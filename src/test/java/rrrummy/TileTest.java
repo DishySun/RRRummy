@@ -15,7 +15,7 @@ public class TileTest extends TestCase{
 		
 		//constructor for numbered tile
 		tile = new Tile (Tile.Color.BLUE, 12);
-		assertEquals(Tile.Color.BULE, tile.getColor());
+		assertEquals(Tile.Color.BLUE, tile.getColor());
 		assertEquals(12, tile.getNumber());
 		
 		//constructor for invalid tile
