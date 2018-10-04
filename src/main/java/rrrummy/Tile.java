@@ -2,8 +2,8 @@ package rrrummy;
 
 
 /* Joker counts as 0 for number!!!!!!
- * 
- * 
+ * Sorted by Blue < Red < Green < Orange < Joker order in increased number order 
+ * ie b2 < b10 < r2 < r5 < g3 < g7 < o2 < jk
  * 
  * 
  * */
@@ -65,6 +65,9 @@ public class Tile {
 	public Color getColor() {return color;}
 	public int getNumber() {return number;}
 	public boolean isGreaterThan(Tile t) {
-		
+		if (this.color.ordinal() > t.color.ordinal()) return true;
+		if (this.color.ordinal() < t.color.ordinal()) return false;
+		if (this.number > t.number) return true;
+		else return false;
 	}
 }

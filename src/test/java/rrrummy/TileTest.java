@@ -74,6 +74,7 @@ public class TileTest extends TestCase{
 			assertTrue(r5.isGreaterThan(r2));
 			assertFalse(r5.isGreaterThan(jk));
 			assertTrue(jk.isGreaterThan(r5));
+			assertFalse(jk.isGreaterThan(jk));
 			}catch (InvalidTileException e) {
 				fail(e.getErrMsg());
 			}
