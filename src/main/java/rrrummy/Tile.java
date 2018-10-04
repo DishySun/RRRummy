@@ -1,5 +1,14 @@
 package rrrummy;
 
+
+/* Joker counts as 0 for number!!!!!!
+ * Sorted by Blue < Red < Green < Orange < Joker order in increased number order 
+ * ie b2 < b10 < r2 < r5 < g3 < g7 < o2 < jk
+ * 
+ * 
+ * */
+
+
 public class Tile {
 	public enum Color{BLUE, RED, GREEN, ORANGE,JOKER}
 	private Color color;
@@ -12,6 +21,7 @@ public class Tile {
 	
 	public Tile() {
 		color = JOKER;
+		number = 0;
 	}
 	
 	public Tile(String str) throws InvalidTileException{
@@ -26,6 +36,7 @@ public class Tile {
 		case "O":	color = ORANGE;
 					break;
 		case "J":	color = JOKER;
+					number = 0;
 					return;
 		default:	color = null;
 		}
@@ -41,15 +52,22 @@ public class Tile {
 		if (!isNumberValid()) throw new InvalidTileException(n, InvalidTileException.Type.NUMBER);
 	}
 	
-	public Tile(Color color, int number) {
+	public Tile(Color color, int number) throws InvalidTileException{
+		if (!isNumberValid()) throw new InvalidTileException(Integer.toString(number), InvalidTileException.Type.NUMBER);
 		this.color = color;
 		this.number = number;
 	}
 	
 	private boolean isNumberValid() {
-		if (number > 0 && number <= 13) return true;
+		if (number >= 0 && number <= 13) return true;
 		return false;
 	}
 	public Color getColor() {return color;}
 	public int getNumber() {return number;}
+	public boolean isGreaterThan(Tile t) {
+		if (this.color.ordinal() > t.color.ordinal()) return true;
+		if (this.color.ordinal() < t.color.ordinal()) return false;
+		if (this.number > t.number) return true;
+		else return false;
+	}
 }

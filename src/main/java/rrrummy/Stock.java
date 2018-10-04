@@ -4,13 +4,13 @@ import java.util.Collections;
 
 public class Stock {
 	private Stack<Tile> stock;
-	public Stock() {
+	public Stock() throws InvalidTileException{
 		stock = new Stack<Tile>();
 		initStock();
 	}
 	public int size() {return stock.size();}
 	public Tile draw() {return stock.pop();}
-	private void initStock() {
+	private void initStock() throws InvalidTileException{
 		for (Tile.Color c : Tile.Color.values()) {
 			for (int i = 1; i <= 13; i++) {
 				if (c == Tile.Color.JOKER) break;
