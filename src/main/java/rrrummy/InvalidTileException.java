@@ -23,9 +23,6 @@ public class InvalidTileException extends Exception{
 		this.number = number;
 		this.type = Type.BOTH;
 	}
-	public String getNumber() {return number;}
-	public String getColor(){return color;}
-	public Type getType() {return type;}
 	public String getErrMsg() {
 		if (type == Type.BOTH) return (color + " is not a valid color and " + number + " is not a valid number.");
 		if (type == Type.COLOR) return (color + " is not a valid color.");
