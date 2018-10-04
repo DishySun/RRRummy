@@ -56,4 +56,26 @@ public class TileTest extends TestCase{
 			fail("String strats with 'J' should be instancted to a joker tile");
 		}
 	}
+	
+	//b10 < r2 < r5 < g3 < g7 < o2 < jk
+	public void testCompare() {
+		Tile b10;
+		Tile r2;
+		Tile r5;
+		Tile jk;
+		try {
+			b10	= new Tile ("B10");
+			r2	= new Tile("R2");
+			r5	= new Tile ("R5");
+			jk	= new Tile();
+			assertFalse(b10.isGreaterThan(r2));
+			assertTrue(r2.isGreaterThan(b10));
+			assertFalse(r2.isGreaterThan(r5));
+			assertTrue(r5.isGreaterThan(r2));
+			assertFalse(r5.isGreaterThan(jk));
+			assertTrue(jk.isGreaterThan(r5));
+			}catch (InvalidTileException e) {
+				fail(e.getErrMsg());
+			}
+	}
 }
