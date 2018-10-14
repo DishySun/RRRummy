@@ -70,4 +70,8 @@ public class Tile {
 		if (this.number > t.number) return true;
 		else return false;
 	}
+	public boolean isJoker() {
+		if(this.color == JOKER)return true;
+		else return false;
+	}
 }
