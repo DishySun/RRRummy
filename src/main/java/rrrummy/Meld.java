@@ -20,23 +20,29 @@ public class Meld {
 		if (tileNumber <= 1) return true;
 		//Consider meld starts with joker(s)
 		Tile.Color c = null;//meld.get(0).getColor();
+		int firstValidNumber = 0;
+		int index = -1;
 		for (Tile t: meld) {
+			index++;
 			if(t.getColor() == Tile.Color.JOKER) continue;
 			c = t.getColor();
+			firstValidNumber = t.getNumber();
 			break;
 		}
-		if (c == null) return true;
+		//if (c == null) return true;
 		for(Tile t : meld) {
 			if (t.getColor() != c && t.getColor()!= Tile.Color.JOKER) return false;
 		}
-		int i = meld.get(0).getNumber();
-		for (Tile tile : meld) {
-			if (!(tile.getNumber() == i++ || tile.getNumber() == 0)) return false;
+		while(index < size()) {
+			index++;
+			if(meld.get(index).getNumber() == firstValidNumber || meld.get(index).getNumber() == 0) firstValidNumber++;
+			else return false;
 		}
 		return true;
 	}
 	private void setRun() {isRun = run();}
 	public boolean isRun() {return isRun;}
+	
 	private boolean set() {
 		if (tileNumber <= 1) return true;
 		if(size() > 4) return false;
@@ -46,9 +52,9 @@ public class Meld {
 			n = t.getNumber();
 			break;
 		}
-		if (n == 0) return true;
+		//if (n == 0) return true;
 		for(Tile t : meld) {
-			if(t.getNumber() != n && t.getNumber() != 0)return false;
+			if(t.getNumber() != n && t.getNumber() != 0) return false;
 		}
 		HashSet<Tile.Color> c = new HashSet<Tile.Color>();
 		for (Tile t : meld) {
@@ -76,6 +82,8 @@ public class Meld {
 		return false;
 	}
 	public boolean addHead(Tile t) {
+		//only use for jokers
+		if(t.getNumber() != 0) return false;
 		if (size() >= 13) return false;
 		if(tileNumber == 0) {
 			meld.add(0,t);
