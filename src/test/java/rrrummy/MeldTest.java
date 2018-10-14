@@ -111,6 +111,13 @@ public class MeldTest extends TestCase{
 		assertTrue(testMeld.addTail(joker));
 	}
 	
+	public void testAddJoker4() {
+		init();
+		assertTrue(testMeld.addHead(joker)); 
+		assertTrue(testMeld.addTail(joker));
+		assertTrue(testMeld.addTail(r2));
+	}
+	
 	public void testRemove() {
 		init();
 		assertTrue(testMeld.addTail(r4));
