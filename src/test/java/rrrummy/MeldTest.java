@@ -45,16 +45,16 @@ public class MeldTest extends TestCase{
 		//add as a run
 		init();
 		assertEquals(0, testMeld.size());
-		assertTrue(testMeld.add(r4));
+		assertTrue(testMeld.addHead(r4));
 		assertEquals(1, testMeld.size());
-		assertFalse(testMeld.add(g8));
+		assertFalse(testMeld.addHead(g8));
 		assertEquals(1, testMeld.size());
-		assertTrue(testMeld.add(r5));
-		assertTrue(testMeld.add(r6));
-		assertFalse(testMeld.add(r2));
-		assertTrue(testMeld.add(r3));
-		assertTrue(testMeld.add(r2));
-		assertTrue(testMeld.add(r1));
+		assertTrue(testMeld.addTail(r5));
+		assertTrue(testMeld.addTail(r6));
+		assertFalse(testMeld.addTail(r2));
+		assertTrue(testMeld.addHead(r3));
+		assertTrue(testMeld.addHead(r2));
+		assertTrue(testMeld.addHead(r1));
 		assertEquals(6, testMeld.size());
 	}
 	
@@ -62,47 +62,61 @@ public class MeldTest extends TestCase{
 		//add as a set
 		init();
 		assertEquals(0, testMeld.size());
-		assertTrue(testMeld.add(r8));
+		assertTrue(testMeld.addHead(r8));
 		assertEquals(1, testMeld.size());
-		assertTrue(testMeld.add(g8));
+		assertTrue(testMeld.addHead(g8));
 		assertEquals(2, testMeld.size());
-		assertTrue(testMeld.add(o8));
-		assertTrue(testMeld.add(b8));
+		assertTrue(testMeld.addTail(o8));
+		assertTrue(testMeld.addTail(b8));
 		//set can only have up to 4 tiles
-		assertFalse(testMeld.add(b8));
+		assertFalse(testMeld.addHead(b8));
+		assertFalse(testMeld.addHead(joker));
 	}
 	
 	public void testAddJoker() {
 		init();
 		//joker can be added because joker is the first tile in this meld
-		assertTrue(testMeld.add(joker));
-		assertTrue(testMeld.add(g8));
-		assertFalse(testMeld.add(r7));
-		assertTrue(testMeld.add(b8));
+		try {
+			assertTrue(testMeld.add(joker));
+		}catch(AbleToAddBothSideException e) {
+			fail("Joker can be added by using add() method to an empty meld");
+		}
+		assertTrue(testMeld.addTail(g8));
+		assertFalse(testMeld.addHead(r7));
+		assertTrue(testMeld.addTail(b8));
 		//after above, Tile can only be added as set from now
-		assertTrue(testMeld.add(o8));
+		assertTrue(testMeld.addTail(o8));
 		assertEquals(4, testMeld.size());
 	}
 	
 	public void testAddJoker2() {
 		init();
-		assertTrue(testMeld.add(r2));
-		assertFalse(testMeld.add(joker)); //joker can be added both ends of the meld
-		assertTrue(testMeld.add(r1));
-		assertTrue(testMeld.add(joker));
+		assertTrue(testMeld.addHead(r2));
+		try {
+			testMeld.add(joker); 
+			fail("add() method CANNOT be used to add a joker when both side can be added");
+		}catch (AbleToAddBothSideException e) {}
+		assertTrue(testMeld.addHead(r1));
+		try {
+			assertTrue(testMeld.add(joker));
+		}catch (AbleToAddBothSideException e) {
+			fail("Joker can be added by using add() method when only one side is able to add to");
+		}
 	}
 	public void testAddJoker3() {
 		init();
-		assertTrue(testMeld.add(r2));
+		assertTrue(testMeld.addHead(r2));
+		assertTrue(testMeld.addTail(r3));
 		assertTrue(testMeld.addHead(joker)); 
+		assertTrue(testMeld.addTail(joker));
 	}
 	
 	public void testRemove() {
 		init();
-		testMeld.add(r4);
-		testMeld.add(r5);
-		testMeld.add(r6);
-		testMeld.add(r7);
+		assertTrue(testMeld.addTail(r4));
+		assertTrue(testMeld.addTail(r5));
+		assertTrue(testMeld.addTail(r6));
+		assertTrue(testMeld.addTail(r7));
 		assertEquals(4, testMeld.size());
 		//test removeHead
 		Tile t = testMeld.removeHead();
@@ -116,14 +130,14 @@ public class MeldTest extends TestCase{
 	
 	public void testCut() {
 		init();
-		testMeld.add(r1);
-		testMeld.add(r2);
-		testMeld.add(r3);
-		testMeld.add(r4);
-		testMeld.add(r5);
-		testMeld.add(r6);
-		testMeld.add(r7);
-		testMeld.add(r8);
+		assertTrue(testMeld.addHead(r1));
+		assertTrue(testMeld.addTail(r2));
+		assertTrue(testMeld.addTail(r3));
+		assertTrue(testMeld.addTail(r4));
+		assertTrue(testMeld.addTail(r5));
+		assertTrue(testMeld.addTail(r6));
+		assertTrue(testMeld.addTail(r7));
+		assertTrue(testMeld.addTail(r8));
 		ArrayList<Tile> returnArr = testMeld.cut(3); // cut at r4
 		assertEquals(4, testMeld.size());
 		assertEquals(4, returnArr.size());
@@ -137,35 +151,102 @@ public class MeldTest extends TestCase{
 	
 	public void testReplace() {
 		init();
-		testMeld.add(r1);
-		testMeld.add(r2);
-		testMeld.add(r3);
-		testMeld.add(r4);
-		testMeld.add(joker);
-		testMeld.add(r6);
-		testMeld.add(r7);
-		testMeld.add(r8);
+		assertTrue(testMeld.addTail(r1));
+		assertTrue(testMeld.addTail(r2));
+		assertTrue(testMeld.addTail(r3));
+		assertTrue(testMeld.addTail(r4));
+		assertTrue(testMeld.addTail(joker));
+		assertTrue(testMeld.addTail(r6));
+		assertTrue(testMeld.addTail(r7));
+		assertTrue(testMeld.addTail(r8));
 		assertEquals(null, testMeld.replace(g8));
 		assertEquals(joker, testMeld.replace(r5));
 	}
 	
-	public void isValid() {
+	public void tsetIsValid() {
 		init();
-		testMeld.add(r1);
+		assertTrue(testMeld.addTail(r1));
 		assertFalse(testMeld.isValid());
-		testMeld.add(r2);
+		assertTrue(testMeld.addTail(r2));
 		assertFalse(testMeld.isValid());
-		testMeld.add(r3);
+		assertTrue(testMeld.addTail(joker));
 		assertTrue(testMeld.isValid());
-		testMeld.add(r4);
+		assertTrue(testMeld.addTail(r4));
 		assertTrue(testMeld.isValid());
-		testMeld.add(joker);
-		assertTrue(testMeld.isValid());
-		testMeld.add(r6);
-		assertTrue(testMeld.isValid());
-		testMeld.add(r7);
-		assertTrue(testMeld.isValid());
-		testMeld.add(r8);
-		assertTrue(testMeld.isValid());
+	}
+	
+	public void testIsRunAndIsSet() {
+		init();
+		assertTrue(testMeld.isRun());
+		assertTrue(testMeld.isSet());
+		assertTrue(testMeld.addHead(r8));// R8
+		assertTrue(testMeld.isRun());
+		assertTrue(testMeld.isSet());
+		assertTrue(testMeld.addHead(g8));// G8 R8
+		assertFalse(testMeld.isRun());
+		assertTrue(testMeld.isSet());
+		assertTrue(testMeld.addTail(o8));// G8 R8 O8
+		assertFalse(testMeld.isRun());
+		assertTrue(testMeld.isSet());
+		assertEquals(o8, testMeld.removeTail());//G8 R8
+		assertFalse(testMeld.isRun());
+		assertTrue(testMeld.isSet());
+		assertEquals(g8, testMeld.removeHead()); //R8
+		assertTrue(testMeld.isRun());
+		assertTrue(testMeld.isSet());
+		assertTrue(testMeld.addHead(r7)); // R7 R8
+		assertTrue(testMeld.isRun());
+		assertFalse(testMeld.isSet());
+		assertTrue(testMeld.addHead(r6)); // R6 R7 R8
+		assertTrue(testMeld.isRun());
+		assertFalse(testMeld.isSet());
+		assertEquals(r6, testMeld.removeHead()); //R7 R8
+		assertTrue(testMeld.isRun());
+		assertFalse(testMeld.isSet());
+		assertEquals(r7, testMeld.removeHead()); // R8
+		assertTrue(testMeld.isRun());
+		assertTrue(testMeld.isSet());
+	}
+	
+	public void testIsRunAndIsSetWithJoker() {
+		init();
+		assertTrue(testMeld.isRun());
+		assertTrue(testMeld.isSet());
+		assertTrue(testMeld.addHead(joker)); // jk
+		assertTrue(testMeld.isRun());
+		assertTrue(testMeld.isSet());
+		assertTrue(testMeld.addTail(r8)); // jk R8
+		assertTrue(testMeld.isRun());
+		assertTrue(testMeld.isSet());
+		assertTrue(testMeld.addTail(o8)); // jk R8 O8
+		assertFalse(testMeld.isRun());
+		assertTrue(testMeld.isSet());
+		assertEquals(joker, testMeld.removeHead()); // R8 O8
+		assertFalse(testMeld.isRun());
+		assertTrue(testMeld.isSet());
+		assertTrue(testMeld.addTail(joker));// R8 O8 jk
+		assertFalse(testMeld.isRun());
+		assertTrue(testMeld.isSet());
+		assertEquals(r8, testMeld.removeHead()); //O8 jk
+		assertTrue(testMeld.isRun());
+		assertTrue(testMeld.isSet());
+		assertEquals(o8, testMeld.removeHead()); //jk
+		assertTrue(testMeld.isRun());
+		assertTrue(testMeld.isSet());
+		assertTrue(testMeld.addHead(r6));//R6 jk
+		assertTrue(testMeld.isRun());
+		assertTrue(testMeld.isSet());
+		assertTrue(testMeld.addHead(r5));//R5 R6 jk
+		assertTrue(testMeld.isRun());
+		assertFalse(testMeld.isSet());
+		assertEquals(r5, testMeld.removeHead()); //R6 jk
+		assertTrue(testMeld.isRun());
+		assertTrue(testMeld.isSet());
+		assertTrue(testMeld.addHead(r7));// R6 jk R7
+		assertTrue(testMeld.isRun());
+		assertFalse(testMeld.isSet());
+		assertEquals(r6, testMeld.removeHead()); //jk R7
+		assertTrue(testMeld.isRun());
+		assertTrue(testMeld.isSet());
 	}
 }
