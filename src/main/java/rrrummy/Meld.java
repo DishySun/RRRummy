@@ -84,35 +84,13 @@ public class Meld {
 	public boolean addHead(Tile t) {
 		//only use for jokers
 		if(t.getNumber() != 0) return false;
-		if (size() >= 13) return false;
-		if(tileNumber == 0) {
-			meld.add(0,t);
-			if(t.getNumber() != 0) tileNumber++;
-			return true;
-		}
-		if (isRun()) {
-			//if(meld.get(0).getNumber() == 1) return false;
-			//while meld starts with joker(s) or not
-			int i = 0; // number of jokers
-			while (meld.get(i).getNumber() == 0) {
-				i++;
-			}
-			if (meld.get(i).getNumber() == i+1) return false; //ie: [jk 2] or [jk jk 3], where first number is 1, so cannot add to head
-			if(t.getNumber() == meld.get(i).getNumber() - i - 1 || t.getNumber() == 0) {
-				meld.add(0, t);
-				if(t.getNumber() != 0) tileNumber++;
-				return true;
-			}
-		}
-		if (isSet()) {
-			//TODO: implementation required
-			
-		}
-		//throw notRunNorSetException
-		return false;
+		meld.add(0,t);
+		return true;
 	}
 	public boolean addTail(Tile t) {
-		//TODO: 
+		if(t.getNumber() != 0) return false;
+		meld.add(t);
+		return true;
 	}
 	public Tile removeHead() {
 		//TODO: require implementation
