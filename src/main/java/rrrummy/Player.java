@@ -11,25 +11,29 @@ public class Player {
 	}
 	public void draw(Tile tile) {
 		// TODO Auto-generated method stub
-		
-	}
-	public Hand getHandCard() {
-		// TODO Auto-generated method stub
-		return null;
+		hand.add(tile);
 	}
 	public int handSize() {
-		return 0;
+		return hand.size();
 		// TODO Auto-generated method stub
 	}
 	public Tile getHand(int i) {
 		// TODO Auto-generated method stub
-		return null;
+		return hand.getTile(i);
 	}
 	public Tile play(int i) {
 		// TODO Auto-generated method stub
-		return null;
+		return hand.remove(i);
 	}
 	
-
+	public String toString() {
+		String str = "";
+		str += "Player: " + name + " \n";
+		str += "Hand:  ";
+		for(int i=0; i<hand.size();i++) {
+			str += hand.getTile(i) + " ";
+		}
+		return str;
+	}
 	
 }
