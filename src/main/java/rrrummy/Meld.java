@@ -17,6 +17,22 @@ public class Meld {
 	
 	public int size() {return meld.size();}
 	private boolean run() {
+		//in case of [jk R1] or [jk jk R2]
+		for(int i = 0; i < size(); i ++) {
+			if(meld.get(i).isJoker()) continue; // Iterate to first non-joker Tile
+			if (i == 0) break; //meld starts with non-joker tile
+			if(meld.get(i).getNumber()<=i) return false;
+		}
+		//in case of [R13 jk] or [R12 jk jk]
+		int numJk = 0;
+		for(int i = size() - 1; i >= 0; i--) {
+			if(meld.get(i).isJoker()) {
+				numJk++;
+				continue; // Iterate to last non-joker Tile
+			}
+			if (i == size()-1) break; //meld ends with non-joker tile
+			if(meld.get(i).getNumber()>=14-numJk) return false;
+		}
 		if (tileNumber <= 1) return true;
 		//Consider meld starts with joker(s)
 		Tile.Color c = null;//meld.get(0).getColor();
@@ -35,7 +51,7 @@ public class Meld {
 		}
 		while(index < size()) {
 			index++;
-			if(meld.get(index).getNumber() == firstValidNumber || meld.get(index).getNumber() == 0) firstValidNumber++;
+			if(meld.get(index).getNumber() == firstValidNumber || meld.get(index).isJoker()) firstValidNumber++;
 			else return false;
 		}
 		return true;
@@ -48,7 +64,7 @@ public class Meld {
 		if(size() > 4) return false;
 		int n = 0;//meld.get(0).getNumber();
 		for (Tile t: meld) {
-			if (t.getNumber() == 0) continue;
+			if (t.isJoker()) continue;
 			n = t.getNumber();
 			break;
 		}
@@ -79,6 +95,14 @@ public class Meld {
 		 * Caution: to add a joker in a run meld must use methods below
 		 * 			if joker can be added both head or tail 
 		 * 			return false*/
+		if(size() == 0) {
+			meld.add(t);
+			if(t.getNumber() != 0) tileNumber++;
+			return true;
+		}
+		if(t.isJoker()) {
+			
+		}else {}
 		return false;
 	}
 	public boolean addHead(Tile t) {
