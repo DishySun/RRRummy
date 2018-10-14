@@ -11,7 +11,7 @@ public class Hand {
 		hand = new ArrayList<Tile>();
 	}
 	
-	public ArrayList<Tile> getHand(){return hand;}
+	public Tile getTile(int i){return hand.get(i);}
 	public void add(Tile t) {hand.add(t);}
 	public Tile remove(int i) {return hand.remove(i);}
 	public int size() {return hand.size();}
