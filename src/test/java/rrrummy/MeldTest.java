@@ -18,6 +18,11 @@ public class MeldTest extends TestCase {
 	private Tile b8;
 	private Tile o8;
 	private Tile g8;
+	private Tile r13;
+	private Tile r11;
+	private Tile b1;
+	private Tile b13;
+	
 
 	private void init() {
 		joker = new Tile();
@@ -33,6 +38,11 @@ public class MeldTest extends TestCase {
 			b8 = new Tile("B8");
 			o8 = new Tile("O8");
 			g8 = new Tile("G8");
+			r13 = new Tile("R13");
+			r11 = new Tile("R12");
+			b1 = new Tile("B1");
+			b13 = new Tile("B13");
+			
 		} catch (InvalidTileException e) {
 			fail(e.getErrMsg());
 		}
@@ -126,6 +136,8 @@ public class MeldTest extends TestCase {
 		}
 	}
 
+	
+	//test if it's run after add joker
 	public void testAddJoker3() {
 		init();
 		try {
@@ -133,21 +145,109 @@ public class MeldTest extends TestCase {
 			assertTrue(testMeld.add(r3));
 			assertTrue(testMeld.addHead(joker));
 			assertTrue(testMeld.addTail(joker));
+			assertTrue(testMeld.isRun());
+			assertFalse(testMeld.isSet());
 		} catch (AbleToAddBothSideException e) {
 			fail();
 		}
 	}
 
+	
+	//test if it's set after add joker
 	public void testAddJoker4() {
+		init();
+		try {
+			assertTrue(testMeld.add(o8));
+			assertTrue(testMeld.add(b8));
+			assertTrue(testMeld.addHead(joker));
+			assertTrue(testMeld.addTail(joker));
+			assertFalse(testMeld.isRun());
+			assertTrue(testMeld.isSet());
+		} catch (AbleToAddBothSideException e) {
+			fail();
+		}
+	}
+	
+	
+	//it can be either set or run
+	public void testAddJoker5() {
 		init();
 		try {
 			assertTrue(testMeld.addHead(joker));
 			assertTrue(testMeld.addTail(joker));
 			assertTrue(testMeld.add(r2));
+			assertTrue(testMeld.isRun());
+			assertTrue(testMeld.isSet());
 		} catch (AbleToAddBothSideException e) {
 			fail();
 		}
 	}
+	
+	//it should add r1 to head and add r3 to be run
+	public void testAddJoker6() {
+		init();
+		try {
+			assertTrue(testMeld.add(joker));
+			assertTrue(testMeld.add(r1));
+			assertTrue(testMeld.isRun());
+			assertTrue(testMeld.isSet());
+			assertTrue(testMeld.add(r3));
+			assertTrue(testMeld.isRun());
+			assertFalse(testMeld.isSet());
+		} catch (AbleToAddBothSideException e) {
+			fail();
+		}
+	}
+	
+	//it should add r13 to tail and add r11 to be run
+	public void testAddJoker7() {
+		init();
+		try {
+			assertTrue(testMeld.add(joker));
+			assertTrue(testMeld.add(r13));
+			assertTrue(testMeld.isRun());
+			assertTrue(testMeld.isSet());
+			assertTrue(testMeld.add(r11));
+			assertTrue(testMeld.isRun());
+			assertFalse(testMeld.isSet());
+		} catch (AbleToAddBothSideException e) {
+			fail();
+		}
+	}
+	
+	//it should add r1 to head and add b1 as set
+		public void testAddJoker8() {
+			init();
+			try {
+				assertTrue(testMeld.add(joker));
+				assertTrue(testMeld.add(r1));
+				assertTrue(testMeld.isRun());
+				assertTrue(testMeld.isSet());
+				assertTrue(testMeld.add(b1));
+				assertFalse(testMeld.isRun());
+				assertTrue(testMeld.isSet());
+			} catch (AbleToAddBothSideException e) {
+				fail();
+			}
+		}
+		
+		//it should add r13 to tail and add b13 as set
+		public void testAddJoker9() {
+			init();
+			try {
+				assertTrue(testMeld.add(joker));
+				assertTrue(testMeld.add(r13));
+				assertTrue(testMeld.isRun());
+				assertTrue(testMeld.isSet());
+				assertTrue(testMeld.add(b13));
+				assertFalse(testMeld.isRun());
+				assertTrue(testMeld.isSet());
+			} catch (AbleToAddBothSideException e) {
+				fail();
+			}
+		}
+	
+	
 
 	public void testRemove() {
 		init();
