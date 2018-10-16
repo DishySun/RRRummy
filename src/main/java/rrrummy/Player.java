@@ -1,5 +1,7 @@
 package rrrummy;
 
+import org.omg.CosNaming.NamingContextExtPackage.StringNameHelper;
+
 public class Player {
 	private Hand hand;
 	private int score;
@@ -34,6 +36,10 @@ public class Player {
 			str += hand.getTile(i) + " ";
 		}
 		return str;
+	}
+	public String getName() {
+		// TODO Auto-generated method stub
+		return this.name;
 	}
 	
 }

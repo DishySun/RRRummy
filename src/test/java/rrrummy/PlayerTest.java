@@ -31,4 +31,10 @@ public class PlayerTest {
 		assertEquals(1, testPlayer.handSize());
 		assertEquals(tile1, testPlayer.getHand(0));
 	}
+	
+	@Test
+	public void test_getName() {
+		testPlayer = new Player("Tony");
+		assertEquals("Tony", testPlayer.getName());
+	}
 }
