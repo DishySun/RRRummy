@@ -1,5 +1,5 @@
 package rrrummy_AI;
 
-public class Observer {
-
+public interface Observer {
+	public void update();
 }
