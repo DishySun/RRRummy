@@ -6,11 +6,12 @@ import rrrummy.*;
 
 public class GameData implements Subject{
 	private ArrayList<Observer> observers;
+	private ArrayList<Player> players;
 	private Table table;
-	private Player players;
 	
 	public GameData() {
 		observers = new ArrayList<Observer>();
+		players = new ArrayList<Player>();
 	}
 	
 	@Override
@@ -35,6 +36,16 @@ public class GameData implements Subject{
 			Observer observer = (Observer)observers.get(i);
 			observer.update(table, players);
 		}
+	}
+	
+	public void dataChanged() {
+		notifyObservers();
+	}
+	
+	public void setValue(Table t, ArrayList<Player> pls) {
+		this.table = t;
+		this.players = pls;
+		dataChanged();
 	}
 	
 	public int getObserversSize() {

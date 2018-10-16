@@ -8,7 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class GameDataTest {
-	private Observer observers;
+	private Observer observer;
 	private GameData testGameData;
 	@Before
 	public void setUp() throws Exception {
@@ -17,14 +17,14 @@ public class GameDataTest {
 
 	@Test
 	public void test_registerObserver() {
-		Observer observer = null;
+		observer = null;
 		testGameData.registerObserver(observer);
 		assertEquals(1,testGameData.getObserversSize());
 	}
 
 	@Test
 	public void test_removeObserver() {
-		Observer observer = null;
+		observer = null;
 		testGameData.registerObserver(observer);
 		testGameData.removeObserver(observer);
 		assertEquals(0,testGameData.getObserversSize());
