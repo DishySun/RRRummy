@@ -1,4 +1,4 @@
-package AI;
+package rrrummy_AI;
 
 import rrrummy.Player;
 

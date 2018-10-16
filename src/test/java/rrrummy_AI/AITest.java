@@ -1,9 +1,11 @@
-package AI;
+package rrrummy_AI;
 
 import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import rrrummy_AI.STR1;
 
 public class AITest {
 	private AI testAI;
