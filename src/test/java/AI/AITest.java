@@ -21,6 +21,8 @@ public class AITest {
 	
 	@Test
 	public void test_setSTY() {
+		AISty = new STR1();
 		testAI.setSTY(AISty);
+		assertEquals(STR1.class, testAI.getSTY().getClass());
 	}
 }
