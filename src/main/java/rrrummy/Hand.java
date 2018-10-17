@@ -6,9 +6,10 @@ import java.util.Comparator;
 
 public class Hand {
 	private ArrayList<Tile> hand;
-	
+	int totalHandScore;
 	public Hand() {
 		hand = new ArrayList<Tile>();
+		totalHandScore = 0;
 	}
 	
 	public Tile getTile(int i){return hand.get(i);}
@@ -39,4 +40,15 @@ public class Hand {
 		
 	});
 }
+	public void getRoundScore() {
+		int tempScore = 0;
+		int jokers = 0;
+		for(int i = 0; i < hand.size();i++) {
+			tempScore += getTile(i).getNumber();	
+			if (getTile(i).getNumber() == 0) {
+				jokers++;
+			}
+		}
+		totalHandScore = tempScore + jokers*30;
+	}
 }
