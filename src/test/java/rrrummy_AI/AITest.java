@@ -10,9 +10,11 @@ import rrrummy_AI.STR1;
 public class AITest {
 	private AI testAI;
 	private AIstrategy AISty;
+	private GameData data;
 	@Before
 	public void setUp() throws Exception {
 		testAI = new AI("Hunter");
+		data = new GameData();
 	}
 
 	@Test
@@ -23,7 +25,7 @@ public class AITest {
 	
 	@Test
 	public void test_setSTY() {
-		AISty = new STR1();
+		AISty = new STR1(data);
 		testAI.setSTY(AISty);
 		assertEquals(STR1.class, testAI.getSTY().getClass());
 	}
