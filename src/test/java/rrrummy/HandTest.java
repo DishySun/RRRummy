@@ -83,12 +83,12 @@ public class HandTest extends TestCase{
 			assertEquals(Tile.Color.JOKER, testHand.getTile(7).getColor());
 			assertEquals(3, testHand.getTile(0).getNumber());
 			assertEquals(7, testHand.getTile(1).getNumber());
-			assertEquals(7, testHand.getTile(2).getNumber());
-			assertEquals(7, testHand.getTile(3).getNumber());
-			assertEquals(7, testHand.getTile(4).getNumber());
-			assertEquals(7, testHand.getTile(5).getNumber());
-			assertEquals(7, testHand.getTile(6).getNumber());
-			assertEquals(7, testHand.getTile(7).getNumber());			
+			assertEquals(5, testHand.getTile(2).getNumber());
+			assertEquals(11, testHand.getTile(3).getNumber());
+			assertEquals(1, testHand.getTile(4).getNumber());
+			assertEquals(10, testHand.getTile(5).getNumber());
+			assertEquals(6, testHand.getTile(6).getNumber());
+			assertEquals(0, testHand.getTile(7).getNumber());			
 		}catch(InvalidTileException e) {
 			fail(e.getErrMsg());
 		}
