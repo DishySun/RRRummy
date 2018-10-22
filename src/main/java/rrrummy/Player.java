@@ -28,6 +28,10 @@ public class Player {
 		return hand.remove(i);
 	}
 	
+	public Hand getHands() {
+		return hand;
+	}
+	
 	public String toString() {
 		String str = "";
 		str += "Player: " + name + " \n";
