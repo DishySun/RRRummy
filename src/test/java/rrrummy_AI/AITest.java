@@ -330,14 +330,48 @@ public class AITest {
 	}
 	
 	@Test
-	public void test_checkSum(){
+	public void test_checkSum1(){
 		ArrayList<Tile> tileArray = new ArrayList<Tile>();
 		tileArray.add(btile11);
 		tileArray.add(btile12);
 		tileArray.add(aJoker);
-		int i = checkSum(tileArray);
+		int i = testAI.checkSum(tileArray);
+		assertEquals(36, i);
 	}
-
+	
+	@Test
+	public void test_checkSum2(){
+		ArrayList<Tile> tileArray = new ArrayList<Tile>();
+		tileArray.add(aJoker);
+		tileArray.add(btile11);
+		tileArray.add(btile12);
+		int i = testAI.checkSum(tileArray);
+		assertEquals(33, i);
+	}
+	
+	@Test
+	public void test_checkSum3(){
+		ArrayList<Tile> tileArray = new ArrayList<Tile>();		
+		tileArray.clear();
+		tileArray.add(aJoker);
+		tileArray.add(btile11);
+		tileArray.add(btile12);
+		tileArray.add(bJoker);
+		int i = testAI.checkSum(tileArray);
+		assertEquals(46, i);
+	}
+	
+	@Test
+	public void test_checkSum4(){
+		ArrayList<Tile> tileArray = new ArrayList<Tile>();
+		tileArray.clear();
+		tileArray.add(btile10);
+		tileArray.add(aJoker);
+		tileArray.add(bJoker);
+		tileArray.add(btile13);
+		int i = testAI.checkSum(tileArray);
+		assertEquals(46, i);
+	}
 	
 
 
