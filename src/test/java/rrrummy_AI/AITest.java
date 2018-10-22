@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import org.junit.Before;
 import org.junit.Test;
 
+import rrrummy.Hand;
 import rrrummy.InvalidTileException;
 import rrrummy.Tile;
 import rrrummy_AI.STR1;
@@ -158,6 +159,82 @@ public class AITest {
 	}
 	
 	@Test
+	public void test_findRun3() {
+		//has joker
+		ArrayList<Tile> tileArray = new ArrayList<Tile>();
+		try {
+			atile1 = new Tile("R1");
+			atile2 = new Tile("R2");
+			atile3 = new Tile("R3");
+			atile4 = new Tile("R4");
+			atile5 = new Tile("R5");
+			atile6 = new Tile("B6");
+			atile7 = new Tile("O6");
+			atile8 = new Tile("R6");
+			atile9 = new Tile("G9");
+			atile10 = new Tile("R8");
+			atile11 = new Tile("R9");
+			atile12 = new Tile("R10");
+			atile13 = new Tile("B13");
+			aJoker = new Tile("J");
+		}catch(InvalidTileException e) {
+			fail();
+		}
+		tileArray = testAI.findInitRun();
+		assertEquals(Tile.Color.RED, tileArray.get(0).getColor());
+		assertEquals(Tile.Color.RED, tileArray.get(1).getColor());
+		assertEquals(Tile.Color.RED, tileArray.get(2).getColor());
+		assertEquals(Tile.Color.JOKER, tileArray.get(3).getColor());
+		assertEquals(8, tileArray.get(0).getNumber());
+		assertEquals(9, tileArray.get(1).getNumber());
+		assertEquals(10, tileArray.get(2).getNumber());
+	}
+	
+	@Test
+	public void test_findRun4() {
+		//has joker
+		ArrayList<Tile> tileArray = new ArrayList<Tile>();
+		try {
+			atile1 = new Tile("R1");
+			atile2 = new Tile("R2");
+			atile3 = new Tile("R3");
+			atile4 = new Tile("R4");
+			atile5 = new Tile("R5");
+			atile6 = new Tile("B6");
+			atile7 = new Tile("O6");
+			atile8 = new Tile("R6");
+			atile9 = new Tile("G9");
+			atile13 = new Tile("R7");
+			atile10 = new Tile("R8");
+			atile11 = new Tile("R9");
+			atile12 = new Tile("R11");
+			aJoker = new Tile("J");
+		}catch(InvalidTileException e) {
+			fail();
+		}
+		tileArray = testAI.findInitRun();
+		assertEquals(Tile.Color.RED, tileArray.get(0).getColor());
+		assertEquals(Tile.Color.RED, tileArray.get(1).getColor());
+		assertEquals(Tile.Color.RED, tileArray.get(2).getColor());
+		assertEquals(Tile.Color.RED, tileArray.get(3).getColor());
+		assertEquals(Tile.Color.RED, tileArray.get(4).getColor());
+		assertEquals(Tile.Color.JOKER, tileArray.get(5).getColor());
+		assertEquals(Tile.Color.RED, tileArray.get(6).getColor());
+		assertEquals(Tile.Color.RED, tileArray.get(7).getColor());
+		assertEquals(Tile.Color.RED, tileArray.get(8).getColor());
+		assertEquals(1, tileArray.get(0).getNumber());
+		assertEquals(2, tileArray.get(1).getNumber());
+		assertEquals(3, tileArray.get(2).getNumber());
+		assertEquals(4, tileArray.get(3).getNumber());
+		assertEquals(5, tileArray.get(4).getNumber());
+		assertEquals(Tile.Color.JOKER, tileArray.get(5).getColor());
+		assertEquals(7, tileArray.get(6).getNumber());
+		assertEquals(8, tileArray.get(7).getNumber());
+		assertEquals(9, tileArray.get(8).getNumber());
+		
+	}
+	
+	@Test
 	public void test_findGroup() {
 		ArrayList<Tile> tileArray = new ArrayList<Tile>();
 		testAI.draw(atile1);
@@ -210,6 +287,7 @@ public class AITest {
 		assertEquals(6, tileArray.get(2).getNumber());
 	}
 	
+	@Test
 	public void test_findRun4null() {
 		ArrayList<Tile> tileArray = new ArrayList<Tile>();
 		testAI.draw(btile1);
@@ -230,6 +308,7 @@ public class AITest {
 		assertEquals(null, tileArray);
 	}
 	
+	@Test
 	public void test_findGroup4null() {
 		ArrayList<Tile> tileArray = new ArrayList<Tile>();
 		testAI.draw(btile1);
@@ -250,4 +329,16 @@ public class AITest {
 		assertEquals(null, tileArray);
 	}
 	
+	@Test
+	public void test_checkSum(){
+		ArrayList<Tile> tileArray = new ArrayList<Tile>();
+		tileArray.add(btile11);
+		tileArray.add(btile12);
+		tileArray.add(aJoker);
+		int i = checkSum(tileArray);
+	}
+
+	
+
+
 }
