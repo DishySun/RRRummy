@@ -216,6 +216,8 @@ public class AITest {
 		assertEquals(10, tileArray.get(9).getNumber());
 	}
 	
+	
+	
 	@Test
 	public void test_findRun4() {
 		//has joker
@@ -296,6 +298,108 @@ public class AITest {
 		assertEquals(6, tileArray.get(0).getNumber());
 		assertEquals(6, tileArray.get(1).getNumber());
 		assertEquals(6, tileArray.get(2).getNumber());
+	}
+	
+	@Test //two parts >= 30, only take one part
+	public void test_findRun5() {
+		//has joker
+		ArrayList<Tile> tileArray = new ArrayList<Tile>();
+		try {
+			atile1 = new Tile("R1");
+			atile2 = new Tile("R2");
+			atile3 = new Tile("R3");
+			atile4 = new Tile("R4");
+			atile5 = new Tile("O5");
+			atile6 = new Tile("R6");
+			atile7 = new Tile("O6");
+			atile8 = new Tile("R7");
+			atile9 = new Tile("G9");
+			atile10 = new Tile("R8");
+			atile11 = new Tile("R10");
+			atile12 = new Tile("R11");
+			atile13 = new Tile("R12");
+			aJoker = new Tile("J");
+		}catch(InvalidTileException e) {
+			fail();
+		}
+		testAI.draw(atile1);
+		testAI.draw(atile2);
+		testAI.draw(atile3);
+		testAI.draw(atile4);
+		testAI.draw(atile5);
+		testAI.draw(atile6);
+		testAI.draw(atile7);
+		testAI.draw(atile8);
+		testAI.draw(atile9);
+		testAI.draw(atile10);
+		testAI.draw(atile11);
+		testAI.draw(atile12);
+		testAI.draw(atile13);
+		testAI.draw(aJoker);
+		tileArray = testAI.findInitRun();
+		System.out.println(tileArray);
+		assertEquals(Tile.Color.RED, tileArray.get(0).getColor());
+		assertEquals(Tile.Color.RED, tileArray.get(1).getColor());
+		assertEquals(Tile.Color.RED, tileArray.get(2).getColor());
+		assertEquals(Tile.Color.RED, tileArray.get(3).getColor());
+		assertEquals(Tile.Color.JOKER, tileArray.get(4).getColor());
+		assertEquals(Tile.Color.RED, tileArray.get(6).getColor());
+		assertEquals(Tile.Color.RED, tileArray.get(7).getColor());
+		assertEquals(1, tileArray.get(0).getNumber());
+		assertEquals(2, tileArray.get(1).getNumber());
+		assertEquals(3, tileArray.get(2).getNumber());
+		assertEquals(4, tileArray.get(3).getNumber());
+		assertEquals(Tile.Color.JOKER, tileArray.get(4).getColor());
+		assertEquals(6, tileArray.get(5).getNumber());
+		assertEquals(7, tileArray.get(6).getNumber());
+		assertEquals(8, tileArray.get(7).getNumber());
+	}
+	
+	@Test //two parts >= 30, only take one part
+	public void test_findRun6() {
+		//has joker
+		ArrayList<Tile> tileArray = new ArrayList<Tile>();
+		try {
+			atile1 = new Tile("R1");
+			atile2 = new Tile("O2");
+			atile3 = new Tile("B3");
+			atile4 = new Tile("R4");
+			atile5 = new Tile("O5");
+			atile6 = new Tile("B6");
+			atile7 = new Tile("O6");
+			atile8 = new Tile("R7");
+			atile9 = new Tile("B9");
+			atile10 = new Tile("O8");
+			atile11 = new Tile("R10");
+			atile12 = new Tile("O11");
+			atile13 = new Tile("B12");
+			aJoker = new Tile("J");
+			bJoker = new Tile("J");
+		}catch(InvalidTileException e) {
+			fail();
+		}
+		testAI.draw(atile1);
+		testAI.draw(atile2);
+		testAI.draw(atile3);
+		testAI.draw(atile4);
+		testAI.draw(atile5);
+		testAI.draw(atile6);
+		testAI.draw(atile7);
+		testAI.draw(atile8);
+		testAI.draw(atile9);
+		testAI.draw(atile10);
+		testAI.draw(atile11);
+		testAI.draw(atile12);
+		testAI.draw(atile13);
+		testAI.draw(aJoker);
+		testAI.draw(bJoker);
+		tileArray = testAI.findInitRun();
+		assertEquals(Tile.Color.BLUE, tileArray.get(0).getColor());
+		assertEquals(Tile.Color.JOKER, tileArray.get(1).getColor());
+		assertEquals(Tile.Color.JOKER, tileArray.get(2).getColor());
+		assertEquals(Tile.Color.BLUE, tileArray.get(3).getColor());
+		assertEquals(9, tileArray.get(0).getNumber());
+		assertEquals(12, tileArray.get(3).getNumber());
 	}
 	
 	@Test
