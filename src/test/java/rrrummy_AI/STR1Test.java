@@ -2,18 +2,17 @@ package rrrummy_AI;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
+
 import org.junit.Before;
 import org.junit.Test;
 
 import rrrummy.InvalidTileException;
+import rrrummy.Player;
 import rrrummy.Table;
 import rrrummy.Tile;
 
 public class STR1Test {
-	private AI ai;
-	private AIstrategy aISty;
-	private GameData data;
-	private Table table;
 	private Tile atile1;
 	private Tile atile2;
 	private Tile atile3;
@@ -42,13 +41,20 @@ public class STR1Test {
 	private Tile btile12;
 	private Tile btile13;
 	private Tile bJoker;
+	private AI ai;
+	private AIstrategy aISty;
+	private STR1 str1;
+	private GameData data;
+	private Table table;
+	private ArrayList<Player> players;
 	@Before
 	public void setUp() throws Exception {
+		table = new Table();
 		ai = new AI("Hunter");
 		data = new GameData();
 		aISty = new STR1(data);
-		table = new Table();
 		ai.setSTY(aISty);
+		players = new ArrayList<Player>();
 		try {
 			atile1 = new Tile("R1");
 			atile2 = new Tile("R2");
@@ -73,15 +79,15 @@ public class STR1Test {
 			btile2 = new Tile("O2");
 			btile3 = new Tile("G3");
 			btile4 = new Tile("B4");
-			btile5 = new Tile("R5");
+			btile5 = new Tile("R10");
 			btile6 = new Tile("B6");
 			btile7 = new Tile("O7");
 			btile8 = new Tile("R8");
 			btile9 = new Tile("G9");
 			btile10 = new Tile("O10");
 			btile11 = new Tile("G11");
-			btile12 = new Tile("B12");
-			btile13 = new Tile("R13");
+			btile12 = new Tile("G10");
+			btile13 = new Tile("B10");
 			bJoker = new Tile("J");
 		}catch(InvalidTileException e) {
 			fail();
@@ -89,7 +95,7 @@ public class STR1Test {
 	}
 
 	@Test
-	public void test_playInitialA() {
+	public void test_playInitial1() {
 		ai.draw(atile1);
 		ai.draw(atile2);
 		ai.draw(atile3);
@@ -104,11 +110,14 @@ public class STR1Test {
 		ai.draw(atile12);
 		ai.draw(atile13);
 		ai.draw(aJoker);
-		ai.getSTY().playInitial(null);
-		assertEquals(4, ai.handSize());
+		//R9 J R10 R11 R12 R13
+		players.add(ai);
+		data.setValue(table, players);
+		ai.getSTY().playInitial();
+		assertEquals(8, ai.handSize());
 	}
-
-	public void test_playInitialB() {
+	@Test
+	public void test_playInitial2() {
 		ai.draw(btile1);
 		ai.draw(btile2);
 		ai.draw(btile3);
@@ -123,7 +132,94 @@ public class STR1Test {
 		ai.draw(btile12);
 		ai.draw(btile13);
 		ai.draw(bJoker);
-		ai.getSTY().playInitial(table);
-		assertEquals(14, ai.handSize());
+		//O10 G10 R10 B10
+		
+		players.add(ai);
+		data.setValue(table, players);
+		ai.getSTY().playInitial();
+		assertEquals(10, ai.handSize());
+	}
+	@Test
+	public void test_playInitial3() {
+		try {
+			btile1 = new Tile("R1");
+			btile2 = new Tile("O2");
+			btile3 = new Tile("G3");
+			btile4 = new Tile("B4");
+			btile5 = new Tile("R5");
+			btile6 = new Tile("B6");
+			btile7 = new Tile("O7");
+			btile8 = new Tile("R8");
+			btile9 = new Tile("G9");
+			btile10 = new Tile("O10");
+			btile11 = new Tile("G11");
+			btile12 = new Tile("B12");
+			bJoker = new Tile("J");
+			bJoker = new Tile("J");
+		}catch(InvalidTileException e) {
+			fail();
+		}
+		ai.draw(btile1);
+		ai.draw(btile2);
+		ai.draw(btile3);
+		ai.draw(btile4);
+		ai.draw(btile5);
+		ai.draw(btile6);
+		ai.draw(btile7);
+		ai.draw(btile8);
+		ai.draw(btile9);
+		ai.draw(btile10);
+		ai.draw(btile11);
+		ai.draw(btile12);
+		ai.draw(btile13);
+		ai.draw(bJoker);
+		//B10 jk B12 
+		//O10 B10 jk ----*
+		players.add(ai);
+		data.setValue(table, players);
+		ai.getSTY().playInitial();
+		assertEquals(11, ai.handSize());
+	}
+	
+	@Test
+	public void test_playrest() {
+		try {
+			btile1 = new Tile("R1");
+			btile2 = new Tile("O2");
+			btile3 = new Tile("G3");
+			btile4 = new Tile("G4");
+			btile5 = new Tile("G5");
+			btile6 = new Tile("B6");
+			btile7 = new Tile("O7");
+			btile8 = new Tile("R8");
+			btile9 = new Tile("G8");
+			btile10 = new Tile("O10");
+			btile11 = new Tile("G10");
+			btile12 = new Tile("B10");
+			bJoker = new Tile("J");
+			bJoker = new Tile("J");
+		}catch(InvalidTileException e) {
+			fail();
+		}
+		ai.draw(btile1);
+		ai.draw(btile2);
+		ai.draw(btile3);
+		ai.draw(btile4);
+		ai.draw(btile5);
+		ai.draw(btile6);
+		ai.draw(btile7);
+		ai.draw(btile8);
+		ai.draw(btile9);
+		ai.draw(btile10);
+		ai.draw(btile11);
+		ai.draw(btile12);
+		ai.draw(btile13);
+		ai.draw(bJoker);
+		//G3 G4 G5
+		//G8 R8 J; O10 G10 B10
+		players.add(ai);
+		data.setValue(table, players);
+		ai.getSTY().playRest();;
+		assertEquals(5, ai.handSize());
 	}
 }
