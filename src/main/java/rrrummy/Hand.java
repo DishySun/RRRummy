@@ -39,4 +39,18 @@ public class Hand {
 		
 	});
 }
+
+	public void sortByNum() {
+		// TODO Auto-generated method stub
+		Collections.sort(hand, new Comparator<Tile>(){
+
+			@Override
+			public int compare(Tile t1, Tile t2) {
+				// TODO Auto-generated method stub
+				if (t1.isEqualThan(t2)) {
+					return 1;
+				}else return -1;
+			}
+		});
+	}
 }

@@ -70,6 +70,12 @@ public class Tile {
 		if (this.number > t.number) return true;
 		else return false;
 	}
+
+	public boolean isEqualThan(Tile t) {
+		if (this.number > t.number) return true;
+		else return false;
+	}
+	
 	public String toString() {
 		String aString = "";
 		switch (color) {

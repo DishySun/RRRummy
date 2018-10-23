@@ -93,4 +93,41 @@ public class HandTest extends TestCase{
 			fail(e.getErrMsg());
 		}
 	}
+	
+	public void test_SortbyColor() {//B G O R
+		Hand testHand = new Hand();
+		try {
+			testHand.add(new Tile("R5"));
+			testHand.add(new Tile("B3"));
+			testHand.add(new Tile("O5"));
+			testHand.add(new Tile("J"));
+			testHand.add(new Tile("B7"));
+			testHand.add(new Tile("R11"));
+			testHand.add(new Tile("G5"));
+			testHand.add(new Tile("G10"));
+			//R5 B3 O6 J B7 R11 G1 G10
+			testHand.sortByNum();
+			//J B3 G5 O5 R5 B7 G10 R11
+			assertEquals(Tile.Color.JOKER, testHand.getTile(0).getColor());
+			assertEquals(Tile.Color.BLUE, testHand.getTile(1).getColor());
+			assertEquals(Tile.Color.GREEN, testHand.getTile(2).getColor());
+			assertEquals(Tile.Color.ORANGE, testHand.getTile(3).getColor());
+			assertEquals(Tile.Color.RED, testHand.getTile(4).getColor());
+			assertEquals(Tile.Color.BLUE, testHand.getTile(5).getColor());
+			assertEquals(Tile.Color.GREEN, testHand.getTile(6).getColor());
+			assertEquals(Tile.Color.RED, testHand.getTile(7).getColor());
+			
+			assertEquals(0, testHand.getTile(0).getNumber());
+			assertEquals(3, testHand.getTile(1).getNumber());
+			assertEquals(5, testHand.getTile(2).getNumber());
+			assertEquals(5, testHand.getTile(3).getNumber());
+			assertEquals(5, testHand.getTile(4).getNumber());
+			assertEquals(7, testHand.getTile(5).getNumber());
+			assertEquals(10, testHand.getTile(6).getNumber());
+			assertEquals(11, testHand.getTile(7).getNumber());		
+		}catch(InvalidTileException e) {
+			fail(e.getErrMsg());
+		}
+		
+	}
 }
