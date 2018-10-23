@@ -1,6 +1,7 @@
 package rrrummy_AI;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import rrrummy.Player;
 import rrrummy.Tile;
@@ -28,31 +29,30 @@ public class AI extends Player{
 		// TODO Auto-generated method stub
 		tile4Run = new ArrayList<Tile>();
 		tile2Play = new ArrayList<Tile>();
-		boolean run = true;
-		boolean disconnect = true;
-		boolean pass = false;
+		boolean run = true;		// used to stop loop when reach 30 points
+		boolean disconnect = true;	// check if next tile number & color is connecte
 		int playIndex = 0;	//point to tile4Run position;
 		int handIndex;  //used when looping hand cards
-		int jokerNum = 0;
-		int jokerorg = 0;
-		int countPoint = 0;
+		int jokerNum = 0;	// joker number
+		int jokerorg = 0;	// joker number (final)
+		int countPoint = 0;	
 		boolean hasJoker;
-		this.getHands().sort();
+		this.getHands().sort();		//sort
 		//check if has joker
 		if(this.getHand(this.handSize()-1).getColor() == Tile.Color.JOKER) 
 			hasJoker = true;
 		else
 			hasJoker = false;
-		if(hasJoker) {		// has joker
-			//count size of joker;
-			for(int i = 0; i<this.handSize();i++) {
+		
+		if(hasJoker) {	
+			for(int i = 0; i<this.handSize();i++) {			//count size of joker;
 				if(this.getHand(i).getColor() == Tile.Color.JOKER) 
 					jokerNum++;
 			}
 			jokerorg = jokerNum;
 			tile4Run.add(this.getHand(0));
 			handIndex = 1;
-			while(handIndex <= this.handSize()-jokerorg && run) {
+			while(handIndex < this.handSize()-jokerorg && run) {
 				if(tile4Run.get(playIndex).getColor() != Tile.Color.JOKER) { // last tile in tile4Run is not joker
 					if(tile4Run.get(playIndex).getColor() == this.getHand(handIndex).getColor() 			//continuously 1 2 3 4 5
 							&& this.getHand(handIndex).getNumber()-1 == tile4Run.get(playIndex).getNumber())
@@ -120,7 +120,7 @@ public class AI extends Player{
 						tile4Run.add(this.getHand(handIndex));
 						handIndex++;
 						playIndex = 0;
-						run = false;
+						run = false;	// reach 30, break loop 
 					}
 				}
 			}
@@ -134,20 +134,18 @@ public class AI extends Player{
 					tile4Run.add(this.getHand(i));
 					playIndex++;
 				} else {
-						for(Tile tile : tile4Run) {
-							countPoint += tile.getNumber();
-						}
-						if(countPoint >= 30) {
-							tile2Play.addAll(tile4Run);
-							tile4Run.clear();
-							tile4Run.add(this.getHand(i));
-							playIndex = 0;
-							run = false;
-						} else {
-							tile4Run.clear();	
-							tile4Run.add(this.getHand(i));
-							playIndex = 0;
-						}
+					countPoint = checkSum(tile4Run);
+					if(countPoint >= 30) {
+						tile2Play.addAll(tile4Run);
+						tile4Run.clear();
+						tile4Run.add(this.getHand(i));
+						playIndex = 0;
+						run = false;		// reach 30, break loop 
+					} else {	
+						tile4Run.clear();	
+						tile4Run.add(this.getHand(i));
+						playIndex = 0;
+					}
 				}
 			}
 		}
@@ -156,7 +154,99 @@ public class AI extends Player{
 
 	public ArrayList<Tile> findInitGroup() {
 		// TODO Auto-generated method stub
-		return null;
+		tile4Group = new ArrayList<Tile>();
+		tile2Play = new ArrayList<Tile>();
+		boolean run = true;		// used to stop loop when reach 30 points
+		boolean disconnect = true;	// check if next tile number & color is connecte
+		int playIndex = 0;	//point to tile4Run position;
+		int handIndex;  //used when looping hand cards
+		int jokerNum = 0;	// joker number
+		int jokerorg = 0;	// joker number (final)
+		int countPoint = 0;	
+		boolean hasJoker;
+		this.getHands().sortByNum();;		//sort by number, same number will put together, order base on Hand
+		//check if has joker
+		if(this.getHand(0).getColor() == Tile.Color.JOKER) 		// joker is first one
+			hasJoker = true;
+		else
+			hasJoker = false;
+		
+		if(hasJoker) {
+			for(int i = 0; i<this.handSize();i++) {			//count size of joker;
+				if(this.getHand(i).getColor() == Tile.Color.JOKER) 
+					jokerNum++;
+			}
+			jokerorg = jokerNum;
+			tile4Group.add(this.getHand(jokerorg));	// J 1 5 5 ....
+			handIndex = jokerorg;
+			
+			while(handIndex < this.handSize() && run) {	
+				if(!hasSameColor(tile4Group, this.getHand(handIndex)) 			//no same color && same # && tile4Group # < 4
+						&& this.getHand(handIndex).getNumber() == tile4Group.get(playIndex).getNumber()
+						&& tile4Group.size() < 4)
+				{
+					tile4Group.add(this.getHand(handIndex));
+					playIndex++;		
+					disconnect = false;
+					handIndex++;
+				} else
+					disconnect = true;
+				
+				if (disconnect){ // disconnect
+					disconnect = false;
+					countPoint = checkSum(tile4Group);
+					if(countPoint < 30) {
+						if(jokerNum > 0 && tile4Group.size()<4) {
+							tile4Group.add( this.getHand(0)); // add joker
+							jokerNum--;
+							playIndex++;
+						} else {
+							for(int i = 0; i<tile4Group.size();i++) {
+								if(tile4Group.get(i).getColor() == Tile.Color.JOKER) 
+									jokerNum++;
+							}
+							tile4Group.clear();	
+							tile4Group.add(this.getHand(handIndex));
+							playIndex = 0;
+							handIndex++;
+						}
+					} else {
+						tile2Play.addAll(tile4Group);
+						tile4Group.clear();
+						tile4Group.add(this.getHand(handIndex));
+						handIndex++;
+						playIndex = 0;
+						run = false;	// reach 30, break loop 
+					}
+				}
+			}
+			
+		} else {	
+			//no joker
+			tile4Group.add(this.getHand(0));
+			for(int i=1; i<this.handSize();i++) {		// R1 B1
+				if(!hasSameColor(tile4Group, this.getHand(i))
+						&& this.getHand(i).getNumber() == tile4Group.get(playIndex).getNumber()) {
+					tile4Group.add(this.getHand(i));
+					playIndex++;
+				} else {
+					countPoint = checkSum(tile4Group);
+					if(countPoint >= 30) {
+						tile2Play.addAll(tile4Group);
+						tile4Group.clear();
+						tile4Group.add(this.getHand(i));
+						playIndex = 0;
+						run = false;		// reach 30, break loop 
+					} else {	
+						tile4Group.clear();	
+						tile4Group.add(this.getHand(i));
+						playIndex = 0;
+					}
+				}
+			}
+		}
+		
+		return tile2Play;
 	}
 	
 	public int checkSum(ArrayList<Tile> tileArray) {
@@ -198,5 +288,12 @@ public class AI extends Player{
 			}
 		}
 		return count;
+	}
+	
+	public boolean hasSameColor(ArrayList<Tile> tile, Tile compareTile) {
+		for (Tile t : tile) {
+			if(t.getColor() == compareTile.getColor()) return true;
+		}
+		return false;	
 	}
 }
