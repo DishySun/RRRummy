@@ -28,10 +28,13 @@ public class AI extends Player{
 		// TODO Auto-generated method stub
 		tile4Run = new ArrayList<Tile>();
 		tile2Play = new ArrayList<Tile>();
+		boolean run = true;
+		boolean disconnect = true;
+		boolean pass = false;
 		int playIndex = 0;	//point to tile4Run position;
-		int tileIndex = 0; // point to first valid tile in hand; ps: used when apply joker
 		int handIndex;  //used when looping hand cards
 		int jokerNum = 0;
+		int jokerorg = 0;
 		int countPoint = 0;
 		boolean hasJoker;
 		this.getHands().sort();
@@ -40,86 +43,90 @@ public class AI extends Player{
 			hasJoker = true;
 		else
 			hasJoker = false;
-		
-		
-		if(hasJoker) {/*
+		if(hasJoker) {		// has joker
 			//count size of joker;
 			for(int i = 0; i<this.handSize();i++) {
 				if(this.getHand(i).getColor() == Tile.Color.JOKER) 
 					jokerNum++;
 			}
+			jokerorg = jokerNum;
 			tile4Run.add(this.getHand(0));
 			handIndex = 1;
-			while(handIndex != this.handSize()-jokerNum-1){
-				if(tile4Run.get(playIndex).getColor() == this.getHand(handIndex).getColor() 			//1 2 3 4 5
-						&& this.getHand(handIndex).getNumber()-1 == tile4Run.get(playIndex).getNumber()
-						|| tile4Run.get(playIndex).getColor() == Tile.Color.JOKER)
-				{
-					tile4Run.add(this.getHand(handIndex));
-					playIndex++;		
-					handIndex++;
-				} else if(tile4Run.get(playIndex).getColor() == this.getHand(handIndex).getColor()	//1 2 3 _ 5 6 && J || JJ
-						&& this.getHand(handIndex).getNumber()- 2 == tile4Run.get(playIndex).getNumber() && jokerNum >= 1)
-				{
-					tileIndex = handIndex;
-					tile4Run.add(this.getHand(this.handSize()-1));			//add joker
-					playIndex++;		
-					//handIndex++;
-					jokerNum--;
-								
-				} else if(tile4Run.get(playIndex).getColor() == this.getHand(handIndex).getColor()		//1 2 _ _ 5 6 7 & J J
-										&& this.getHand(handIndex).getNumber()- 3 == tile4Run.get(playIndex).getNumber() && jokerNum == 2)
-				{
-					tileIndex = handIndex;
-					tile4Run.add(this.getHand(this.handSize()-1));			//add joker
-					tile4Run.add(this.getHand(this.handSize()-2));			//add joker
-					playIndex+=2;		
-					//handIndex+=2;
-					jokerNum-=2;
+			while(handIndex <= this.handSize()-jokerorg && run) {
+				if(tile4Run.get(playIndex).getColor() != Tile.Color.JOKER) { // last tile in tile4Run is not joker
+					if(tile4Run.get(playIndex).getColor() == this.getHand(handIndex).getColor() 			//continuously 1 2 3 4 5
+							&& this.getHand(handIndex).getNumber()-1 == tile4Run.get(playIndex).getNumber())
+					{
+						tile4Run.add(this.getHand(handIndex));
+						playIndex++;		
+						disconnect = false;
+						handIndex++;
+					} else
+						disconnect = true;
 				}
-				else {		//check tile array if reach 30
-					for(Tile tile : tile4Run) {
-						countPoint += tile.getNumber();
+				else {	// last tile in tile4Run is joker _ _ J
+					if(tile4Run.get(playIndex-1).getColor() == Tile.Color.JOKER  // _ J J 
+							&& this.getHand(handIndex).getNumber() - 3 !=  tile4Run.get(playIndex-2).getNumber()) {
+						disconnect = true;
+					} else if (tile4Run.get(playIndex-1).getColor() == Tile.Color.JOKER // _ J J
+							&& this.getHand(handIndex).getNumber() - 3 ==  tile4Run.get(playIndex-2).getNumber()) {
+						tile4Run.add(this.getHand(handIndex));
+						playIndex++;		
+						handIndex++;
+						disconnect = false;
+					} else if (tile4Run.get(playIndex-1).getColor() != Tile.Color.JOKER // _ _ J
+							&& this.getHand(handIndex).getNumber() - 2 !=  tile4Run.get(playIndex-1).getNumber()) {
+						disconnect = true;
+					} else if (tile4Run.get(playIndex-1).getColor() != Tile.Color.JOKER // _ _ J
+							&& this.getHand(handIndex).getNumber() - 2 ==  tile4Run.get(playIndex-1).getNumber()) {
+						tile4Run.add(this.getHand(handIndex));
+						playIndex++;	
+						handIndex++;
+						disconnect = false;
 					}
-					if(countPoint >= 30) {
+				}
+
+				if (disconnect){ // disconnect
+					disconnect = false;
+					countPoint = checkSum(tile4Run);
+					if(countPoint < 30) {
+						if(jokerNum > 0) {
+							if(tile4Run.size() >= 2 && tile4Run.get(tile4Run.size()-1).getNumber() == 12 
+									&& tile4Run.get(tile4Run.size()-1).getColor() == Tile.Color.JOKER 
+									|| tile4Run.get(tile4Run.size()-1).getNumber() == 13)
+							{	
+										tile4Run.add(0, this.getHand(this.handSize()-1)); // add joker
+										jokerNum--;
+										playIndex++;
+								
+							} else {
+								tile4Run.add(this.getHand(this.handSize()-1)); // add joker
+								jokerNum--;
+								playIndex++;
+							}
+						} else {
+							for(int i = 0; i<tile4Run.size();i++) {
+								if(tile4Run.get(i).getColor() == Tile.Color.JOKER) 
+									jokerNum++;
+							}
+							tile4Run.clear();	
+							tile4Run.add(this.getHand(handIndex));
+							playIndex = 0;
+							handIndex++;
+						}
+					} else {
 						tile2Play.addAll(tile4Run);
 						tile4Run.clear();
 						tile4Run.add(this.getHand(handIndex));
+						handIndex++;
 						playIndex = 0;
-					} else if (countPoint < 30 && tile4Run.size()+jokerNum >= 3 && jokerNum > 0){	//if R12 J J || R11 R12 J 
-						int tempCount = 0;
-						for(Tile t : tile4Run) {
-							tempCount += t.getNumber();
-						}
-						if(jokerNum == 1) {	
-							if(tempCount + tile4Run.get(playIndex).getNumber()+1 >= 30 
-									&& tile4Run.get(playIndex).getNumber() != 13) {	// if total number + next number > 30 && not  13 J J 
-								tile4Run.add(this.getHand(this.handSize()-1));
-								tile2Play.addAll(tile4Run);
-								tile4Run.clear();
-								tile4Run.add(this.getHand(handIndex));
-								playIndex = 0;
-								jokerNum--;
-							}
-						}
-						else if(jokerNum == 2) {
-							if(tile4Run.get(tile4Run.size()-1).getNumber() < 9) {		//8 J J = 27, 9 10 J = 30
-								tile4Run.clear();	
-								tile4Run.add(this.getHand(handIndex));
-								playIndex = 0;
-							} 
-						}
-					} else if (countPoint < 30 && jokerNum == 0){
-						tile4Run.clear();	
-						tile4Run.add(this.getHand(handIndex));
-						playIndex = 0;
+						run = false;
 					}
-						
 				}
 			}
-			*/
 		}
 		else {
+			//no joker
 			tile4Run.add(this.getHand(0));
 			for(int i=1; i<this.handSize();i++) {
 				if(tile4Run.get(playIndex).getColor() == this.getHand(i).getColor() 
@@ -135,12 +142,12 @@ public class AI extends Player{
 							tile4Run.clear();
 							tile4Run.add(this.getHand(i));
 							playIndex = 0;
+							run = false;
 						} else {
 							tile4Run.clear();	
 							tile4Run.add(this.getHand(i));
 							playIndex = 0;
 						}
-							
 				}
 			}
 		}
