@@ -378,6 +378,102 @@ public class AITest {
 	}
 	
 	@Test
+	public void test_findRun7() {
+		//has joker
+		ArrayList<Tile> tileArray = new ArrayList<Tile>();
+		try {
+			atile1 = new Tile("R1");
+			atile2 = new Tile("R2");
+			atile3 = new Tile("R3");
+			atile4 = new Tile("R4");
+			atile5 = new Tile("B5");
+			atile6 = new Tile("B6");
+			atile7 = new Tile("O6");
+			atile8 = new Tile("R6");
+			atile9 = new Tile("G5");
+			atile13 = new Tile("R7");
+			atile10 = new Tile("O8");
+			atile11 = new Tile("R1");
+			atile12 = new Tile("R12");
+			aJoker = new Tile("J");
+			bJoker = new Tile("J");
+		}catch(InvalidTileException e) {
+			fail();
+		}
+		testAI.draw(atile1);
+		testAI.draw(atile2);
+		testAI.draw(atile3);
+		testAI.draw(atile4);
+		testAI.draw(atile5);
+		testAI.draw(atile6);
+		testAI.draw(atile7);
+		testAI.draw(atile8);
+		testAI.draw(atile9);
+		testAI.draw(atile10);
+		testAI.draw(atile11);
+		testAI.draw(atile12);
+		testAI.draw(bJoker);
+		testAI.draw(aJoker);
+		tileArray = testAI.findInitRun();
+
+		assertEquals(Tile.Color.JOKER, tileArray.get(0).getColor());
+		assertEquals(Tile.Color.RED, tileArray.get(1).getColor());
+		assertEquals(Tile.Color.JOKER, tileArray.get(2).getColor());
+
+		assertEquals(0, tileArray.get(0).getNumber());
+		assertEquals(12, tileArray.get(1).getNumber());
+		assertEquals(0, tileArray.get(2).getNumber());
+	
+	}
+	
+	@Test
+	public void test_findRun8() {
+		//has joker
+		ArrayList<Tile> tileArray = new ArrayList<Tile>();
+		try {
+			atile1 = new Tile("R1");
+			atile2 = new Tile("R2");
+			atile3 = new Tile("R3");
+			atile4 = new Tile("R4");
+			atile5 = new Tile("B5");
+			atile6 = new Tile("B6");
+			atile7 = new Tile("O6");
+			atile8 = new Tile("R6");
+			atile9 = new Tile("G5");
+			atile13 = new Tile("R7");
+			atile10 = new Tile("O8");
+			atile11 = new Tile("R1");
+			atile12 = new Tile("R13");
+			aJoker = new Tile("J");
+			bJoker = new Tile("J");
+		}catch(InvalidTileException e) {
+			fail();
+		}
+		testAI.draw(atile1);
+		testAI.draw(atile2);
+		testAI.draw(atile3);
+		testAI.draw(atile4);
+		testAI.draw(atile5);
+		testAI.draw(atile6);
+		testAI.draw(atile7);
+		testAI.draw(atile8);
+		testAI.draw(atile9);
+		testAI.draw(atile10);
+		testAI.draw(atile11);
+		testAI.draw(atile12);
+		testAI.draw(bJoker);
+		testAI.draw(aJoker);
+		tileArray = testAI.findInitRun();
+
+		assertEquals(Tile.Color.JOKER, tileArray.get(0).getColor());
+		assertEquals(Tile.Color.JOKER, tileArray.get(1).getColor());
+		assertEquals(Tile.Color.RED, tileArray.get(2).getColor());
+		assertEquals(0, tileArray.get(0).getNumber());
+		assertEquals(0, tileArray.get(1).getNumber());
+		assertEquals(13, tileArray.get(2).getNumber());
+	}
+	
+	@Test
 	public void test_findGroup() {
 		// no joker
 		//O B G R last to first

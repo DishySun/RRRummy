@@ -91,7 +91,7 @@ public class AI extends Player{
 					countPoint = checkSum(tile4Run);
 					if(countPoint < 30) {
 						if(jokerNum > 0) {
-							if(tile4Run.size() >= 2 && tile4Run.get(tile4Run.size()-1).getNumber() == 12 
+							if(tile4Run.size() >= 2 && tile4Run.get(tile4Run.size()-2).getNumber() == 12 
 									&& tile4Run.get(tile4Run.size()-1).getColor() == Tile.Color.JOKER 
 									|| tile4Run.get(tile4Run.size()-1).getNumber() == 13)
 							{	
