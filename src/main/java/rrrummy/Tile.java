@@ -92,21 +92,4 @@ public class Tile {
 		}
 		return str + number;
 	}
-	public String toString() {
-		String aString = "";
-		switch (color) {
-		case BLUE: 		aString += "B";
-			break;
-		case RED: 		aString += "R";
-			break;
-		case ORANGE: 	aString += "O";
-			break;
-		case GREEN:		aString += "G";
-			break;
-		default:
-			return "jk";
-		}
-		aString+= number;
-		return aString;
-	}
 }
