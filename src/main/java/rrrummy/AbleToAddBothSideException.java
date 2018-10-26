@@ -11,4 +11,7 @@ public class AbleToAddBothSideException extends Exception{
 		meld = m;
 		tile = t;
 	}
+	public String toString() {
+		return "Tile "+ tile+ " can be added either head or tail to meld "+ meld+".";
+	}
 }

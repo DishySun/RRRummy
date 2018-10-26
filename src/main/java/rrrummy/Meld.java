@@ -18,7 +18,7 @@ public class Meld {
 	}
 	
 	public int size() {return meld.size();}
-	public boolean isRun() {
+	protected boolean isRun() {
 		//in case of [jk R1] or [jk jk R2]
 		for(int i = 0; i < size(); i ++) {
 			if(meld.get(i).isJoker()) continue; // Iterate to first non-joker Tile
@@ -243,11 +243,24 @@ public class Meld {
 		return t;
 	}
 	public ArrayList<Tile> cut(int i){
-		//TODO: require implementation
+		if (i >= size()) return null;
+		ArrayList<Tile> returnArr = new ArrayList<Tile>();
+		while (i >= 0) {
+			returnArr.add(meld.remove(0));
+			i--;
+		}
+		return returnArr;
+	}
+	private boolean haveJoker() {
+		for (Tile t: meld) {
+			if(t.isJoker()) return true;
+		}
+		return false;
 	}
 	public Tile replace(Tile t) {
 		//TODO: require implementation
 		//return the Tile that has been replaced, or return null if nothing to replace
+		if (!haveJoker()) return null;
 	}
 	
 	public String toString() {
