@@ -249,7 +249,7 @@ public class MeldTest extends TestCase{
 		assertEquals(r5, testMeld.removeHead()); //R6 jk
 		assertTrue(testMeld.isRun());
 		assertTrue(testMeld.isSet());
-		assertTrue(testMeld.addHead(r7));// R6 jk R7
+		assertTrue(testMeld.addTail(r8));// R6 jk R8
 		assertTrue(testMeld.isRun());
 		assertFalse(testMeld.isSet());
 		assertEquals(r6, testMeld.removeHead()); //jk R7
