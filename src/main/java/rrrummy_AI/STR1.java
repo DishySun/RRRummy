@@ -29,15 +29,26 @@ public class STR1 implements Observer, AIstrategy{
 		AI AI = (AI)players.get(0);
 		tile4Run = AI.findInitRun();
 		tile4Group = AI.findInitGroup();
-		if(tile4Run.size() > tile4Group.size()) {
-			for(Tile t: tile4Run) {
-				AI.play(AI.play(t));
+		if(tile4Run.size()> 0 || tile4Group.size() >  0) {
+			if(tile4Run.size() > tile4Group.size()) {
+				for(Tile t: tile4Run) {
+					AI.play(AI.play(t));
+				}
+			} else {
+				for(Tile t: tile4Group) {
+					AI.play(AI.play(t));
+				}
 			}
 		} else {
-			for(Tile t: tile4Group) {
-				AI.play(AI.play(t));
-			}
+			tile2Play =AI.findComb();
+			if(tile2Play.size() > 0) {
+				for(Tile t: tile2Play) {
+					AI.play(AI.play(t));
+				}
+			} else
+				System.out.println("No melds to play");
 		}
+		
 	}
 
 	/**

@@ -13,9 +13,11 @@ public class Hand {
 	
 	public Tile getTile(int i){return hand.get(i);}
 	public void add(Tile t) {hand.add(t);}
+	public void addAll(ArrayList<Tile> list) {hand.addAll(list);}
 	public Tile remove(int i) {return hand.remove(i);}
 	public int size() {return hand.size();}
 	public Tile remove() {return hand.remove(size()-1);}
+	public void removeAll(ArrayList<Tile> list) {hand.removeAll(list);}
 	public String toString() {
 		String aString = "";
 		for (int i = 0; i < hand.size(); i++) {
