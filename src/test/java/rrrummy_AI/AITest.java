@@ -9,10 +9,12 @@ import org.junit.Test;
 
 import rrrummy.Hand;
 import rrrummy.InvalidTileException;
+import rrrummy.Table;
 import rrrummy.Tile;
 import rrrummy_AI.STR1;
 
 public class AITest {
+	private Table table;
 	private AI testAI;
 	private AIstrategy AISty;
 	private GameData data;
@@ -24,7 +26,7 @@ public class AITest {
 	public void setUp() throws Exception {
 		testAI = new AI("Hunter");
 		data = new GameData();
-		
+		table = new Table();
 		try {
 			atile1 = new Tile("R1");
 			atile2 = new Tile("R2");
@@ -927,7 +929,7 @@ public class AITest {
 	}
 	
 	@Test
-	public void test_findComb() {
+	public void test_findComb30() {
 		ArrayList<Tile> tileArray = new ArrayList<Tile>();
 		try {
 			atile1 = new Tile("R1");
@@ -943,6 +945,137 @@ public class AITest {
 			atile10 = new Tile("O4");
 			atile11 = new Tile("R2");
 			atile12 = new Tile("R3");
+			aJoker = new Tile("J");
+			bJoker = new Tile("J");
+			//sorted: J J R1 R1 B1 R2 R2 B2 R3 O4 O4 O4 R4 R4
+		}catch(InvalidTileException e) {
+			fail();
+		}
+		testAI.draw(atile1);
+		testAI.draw(atile2);
+		testAI.draw(atile3);
+		testAI.draw(atile4);
+		testAI.draw(atile5);
+		testAI.draw(atile6);
+		testAI.draw(atile7);
+		testAI.draw(atile8);
+		testAI.draw(atile9);
+		testAI.draw(atile10);
+		testAI.draw(atile11);
+		testAI.draw(atile12);
+		testAI.draw(bJoker);
+		testAI.draw(aJoker);
+		tileArray = testAI.findComb30();
+		assertEquals(Tile.Color.BLUE, tileArray.get(0).getColor());
+		assertEquals(Tile.Color.BLUE, tileArray.get(1).getColor());
+		assertEquals(Tile.Color.JOKER, tileArray.get(2).getColor());
+		assertEquals(Tile.Color.RED, tileArray.get(3).getColor());
+		assertEquals(Tile.Color.RED, tileArray.get(4).getColor());
+		assertEquals(Tile.Color.JOKER, tileArray.get(5).getColor());
+		assertEquals(Tile.Color.RED, tileArray.get(6).getColor());
+		assertEquals(Tile.Color.RED, tileArray.get(7).getColor());
+		assertEquals(Tile.Color.RED, tileArray.get(8).getColor());
+		assertEquals(Tile.Color.RED, tileArray.get(9).getColor());
+		assertEquals(Tile.Color.GREEN, tileArray.get(10).getColor());
+		assertEquals(Tile.Color.ORANGE, tileArray.get(11).getColor());
+		
+		assertEquals(1, tileArray.get(0).getNumber());
+		assertEquals(2, tileArray.get(1).getNumber());
+		assertEquals(0, tileArray.get(2).getNumber());
+		assertEquals(1, tileArray.get(3).getNumber());
+		assertEquals(2, tileArray.get(4).getNumber());
+		assertEquals(0, tileArray.get(5).getNumber());
+		assertEquals(2, tileArray.get(6).getNumber());
+		assertEquals(3, tileArray.get(7).getNumber());
+		assertEquals(4, tileArray.get(8).getNumber());
+		assertEquals(4, tileArray.get(9).getNumber());
+		assertEquals(4, tileArray.get(10).getNumber());
+		assertEquals(4, tileArray.get(11).getNumber());
+	}
+	
+	@Test
+	public void test_findCombAll() {
+		ArrayList<Tile> tileArray = new ArrayList<Tile>();
+		try {
+			atile1 = new Tile("R1");
+			atile2 = new Tile("R2");
+			atile3 = new Tile("R1");
+			atile4 = new Tile("R4");
+			atile5 = new Tile("B2");
+			atile6 = new Tile("B1");
+			atile7 = new Tile("O4");
+			atile8 = new Tile("R4");
+			atile9 = new Tile("G4");
+			atile13 = new Tile("R5");
+			atile10 = new Tile("O4");
+			atile11 = new Tile("R2");
+			atile12 = new Tile("R3");
+			aJoker = new Tile("J");
+			bJoker = new Tile("J");
+			//sorted: J J R1 R1 B1 R2 R2 B2 R3 O4 O4 O4 R4 R4
+		}catch(InvalidTileException e) {
+			fail();
+		}
+		testAI.draw(atile1);
+		testAI.draw(atile2);
+		testAI.draw(atile3);
+		testAI.draw(atile4);
+		testAI.draw(atile5);
+		testAI.draw(atile6);
+		testAI.draw(atile7);
+		testAI.draw(atile8);
+		testAI.draw(atile9);
+		testAI.draw(atile10);
+		testAI.draw(atile11);
+		testAI.draw(atile12);
+		testAI.draw(bJoker);
+		testAI.draw(aJoker);
+		tileArray = testAI.findCombAll();
+		assertEquals(Tile.Color.BLUE, tileArray.get(0).getColor());
+		assertEquals(Tile.Color.BLUE, tileArray.get(1).getColor());
+		assertEquals(Tile.Color.JOKER, tileArray.get(2).getColor());
+		assertEquals(Tile.Color.RED, tileArray.get(3).getColor());
+		assertEquals(Tile.Color.RED, tileArray.get(4).getColor());
+		assertEquals(Tile.Color.JOKER, tileArray.get(5).getColor());
+		assertEquals(Tile.Color.RED, tileArray.get(6).getColor());
+		assertEquals(Tile.Color.RED, tileArray.get(7).getColor());
+		assertEquals(Tile.Color.RED, tileArray.get(8).getColor());
+		assertEquals(Tile.Color.RED, tileArray.get(9).getColor());
+		assertEquals(Tile.Color.GREEN, tileArray.get(10).getColor());
+		assertEquals(Tile.Color.ORANGE, tileArray.get(11).getColor());
+		
+		assertEquals(1, tileArray.get(0).getNumber());
+		assertEquals(2, tileArray.get(1).getNumber());
+		assertEquals(0, tileArray.get(2).getNumber());
+		assertEquals(1, tileArray.get(3).getNumber());
+		assertEquals(2, tileArray.get(4).getNumber());
+		assertEquals(0, tileArray.get(5).getNumber());
+		assertEquals(2, tileArray.get(6).getNumber());
+		assertEquals(3, tileArray.get(7).getNumber());
+		assertEquals(4, tileArray.get(8).getNumber());
+		assertEquals(4, tileArray.get(9).getNumber());
+		assertEquals(4, tileArray.get(10).getNumber());
+		assertEquals(4, tileArray.get(11).getNumber());
+	}
+	
+	@Test
+	public void test_findMeldOnTable() {
+		ArrayList<Tile> tile2play = new ArrayList<Tile>();
+		ArrayList<Tile> tileArray = new ArrayList<Tile>();
+		try {
+			atile1 = new Tile("R1");
+			atile2 = new Tile("R2");
+			atile3 = new Tile("R1");
+			atile4 = new Tile("R4");
+			atile5 = new Tile("B2");
+			atile6 = new Tile("B1");
+			atile7 = new Tile("O6");
+			atile8 = new Tile("R6");
+			atile9 = new Tile("G6");
+			atile13 = new Tile("R7");
+			atile10 = new Tile("O8");
+			atile11 = new Tile("R2");
+			atile12 = new Tile("R12");
 			aJoker = new Tile("J");
 			bJoker = new Tile("J");
 		}catch(InvalidTileException e) {
@@ -962,8 +1095,9 @@ public class AITest {
 		testAI.draw(atile12);
 		testAI.draw(bJoker);
 		testAI.draw(aJoker);
-		tileArray = testAI.findComb();
-		System.out.print(tileArray);
+		tileArray = testAI.findCombAll();
+		tile2play = testAI.findMeldsOnTable(table, tileArray);
+
 		assertEquals(Tile.Color.BLUE, tileArray.get(0).getColor());
 		assertEquals(Tile.Color.RED, tileArray.get(1).getColor());
 		assertEquals(Tile.Color.JOKER, tileArray.get(2).getColor());
@@ -983,5 +1117,73 @@ public class AITest {
 		assertEquals(6, tileArray.get(6).getNumber());
 		assertEquals(6, tileArray.get(7).getNumber());
 		assertEquals(6, tileArray.get(8).getNumber());
+	}
+	
+	public void test_ArrayList2MeldList() {
+		ArrayList<Tile> tileArray = new ArrayList<Tile>();
+		try {
+			atile1 = new Tile("R1");
+			atile2 = new Tile("R2");
+			atile3 = new Tile("R1");
+			atile4 = new Tile("R4");
+			atile5 = new Tile("B2");
+			atile6 = new Tile("B1");
+			atile7 = new Tile("O4");
+			atile8 = new Tile("R4");
+			atile9 = new Tile("G4");
+			atile13 = new Tile("R5");
+			atile10 = new Tile("O4");
+			atile11 = new Tile("R2");
+			atile12 = new Tile("R3");
+			aJoker = new Tile("J");
+			bJoker = new Tile("J");
+			//sorted: J J R1 R1 B1 R2 R2 B2 R3 O4 O4 O4 R4 R4
+		}catch(InvalidTileException e) {
+			fail();
+		}
+		testAI.draw(atile1);
+		testAI.draw(atile2);
+		testAI.draw(atile3);
+		testAI.draw(atile4);
+		testAI.draw(atile5);
+		testAI.draw(atile6);
+		testAI.draw(atile7);
+		testAI.draw(atile8);
+		testAI.draw(atile9);
+		testAI.draw(atile10);
+		testAI.draw(atile11);
+		testAI.draw(atile12);
+		testAI.draw(bJoker);
+		testAI.draw(aJoker);
+		tileArray = testAI.findComb30();
+		//[B1, B2, jk, R1, R2, jk, R2, R3, R4, R4, G4, O4]
+		assertEquals(Tile.Color.BLUE, tileArray.get(0).getColor());
+		assertEquals(Tile.Color.BLUE, tileArray.get(1).getColor());
+		assertEquals(Tile.Color.JOKER, tileArray.get(2).getColor());
+		assertEquals(Tile.Color.RED, tileArray.get(3).getColor());
+		assertEquals(Tile.Color.RED, tileArray.get(4).getColor());
+		assertEquals(Tile.Color.JOKER, tileArray.get(5).getColor());
+		assertEquals(Tile.Color.RED, tileArray.get(6).getColor());
+		assertEquals(Tile.Color.RED, tileArray.get(7).getColor());
+		assertEquals(Tile.Color.RED, tileArray.get(8).getColor());
+		assertEquals(Tile.Color.RED, tileArray.get(9).getColor());
+		assertEquals(Tile.Color.GREEN, tileArray.get(10).getColor());
+		assertEquals(Tile.Color.ORANGE, tileArray.get(11).getColor());
+		
+		assertEquals(1, tileArray.get(0).getNumber());
+		assertEquals(2, tileArray.get(1).getNumber());
+		assertEquals(0, tileArray.get(2).getNumber());
+		assertEquals(1, tileArray.get(3).getNumber());
+		assertEquals(2, tileArray.get(4).getNumber());
+		assertEquals(0, tileArray.get(5).getNumber());
+		assertEquals(2, tileArray.get(6).getNumber());
+		assertEquals(3, tileArray.get(7).getNumber());
+		assertEquals(4, tileArray.get(8).getNumber());
+		assertEquals(4, tileArray.get(9).getNumber());
+		assertEquals(4, tileArray.get(10).getNumber());
+		assertEquals(4, tileArray.get(11).getNumber());
+		
+		ArrayList<Meld> meldList = new ArrayList<Meld>();
+		meldList = testAI.arrayList2MeldList(tileArray);
 	}
 }

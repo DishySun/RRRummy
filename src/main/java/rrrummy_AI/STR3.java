@@ -13,6 +13,7 @@ public class STR3  implements Observer, AIstrategy{
 	private ArrayList<Tile> tile4Group;
 	private ArrayList<Tile> tile4All;
 	private ArrayList<Tile> tile4MeldT;
+	private ArrayList<Tile> tile2Play;
 	private AI AI;
 	public STR3(Subject data) {
 		data.registerObserver(this);
@@ -28,16 +29,28 @@ public class STR3  implements Observer, AIstrategy{
 		// TODO Auto-generated method stub
 		tile4Run = new ArrayList<Tile>();
 		tile4Group = new ArrayList<Tile>();
+		tile2Play = new ArrayList<Tile>();
+		AI AI = (AI)players.get(0);
 		tile4Run = AI.findInitRun();
 		tile4Group = AI.findInitGroup();
-		if(tile4Run.size() > tile4Group.size()) {
-			for(Tile t: tile4Run) {
-				AI.play(AI.play(t));
+		if(tile4Run.size()> 0 || tile4Group.size() >  0) {
+			if(tile4Run.size() > tile4Group.size()) {
+				for(Tile t: tile4Run) {
+					AI.play(AI.play(t));
+				}
+			} else {
+				for(Tile t: tile4Group) {
+					AI.play(AI.play(t));
+				}
 			}
 		} else {
-			for(Tile t: tile4Group) {
-				AI.play(AI.play(t));
-			}
+			tile2Play =AI.findComb30();
+			if(tile2Play.size() > 0) {
+				for(Tile t: tile2Play) {
+					AI.play(AI.play(t));
+				}
+			} else
+				System.out.println("No melds to play");
 		}
 	}
 
@@ -53,48 +66,7 @@ public class STR3  implements Observer, AIstrategy{
 		tile4Run = new ArrayList<Tile>();
 		tile4Group = new ArrayList<Tile>();
 		tile4All = new ArrayList<Tile>();
-		tile4Group = new ArrayList<Tile>();
-		boolean handsless3 = false;
-		for(Player p : players) {
-			if(p.handSize() < AI.handSize()-3) {
-				handsless3 = true;
-				break;
-			}
-		}
 		
-		tile4All = AI.findBest2Play(table);
-		if(tile4All.size() == AI.handSize()) {
-			for(Tile t: tile4All) {
-				AI.play(AI.play(t));/////
-			}
-		} else {
-			if(handsless3) {
-				tile4MeldT = AI.findMeldsOnTable(table);
-				for(Tile t: tile4All) {
-					AI.play(AI.play(t));////////
-				}
-			} else {
-				tile4Run = AI.findRun();
-				tile4Group = AI.findGroup();
-				if(tile4Run.size() > tile4Group.size()) { //first run
-					for(Tile t: tile4Run) {
-						AI.play(AI.play(t));
-					}
-					tile4Group = AI.findGroup();
-					for(Tile t: tile4Group) {
-						AI.play(AI.play(t));
-					}
-				} else {		//first group
-					for(Tile t: tile4Group) {
-						AI.play(AI.play(t));
-					}
-					tile4Run = AI.findRun();
-					for(Tile t: tile4Run) {
-						AI.play(AI.play(t));
-					}
-				}
-			}
-		}
 	}
 
 	@Override

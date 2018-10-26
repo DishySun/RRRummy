@@ -7,6 +7,7 @@ import java.util.HashSet;
 
 import rrrummy.InvalidTileException;
 import rrrummy.Player;
+import rrrummy.Table;
 import rrrummy.Tile;
 
 public class AI extends Player{
@@ -537,18 +538,16 @@ public class AI extends Player{
 		return tile2Play;
 	}
 
-	public ArrayList<Tile> findComb() {
+	public ArrayList<Tile> findComb30() {
 		// TODO Auto-generated method stub
+		//find all runs, if < 30, + find all sets
 		ArrayList<Tile> tempArray = new ArrayList<Tile>();
 		tile4Run = new ArrayList<Tile>();
 		tile4Group = new ArrayList<Tile>();
-		System.out.println(tempArray);
 		tile4Run = this.findRun();
 		tile4Group = this.findGroup();
 		int runSum = this.checkSum(tile4Run);
 		int groupSum = this.checkSum(tile4Group);
-		System.out.println(this.getHands());
-		System.out.println("---" +tempArray);
 		if(runSum >= 30) {
 			return tile4Run;
 		}  else if(groupSum  >= 30) {
@@ -562,7 +561,6 @@ public class AI extends Player{
 					this.getHands().addAll(tile4Run);
 					tempArray.addAll(tile4Run);
 					tempArray.addAll(tile4Group);
-					System.out.println(tempArray);
 					return tempArray;
 				} 
 			} else {
@@ -573,12 +571,68 @@ public class AI extends Player{
 					this.getHands().addAll(tile4Group);
 					tempArray.addAll(tile4Run);
 					tempArray.addAll(tile4Group);
-					System.out.println(tempArray);
 					return tempArray;
 				} 
 			}
 		}
 		return null;
 	}
+
+	public ArrayList<Tile> findCombAll() {
+		// TODO Auto-generated method stub
+		//find all runs, and sets
+				ArrayList<Tile> tempArray = new ArrayList<Tile>();
+				tile4Run = new ArrayList<Tile>();
+				tile4Group = new ArrayList<Tile>();
+				tile4Run = this.findRun();
+				tile4Group = this.findGroup();
+				int runSum = this.checkSum(tile4Run);
+				int groupSum = this.checkSum(tile4Group);
+				if(runSum > groupSum) {
+					tile4Group.clear();
+					this.getHands().removeAll(tile4Run);
+					tile4Group = this.findGroup();
+					if(runSum + this.checkSum(tile4Group) >= 30) {
+						this.getHands().addAll(tile4Run);
+						tempArray.addAll(tile4Run);
+						tempArray.addAll(tile4Group);
+							return tempArray;
+					} 
+				} else {
+					tile4Run.clear();
+					this.getHands().removeAll(tile4Group);
+					tile4Run = this.findRun();
+					if(groupSum + this.checkSum(tile4Run) >= 30) {
+						this.getHands().addAll(tile4Group);
+						tempArray.addAll(tile4Run);
+						tempArray.addAll(tile4Group);
+						return tempArray;
+					} 
+				}
+				return null;
+	}
+
+	public ArrayList<Tile> findMeldsOnTable(Table table, ArrayList<Tile> tList) {
+		// TODO Auto-generated method stub
+		// tList is runs and sets will played
+		
+		return null;
+	}
+
+	public ArrayList<Meld> arrayList2MeldList(ArrayList<Tile> tileArray) {
+		ArrayList<Meld> meldList = new ArrayList<Meld>();
+		Meld tempMeld = new Meld();
+		for(Tile t : tileArray) {
+			if(tempMeld.addHead(t)) continue;
+			else {
+				meldList.add(tempMeld);
+				tempMeld.clear();
+			}
+		}
+		// TODO Auto-generated method stub
+		return meldList;
+	}
+
+	
 	
 }

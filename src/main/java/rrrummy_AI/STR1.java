@@ -40,7 +40,7 @@ public class STR1 implements Observer, AIstrategy{
 				}
 			}
 		} else {
-			tile2Play =AI.findComb();
+			tile2Play =AI.findComb30();
 			if(tile2Play.size() > 0) {
 				for(Tile t: tile2Play) {
 					AI.play(AI.play(t));
