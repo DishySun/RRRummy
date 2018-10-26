@@ -925,4 +925,63 @@ public class AITest {
 		assertEquals(6, tileArray.get(7).getNumber());
 		assertEquals(6, tileArray.get(8).getNumber());
 	}
+	
+	@Test
+	public void test_findComb() {
+		ArrayList<Tile> tileArray = new ArrayList<Tile>();
+		try {
+			atile1 = new Tile("R1");
+			atile2 = new Tile("R2");
+			atile3 = new Tile("R1");
+			atile4 = new Tile("R4");
+			atile5 = new Tile("B2");
+			atile6 = new Tile("B1");
+			atile7 = new Tile("O4");
+			atile8 = new Tile("R4");
+			atile9 = new Tile("G4");
+			atile13 = new Tile("R5");
+			atile10 = new Tile("O4");
+			atile11 = new Tile("R2");
+			atile12 = new Tile("R3");
+			aJoker = new Tile("J");
+			bJoker = new Tile("J");
+		}catch(InvalidTileException e) {
+			fail();
+		}
+		testAI.draw(atile1);
+		testAI.draw(atile2);
+		testAI.draw(atile3);
+		testAI.draw(atile4);
+		testAI.draw(atile5);
+		testAI.draw(atile6);
+		testAI.draw(atile7);
+		testAI.draw(atile8);
+		testAI.draw(atile9);
+		testAI.draw(atile10);
+		testAI.draw(atile11);
+		testAI.draw(atile12);
+		testAI.draw(bJoker);
+		testAI.draw(aJoker);
+		tileArray = testAI.findComb();
+		System.out.print(tileArray);
+		assertEquals(Tile.Color.BLUE, tileArray.get(0).getColor());
+		assertEquals(Tile.Color.RED, tileArray.get(1).getColor());
+		assertEquals(Tile.Color.JOKER, tileArray.get(2).getColor());
+		assertEquals(Tile.Color.RED, tileArray.get(3).getColor());
+		assertEquals(Tile.Color.BLUE, tileArray.get(4).getColor());
+		assertEquals(Tile.Color.JOKER, tileArray.get(5).getColor());
+		assertEquals(Tile.Color.GREEN, tileArray.get(6).getColor());
+		assertEquals(Tile.Color.RED, tileArray.get(7).getColor());
+		assertEquals(Tile.Color.ORANGE, tileArray.get(8).getColor());
+		
+		assertEquals(1, tileArray.get(0).getNumber());
+		assertEquals(1, tileArray.get(1).getNumber());
+		assertEquals(0, tileArray.get(2).getNumber());
+		assertEquals(2, tileArray.get(3).getNumber());
+		assertEquals(2, tileArray.get(4).getNumber());
+		assertEquals(0, tileArray.get(5).getNumber());
+		assertEquals(6, tileArray.get(6).getNumber());
+		assertEquals(6, tileArray.get(7).getNumber());
+		assertEquals(6, tileArray.get(8).getNumber());
+	}
 }

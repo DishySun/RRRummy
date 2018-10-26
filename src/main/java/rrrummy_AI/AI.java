@@ -536,5 +536,49 @@ public class AI extends Player{
 		
 		return tile2Play;
 	}
+
+	public ArrayList<Tile> findComb() {
+		// TODO Auto-generated method stub
+		ArrayList<Tile> tempArray = new ArrayList<Tile>();
+		tile4Run = new ArrayList<Tile>();
+		tile4Group = new ArrayList<Tile>();
+		System.out.println(tempArray);
+		tile4Run = this.findRun();
+		tile4Group = this.findGroup();
+		int runSum = this.checkSum(tile4Run);
+		int groupSum = this.checkSum(tile4Group);
+		System.out.println(this.getHands());
+		System.out.println("---" +tempArray);
+		if(runSum >= 30) {
+			return tile4Run;
+		}  else if(groupSum  >= 30) {
+			return tile4Group;
+		} else {
+			if(runSum > groupSum) {
+				tile4Group.clear();
+				this.getHands().removeAll(tile4Run);
+				tile4Group = this.findGroup();
+				if(runSum + this.checkSum(tile4Group) >= 30) {
+					this.getHands().addAll(tile4Run);
+					tempArray.addAll(tile4Run);
+					tempArray.addAll(tile4Group);
+					System.out.println(tempArray);
+					return tempArray;
+				} 
+			} else {
+				tile4Run.clear();
+				this.getHands().removeAll(tile4Group);
+				tile4Run = this.findRun();
+				if(groupSum + this.checkSum(tile4Run) >= 30) {
+					this.getHands().addAll(tile4Group);
+					tempArray.addAll(tile4Run);
+					tempArray.addAll(tile4Group);
+					System.out.println(tempArray);
+					return tempArray;
+				} 
+			}
+		}
+		return null;
+	}
 	
 }
