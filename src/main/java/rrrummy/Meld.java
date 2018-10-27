@@ -195,7 +195,23 @@ public class Meld {
 			this.generateMap();
 			return true;
 		}
-		if(tileMap == null) throw new AbleToAddBothSideException(this.toString(), t.toString());
+		if(tileMap == null) {
+			int jkNum = 0;
+			for (Tile tt : meld) {
+				if (tt.isJoker()) jkNum++;
+			}
+			if(t.getNumber() <= jkNum) {
+				meld.add(0,t);
+				if(!t.isJoker()) tileNumber++;
+				this.generateMap();
+				return true;
+			}else if (t.getNumber() >= 13 - jkNum) {
+				meld.add(t);
+				if(!t.isJoker()) tileNumber++;
+				this.generateMap();
+				return true;
+			}else throw new AbleToAddBothSideException(this.toString(), t.toString());
+		}
 		if(!tileMap.containsKey(t.toString())) return false;
 		switch (tileMap.get(t.toString())) {
 		case 1:	meld.add(0, t);
@@ -206,7 +222,12 @@ public class Meld {
 				if(!t.isJoker()) tileNumber++;
 				this.generateMap();
 				return true;
-		case 3: throw new AbleToAddBothSideException(this.toString(), t.toString());
+		case 3: if ((isSet() && !t.isJoker())) {
+					meld.add(t);
+					if(!t.isJoker()) tileNumber++;
+					this.generateMap();
+					return true;
+				}else throw new AbleToAddBothSideException(this.toString(), t.toString());
 		default: return false;
 		}
 	}
@@ -257,10 +278,55 @@ public class Meld {
 		}
 		return false;
 	}
-	public Tile replace(Tile t) {
+	private Tile.Color getRunColor(){
+		for(Tile t : meld) {
+			if (!t.isJoker()) return t.getColor();
+		}
+		return Tile.Color.JOKER;
+	}
+	private int getRunNumberAt(int index) {
+		if (!meld.get(index).isJoker()) return meld.get(index).getNumber();
+		try {
+			return this.getRunNumberAt(index-1)+1;
+		}catch (Exception e) {
+			
+		}
+		try {
+			return this.getRunNumberAt(index+1)-1;
+		}catch (Exception e) {
+			
+		}
+		return 0;
+	}
+	public Tile replace(Tile t, int index) {
 		//TODO: require implementation
 		//return the Tile that has been replaced, or return null if nothing to replace
-		if (!haveJoker()) return null;
+		if (!meld.get(index).isJoker()) return null;
+		if (t.isJoker()) return null;
+		if (tileNumber == 0) {
+			meld.add(index, t);
+			tileNumber++;
+			return meld.remove(index+1);
+		}
+		if(isRun()) {
+			if(t.getColor() == getRunColor() && t.getNumber() == this.getRunNumberAt(index)) {
+				meld.add(index, t);
+				tileNumber++;
+				return meld.remove(index+1);
+			}
+		}
+		if (isSet()) {
+			HashSet<Tile.Color> c = new HashSet<Tile.Color>();
+			for (Tile tt : meld) {
+				if (!c.contains(tt.getColor())) c.add(tt.getColor());
+			}
+			if(t.getNumber() == this.getFirstNumber() && !c.contains(t.getColor())) {
+				meld.add(index, t);
+				tileNumber++;
+				return meld.remove(index+1);
+			}
+		}
+		return null;
 	}
 	
 	public String toString() {
