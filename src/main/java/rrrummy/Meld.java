@@ -16,6 +16,24 @@ public class Meld {
 		tileNumber = 0;
 		tileMap = null;
 	}
+	public Meld(Tile t) throws AbleToAddBothSideException{
+		meld = new ArrayList<Tile>();
+		tileNumber = 0;
+		tileMap = null;
+		this.add(t);
+	}
+	private Meld(ArrayList<Tile> m) {
+		meld = new ArrayList<Tile>();
+		tileNumber = 0;
+		tileMap = null;
+		while (m.size()>0) {
+			try {
+				this.add(m.remove(0));
+			}catch(AbleToAddBothSideException e) {
+				
+			}
+		}
+	}
 	
 	public int size() {return meld.size();}
 	protected boolean isRun() {
@@ -263,20 +281,14 @@ public class Meld {
 		this.generateMap();
 		return t;
 	}
-	public ArrayList<Tile> cut(int i){
+	public Meld cut(int i){
 		if (i >= size()) return null;
 		ArrayList<Tile> returnArr = new ArrayList<Tile>();
 		while (i >= 0) {
 			returnArr.add(meld.remove(0));
 			i--;
 		}
-		return returnArr;
-	}
-	private boolean haveJoker() {
-		for (Tile t: meld) {
-			if(t.isJoker()) return true;
-		}
-		return false;
+		return new Meld(returnArr);
 	}
 	private Tile.Color getRunColor(){
 		for(Tile t : meld) {
