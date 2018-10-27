@@ -39,7 +39,7 @@ public class MeldTest extends TestCase {
 			o8 = new Tile("O8");
 			g8 = new Tile("G8");
 			r13 = new Tile("R13");
-			r11 = new Tile("R12");
+			r11 = new Tile("R11");
 			b1 = new Tile("B1");
 			b13 = new Tile("B13");
 			
@@ -99,8 +99,7 @@ public class MeldTest extends TestCase {
 		// joker can be added because joker is the first tile in this meld
 		try {
 			assertTrue(testMeld.add(joker));
-
-			assertTrue(testMeld.add(g8));
+			assertTrue(testMeld.addHead(g8));
 			assertFalse(testMeld.add(r7));
 			assertTrue(testMeld.add(b8));
 			// after above, Tile can only be added as set from now
@@ -337,16 +336,16 @@ public class MeldTest extends TestCase {
 			assertTrue(testMeld.add(r8));// R8
 			assertTrue(testMeld.isRun());
 			assertTrue(testMeld.isSet());
-			assertTrue(testMeld.add(g8));// G8 R8
+			assertTrue(testMeld.add(g8));// R8 G8
 			assertFalse(testMeld.isRun());
 			assertTrue(testMeld.isSet());
-			assertTrue(testMeld.add(o8));// G8 R8 O8
+			assertTrue(testMeld.add(o8));// R8 G8 O8
 			assertFalse(testMeld.isRun());
 			assertTrue(testMeld.isSet());
-			assertEquals(o8, testMeld.removeTail());// G8 R8
+			assertEquals(o8, testMeld.removeTail());// R8 G8
 			assertFalse(testMeld.isRun());
 			assertTrue(testMeld.isSet());
-			assertEquals(g8, testMeld.removeHead()); // R8
+			assertEquals(g8, testMeld.removeTail()); // R8
 			assertTrue(testMeld.isRun());
 			assertTrue(testMeld.isSet());
 			assertTrue(testMeld.add(r7)); // R7 R8
