@@ -11,7 +11,15 @@ public class GameData implements Subject{
 	
 	public GameData() {
 		observers = new ArrayList<Observer>();
-		players = new ArrayList<Player>();
+		//players = new ArrayList<Player>();
+	}
+	
+	public Table getTable() {
+		return table;
+	}
+	
+	public ArrayList<Player> getPlayer() {
+		return players;
 	}
 	
 	@Override
@@ -23,9 +31,8 @@ public class GameData implements Subject{
 	@Override
 	public void removeObserver(Observer o) {
 		// TODO Auto-generated method stub
-		int i = observers.indexOf(o);
-		if (i >= 0) {
-			observers.remove(i);
+		if (observers.contains(o)) {
+			observers.remove(o);
 		}
 	}
 
@@ -33,8 +40,7 @@ public class GameData implements Subject{
 	public void notifyObservers() {
 		// TODO Auto-generated method stub
 		for (int i = 0; i < observers.size(); i++) {
-			Observer observer = (Observer)observers.get(i);
-			observer.update(table, players);
+			observers.get(i).update(getTable(), getPlayer());
 		}
 	}
 	
