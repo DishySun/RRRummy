@@ -70,6 +70,13 @@ public class Tile {
 		if (this.number > t.number) return true;
 		else return false;
 	}
+	public boolean isJoker() {
+		if(this.color == JOKER)return true;
+		else return false;
+	}
+	public boolean compareTo(String s) {
+		return s.equals(this.toString());
+	}
 
 	public boolean isEqualThan(Tile t) {
 		if (this.number > t.number) return true;
@@ -77,20 +84,18 @@ public class Tile {
 	}
 	
 	public String toString() {
-		String aString = "";
-		switch (color) {
-		case BLUE: 		aString += "B";
-			break;
-		case RED: 		aString += "R";
-			break;
-		case ORANGE: 	aString += "O";
-			break;
-		case GREEN:		aString += "G";
-			break;
-		default:
-			return "jk";
+		String str = "";
+		switch(color) {
+		case BLUE: 	str += "B";
+					break;
+		case RED: 	str += "R";
+					break;
+		case GREEN:	str += "G";
+					break;
+		case ORANGE: str+= "O";
+					break;
+		default: return "JK";
 		}
-		aString+= number;
-		return aString;
+		return str + number;
 	}
 }
