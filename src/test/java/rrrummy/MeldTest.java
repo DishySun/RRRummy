@@ -305,13 +305,26 @@ public class MeldTest extends TestCase {
 			assertTrue(testMeld.add(r6));
 			assertTrue(testMeld.add(r7));
 			assertTrue(testMeld.add(r8));
-			assertEquals(null, testMeld.replace(g8));
-			assertEquals(joker, testMeld.replace(r5));
+			assertEquals(null, testMeld.replace(g8, 4));
+			assertEquals(joker, testMeld.replace(r5,4));
 		} catch (AbleToAddBothSideException e) {
 			fail();
 		}
 	}
 
+	public void testReplace2() {
+		init();
+		try {
+			assertTrue(testMeld.add(r1));
+			assertTrue(testMeld.add(r2));
+			assertTrue(testMeld.add(r3));
+			assertTrue(testMeld.add(r4));
+			assertEquals(null, testMeld.replace(g8,3));
+			assertEquals(null, testMeld.replace(r4,3));
+		} catch (AbleToAddBothSideException e) {
+			fail();
+		}
+	}
 	public void tsetIsValid() {
 		init();
 		try {
