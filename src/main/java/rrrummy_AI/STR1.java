@@ -2,12 +2,16 @@ package rrrummy_AI;
 
 import java.util.ArrayList;
 
+import rrrummy.Meld;
 import rrrummy.Player;
 import rrrummy.Table;
 import rrrummy.Tile;
 
 public class STR1 implements Observer, AIstrategy{
 	private Table table;
+	private ArrayList<Meld> meldListRun;
+	private ArrayList<Meld> meldListSet;
+	private ArrayList<Meld> meldListTotal;
 	private ArrayList<Player> players;
 	private ArrayList<Tile> tile4Run;
 	private ArrayList<Tile> tile4Group;
@@ -26,24 +30,34 @@ public class STR1 implements Observer, AIstrategy{
 		tile4Run = new ArrayList<Tile>();
 		tile4Group = new ArrayList<Tile>();
 		tile2Play = new ArrayList<Tile>();
+		meldListRun = new ArrayList<Meld>();
+		meldListSet = new ArrayList<Meld>();
+		meldListTotal = new ArrayList<Meld>();
+		
 		AI AI = (AI)players.get(0);
 		tile4Run = AI.findInitRun();
 		tile4Group = AI.findInitGroup();
 		if(tile4Run.size()> 0 || tile4Group.size() >  0) {
-			if(tile4Run.size() > tile4Group.size()) {
-				for(Tile t: tile4Run) {
-					AI.play(AI.play(t));
-				}
+			if(tile4Run.size() > tile4Group.size()) {		//first run or first set
+				meldListRun = AI.arrayList2MeldList(tile4Run);
+				for(Meld m : meldListRun) {
+					table.add(m);
+					AI.playMeld(m);
+				}	
 			} else {
-				for(Tile t: tile4Group) {
-					AI.play(AI.play(t));
+				meldListRun = AI.arrayList2MeldList(tile4Group);
+				for(Meld m : meldListRun) {
+					table.add(m);
+					AI.playMeld(m);
 				}
 			}
-		} else {
+		} else {	//if no run or set reach 30
 			tile2Play =AI.findComb30();
 			if(tile2Play.size() > 0) {
-				for(Tile t: tile2Play) {
-					AI.play(AI.play(t));
+				meldListTotal = AI.arrayList2MeldList(tile2Play);
+				for(Meld m : meldListRun) {
+					table.add(m);
+					AI.playMeld(m);
 				}
 			} else
 				System.out.println("No melds to play");
@@ -60,25 +74,37 @@ public class STR1 implements Observer, AIstrategy{
 		tile4Run = new ArrayList<Tile>();
 		tile4Group = new ArrayList<Tile>();
 		tile2Play = new ArrayList<Tile>();
+		meldListRun = new ArrayList<Meld>();
+		meldListSet = new ArrayList<Meld>();
+		meldListTotal = new ArrayList<Meld>();
+		
 		AI AI = (AI)players.get(0);
 		tile4Run = AI.findRun();
 		tile4Group = AI.findGroup();
 		if(tile4Run.size() > tile4Group.size()) { //first run
-			for(Tile t: tile4Run) {
-				AI.play(AI.play(t));
-			}
+			meldListRun = AI.arrayList2MeldList(tile4Run);
+			for(Meld m : meldListRun) {
+				table.add(m);
+				AI.playMeld(m);
+			}	
 			tile4Group = AI.findGroup();
-			for(Tile t: tile4Group) {
-				AI.play(AI.play(t));
-			}
+			meldListRun = AI.arrayList2MeldList(tile4Group);
+			for(Meld m : meldListRun) {
+				table.add(m);
+				AI.playMeld(m);
+			}	
 		} else {		//first group
-			for(Tile t: tile4Group) {
-				AI.play(AI.play(t));
-			}
+			meldListRun = AI.arrayList2MeldList(tile4Group);
+			for(Meld m : meldListRun) {
+				table.add(m);
+				AI.playMeld(m);
+			}	
 			tile4Run = AI.findRun();
-			for(Tile t: tile4Run) {
-				AI.play(AI.play(t));
-			}
+			meldListRun = AI.arrayList2MeldList(tile4Run);
+			for(Meld m : meldListRun) {
+				table.add(m);
+				AI.playMeld(m);
+			}	
 		}
 	}
 

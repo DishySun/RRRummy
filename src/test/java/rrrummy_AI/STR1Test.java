@@ -85,12 +85,15 @@ public class STR1Test {
 		ai.draw(atile12);
 		ai.draw(atile13);
 		ai.draw(aJoker);
-		//R9 J R10 R11 R12 R13
+		//R8 J R10 R11 R12 R13
 		players.add(ai);
 		data.setValue(table, players);
 		ai.getSTY().playInitial();
 		assertEquals(8, ai.handSize());
+		assertEquals(1,table.size());
+		assertEquals("[R8, JK, R10, R11, R12, R13]", table.getMeld(0).toString());
 	}
+	
 	@Test
 	public void test_playInitial2() {
 		ai.draw(btile1);
@@ -113,6 +116,8 @@ public class STR1Test {
 		data.setValue(table, players);
 		ai.getSTY().playInitial();
 		assertEquals(10, ai.handSize());
+		assertEquals(1,table.size());
+		assertEquals("[O10, G10, R10, B10]", table.getMeld(0).toString());
 	}
 	@Test
 	public void test_playInitial3() {
@@ -154,6 +159,8 @@ public class STR1Test {
 		data.setValue(table, players);
 		ai.getSTY().playInitial();
 		assertEquals(11, ai.handSize());
+		assertEquals(1,table.size());
+		assertEquals("[O10, B10, JK]", table.getMeld(0).toString());
 	}
 	
 	@Test
@@ -191,10 +198,12 @@ public class STR1Test {
 		ai.draw(btile13);
 		ai.draw(bJoker);
 		//G3 G4 G5
-		//G8 R8 J; O10 G10 B10
+		//G8 R8 J; 
+		//O10 G10 B10
 		players.add(ai);
 		data.setValue(table, players);
 		ai.getSTY().playRest();;
 		assertEquals(5, ai.handSize());
+		assertEquals(3,table.size());
 	}
 }

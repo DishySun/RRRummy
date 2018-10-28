@@ -1,20 +1,17 @@
 package rrrummy_AI;
 
-import static org.junit.Assert.fail;
-
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 
-import rrrummy.InvalidTileException;
-import rrrummy.Player;
-import rrrummy.Table;
-import rrrummy.Tile;
+import rrrummy.*;
 
 public class AI extends Player{
 	private AIstrategy aIstrategy;
 	private ArrayList<Tile> tile4Run;
 	private ArrayList<Tile> tile4Group;
 	private ArrayList<Tile> tile2Play;
+	
 	public AI(String n) {
 		super(n);
 		// TODO Auto-generated constructor stub
@@ -301,7 +298,7 @@ public class AI extends Player{
 		return false;	
 	}
 
-	public int play(Tile t) {
+	/*public int play(Tile t) {
 		// TODO Auto-generated method stub
 		boolean has = false;
 		int index = 0 ;
@@ -316,7 +313,7 @@ public class AI extends Player{
 			System.out.println("can not find the Tile ---- AI.java 315");
 		
 		return index;
-	}
+	}*/
 
 	public ArrayList<Tile> findRun() {
 		// TODO Auto-generated method stub
@@ -612,25 +609,58 @@ public class AI extends Player{
 				return null;
 	}
 
-	public ArrayList<Tile> findMeldsOnTable(Table table, ArrayList<Tile> tList) {
+	public HashMap<Tile,Integer> findMeldsOnTable(Table table) throws AbleToAddBothSideException {
 		// TODO Auto-generated method stub
-		// tList is runs and sets will played
+		// find if any hand tile can form a mile from table
+		/*HashMap<Tile, Integer> mdlesMap = new HashMap<Tile,Integer>();
+		for(int i=0; i<table.size();i++) {
+			for(int j=0; j<this.getHands().size();j++) {	
+				if(this.getHand(i).getColor() == Tile.Color.JOKER) continue;
+				if(table.getMeld(i).add(this.getHand(j))) {
+					table.remove(i, this.getHand(j));
+					mdlesMap.put(this.getHand(j),i);
+				}
+			
+		}}*/
 		
-		return null;
+		
+		if(mdlesMap.size() == 0)
+			return null;
+		return mdlesMap;
 	}
 
 	public ArrayList<Meld> arrayList2MeldList(ArrayList<Tile> tileArray) {
 		ArrayList<Meld> meldList = new ArrayList<Meld>();
 		Meld tempMeld = new Meld();
 		for(Tile t : tileArray) {
-			if(tempMeld.addHead(t)) continue;
-			else {
-				meldList.add(tempMeld);
-				tempMeld.clear();
-			}
+			if(t.getColor() == Tile.Color.JOKER) 
+				tempMeld.addTail(t);
+			else
+				if(tempMeld.addHead(t)) continue;
+				else {
+					meldList.add(tempMeld);
+					tempMeld = new Meld();
+					tempMeld.addHead(t);
+				}
 		}
+		meldList.add(tempMeld);
 		// TODO Auto-generated method stub
 		return meldList;
+	}
+
+	public void playMeld(Meld meld) {
+		// TODO Auto-generated method stub
+		System.out.println(meld.toString());
+		int handsize = this.handSize();
+		//System.out.println(handsize);
+		for(int i=handsize-1; i>-1;i--) {
+			for(int j=0; j<meld.size(); j++) {
+				if(this.getHand(i) == meld.get(j)) {
+					this.getHands().remove(i);
+					break;
+				}	
+			}
+		}
 	}
 
 	
