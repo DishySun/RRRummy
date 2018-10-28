@@ -280,7 +280,7 @@ public class MeldTest extends TestCase {
 			assertTrue(testMeld.add(r6));
 			assertTrue(testMeld.add(r7));
 			assertTrue(testMeld.add(r8));
-			ArrayList<Tile> returnArr = testMeld.cut(3); // cut at r4
+			Meld returnArr = testMeld.cut(3); // cut at r4
 			assertEquals(4, testMeld.size());
 			assertEquals(4, returnArr.size());
 			assertEquals(Tile.Color.RED, returnArr.get(0).getColor());

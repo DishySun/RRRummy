@@ -22,13 +22,19 @@ public class Table {
 		if (i >= this.size()) return false;
 		return table.get(i).add(t);
 	}
-	
+	public void add(Meld m) {
+		table.add(m);
+	}
 	public Tile removeHead(int i) {
 		return table.get(i).removeHead();
 	}
 	
 	public Tile removeTail(int i) {
 		return table.get(i).removeTail();
+	}
+	
+	public void remove(int i,Tile t) {
+		table.get(i).removeTile(t);
 	}
 	
 	public Tile replace(Tile t, int tableIndex, int meldIndex) {
@@ -39,5 +45,5 @@ public class Table {
 		table.add(table.get(meldIndex).cut(tileIndex));
 	}
 	
-	protected Meld getMeld(int i) {return table.get(i);}
+	public Meld getMeld(int i) {return table.get(i);}
 }

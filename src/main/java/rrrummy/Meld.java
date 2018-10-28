@@ -7,7 +7,7 @@ import rrrummy.Tile.Color;
 import java.util.HashMap;
 
 public class Meld {
-	private int tileNumber; // 有效牌数（除了Joker的Tile张数）注：只有当有效牌数>=2时，才能判断具体是run或者set
+	private int tileNumber; // 鏈夋晥鐗屾暟锛堥櫎浜咼oker鐨凾ile寮犳暟锛夋敞锛氬彧鏈夊綋鏈夋晥鐗屾暟>=2鏃讹紝鎵嶈兘鍒ゆ柇鍏蜂綋鏄痳un鎴栬�卻et
 	private ArrayList<Tile> meld;
 	private HashMap<String, Integer> tileMap;
 	
@@ -36,6 +36,7 @@ public class Meld {
 	}
 	
 	public int size() {return meld.size();}
+	public Tile get(int i) {return meld.get(i);}
 	protected boolean isRun() {
 		//in case of [jk R1] or [jk jk R2]
 		for(int i = 0; i < size(); i ++) {
@@ -175,7 +176,7 @@ public class Meld {
 		}
 		if(size()>=4)return;
 		
-		//有效颜色
+		//鏈夋晥棰滆壊
 		if(isSet()) {
 			tileMap.put("JK", 3);
 			HashSet<Color> colorSet = new HashSet<Tile.Color>();
@@ -351,5 +352,6 @@ public class Meld {
 		return str+"]";
 	}
 	public HashMap<String, Integer> getMap(){return tileMap;}
+	public void removeTile(Tile t) {meld.remove(t);}
 	//Methods for test case:
 }
