@@ -282,7 +282,7 @@ public class Meld {
 		return t;
 	}
 	public Meld cut(int i){
-		if (i >= size()) return null;
+		if (i >= size() || i <= 0) return null;
 		ArrayList<Tile> returnArr = new ArrayList<Tile>();
 		while (i >= 0) {
 			returnArr.add(meld.remove(0));

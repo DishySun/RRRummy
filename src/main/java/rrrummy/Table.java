@@ -39,5 +39,13 @@ public class Table {
 		table.add(table.get(meldIndex).cut(tileIndex));
 	}
 	
-	protected Meld getMeld(int i) {return table.get(i);}
+	public String toString() {
+		String result = "Table:\n";
+		for (int i = 0; i < table.size(); i++) {
+			result += i +". "+ table.get(i).toString();
+			if (i < size() - 1) result+="\n";
+		}
+		return result;
+	}
+	//protected Meld getMeld(int i) {return table.get(i);}
 }
