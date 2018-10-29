@@ -10,7 +10,7 @@ public class AI extends Player{
 	private AIstrategy aIstrategy;
 	private ArrayList<Tile> tile4Run;
 	private ArrayList<Tile> tile4Group;
-	private ArrayList<Tile> tile2Play;
+	private ArrayList<ArrayList<Tile>> tile2Play;
 	
 	public AI(String n) {
 		super(n);
@@ -26,10 +26,10 @@ public class AI extends Player{
 		return aIstrategy;
 	}
 
-	public ArrayList<Tile> findInitRun() {
+	public ArrayList<ArrayList<Tile>> findInitRun() {
 		// TODO Auto-generated method stub
 		tile4Run = new ArrayList<Tile>();
-		tile2Play = new ArrayList<Tile>();
+		tile2Play = new ArrayList<ArrayList<Tile>>();
 		boolean run = true;		// used to stop loop when reach 30 points
 		boolean disconnect = true;	// check if next tile number & color is connecte
 		int playIndex = 0;	//point to tile4Run position;
@@ -110,14 +110,14 @@ public class AI extends Player{
 								if(tile4Run.get(i).getColor() == Tile.Color.JOKER) 
 									jokerNum++;
 							}
-							tile4Run.clear();	
+							tile4Run = new ArrayList<Tile>();
 							tile4Run.add(this.getHand(handIndex));
 							playIndex = 0;
 							handIndex++;
 						}
 					} else {
-						tile2Play.addAll(tile4Run);
-						tile4Run.clear();
+						tile2Play.add(tile4Run);
+						tile4Run = new ArrayList<Tile>();
 						tile4Run.add(this.getHand(handIndex));
 						handIndex++;
 						playIndex = 0;
@@ -142,26 +142,27 @@ public class AI extends Player{
 				if(disconnect) {
 					countPoint = checkSum(tile4Run);
 					if(countPoint >= 30) {
-						tile2Play.addAll(tile4Run);
-						tile4Run.clear();
+						tile2Play.add(tile4Run);
+						tile4Run = new ArrayList<Tile>();
 						tile4Run.add(this.getHand(i));
 						playIndex = 0;
 						run = false;		// reach 30, break loop 
 					} else {	
-						tile4Run.clear();	
+						tile4Run = new ArrayList<Tile>();
 						tile4Run.add(this.getHand(i));
 						playIndex = 0;
 					}
 				}
 			}
 		}
+		
 		return tile2Play;
 	}
 
-	public ArrayList<Tile> findInitGroup() {
+	public ArrayList<ArrayList<Tile>> findInitGroup() {
 		// TODO Auto-generated method stub
 		tile4Group = new ArrayList<Tile>();
-		tile2Play = new ArrayList<Tile>();
+		tile2Play = new ArrayList<ArrayList<Tile>>();
 		boolean run = true;		// used to stop loop when reach 30 points
 		boolean disconnect = true;	// check if next tile number & color is connecte
 		int playIndex = 0;	//point to tile4Run position;
@@ -211,14 +212,14 @@ public class AI extends Player{
 								if(tile4Group.get(i).getColor() == Tile.Color.JOKER) 
 									jokerNum++;
 							}
-							tile4Group.clear();	
+							tile4Group = new ArrayList<Tile>();
 							tile4Group.add(this.getHand(handIndex));
 							playIndex = 0;
 							handIndex++;
 						}
 					} else {
-						tile2Play.addAll(tile4Group);
-						tile4Group.clear();
+						tile2Play.add(tile4Group);
+						tile4Group = new ArrayList<Tile>();
 						tile4Group.add(this.getHand(handIndex));
 						handIndex++;
 						playIndex = 0;
@@ -244,13 +245,13 @@ public class AI extends Player{
 				if(disconnect){
 					countPoint = checkSum(tile4Group);
 					if(countPoint >= 30) {
-						tile2Play.addAll(tile4Group);
-						tile4Group.clear();
+						tile2Play.add(tile4Group);
+						tile4Group = new ArrayList<Tile>();
 						tile4Group.add(this.getHand(i));
 						playIndex = 0;
 						run = false;		// reach 30, break loop 
 					} else {	
-						tile4Group.clear();	
+						tile4Group = new ArrayList<Tile>();
 						tile4Group.add(this.getHand(i));
 						playIndex = 0;
 					}
@@ -303,6 +304,14 @@ public class AI extends Player{
 		return count;
 	}
 	
+	public int checkSum2arr(ArrayList<ArrayList<Tile>> arr) {
+		int count = 0;
+		for(ArrayList<Tile> a : arr) {
+			count += checkSum(a);
+		}
+		return count;
+	}
+	
 	public boolean hasSameColor(ArrayList<Tile> tile, Tile compareTile) {
 		for (Tile t : tile) {
 			if(t.getColor() == compareTile.getColor()) return true;
@@ -310,10 +319,10 @@ public class AI extends Player{
 		return false;	
 	}
 
-	public ArrayList<Tile> findRun() {
+	public ArrayList<ArrayList<Tile>> findRun() {
 		// TODO Auto-generated method stub
 		tile4Run = new ArrayList<Tile>();
-		tile2Play = new ArrayList<Tile>();
+		tile2Play = new ArrayList<ArrayList<Tile>>();
 		boolean run = true;		// used to stop loop when reach 30 points
 		boolean disconnect = true;	// check if next tile number & color is connecte
 		int playIndex = 0;	//point to tile4Run position;
@@ -394,14 +403,14 @@ public class AI extends Player{
 								if(tile4Run.get(i).getColor() == Tile.Color.JOKER) 
 									jokerNum++;
 							}
-							tile4Run.clear();	
+							tile4Run = new ArrayList<Tile>();
 							tile4Run.add(this.getHand(handIndex));
 							playIndex = 0;
 							handIndex++;
 						}
 					} else {
-						tile2Play.addAll(tile4Run);
-						tile4Run.clear();
+						tile2Play.add(tile4Run);
+						tile4Run = new ArrayList<Tile>();
 						tile4Run.add(this.getHand(handIndex));
 						playIndex = 0;
 						handIndex++;
@@ -425,12 +434,12 @@ public class AI extends Player{
 				
 				if(disconnect) {
 					if(tile4Run.size() >= 3) {
-						tile2Play.addAll(tile4Run);
-						tile4Run.clear();
+						tile2Play.add(tile4Run);
+						tile4Run = new ArrayList<Tile>();
 						tile4Run.add(this.getHand(i));
 						playIndex = 0;
 					} else {	
-						tile4Run.clear();	
+						tile4Run = new ArrayList<Tile>();
 						tile4Run.add(this.getHand(i));
 						playIndex = 0;
 					}
@@ -440,12 +449,12 @@ public class AI extends Player{
 		return tile2Play;
 	}
 
-	public ArrayList<Tile> findGroup() {
+	public ArrayList<ArrayList<Tile>> findGroup() {
 		// TODO Auto-generated method stub
 		if(this.handSize() == 0) return null;
 		
 		tile4Group = new ArrayList<Tile>();
-		tile2Play = new ArrayList<Tile>();
+		tile2Play = new ArrayList<ArrayList<Tile>>();
 		boolean run = true;		// used to stop loop when reach 30 points
 		boolean disconnect = true;	// check if next tile number & color is connecte
 		int playIndex = 0;	//point to tile4Run position;
@@ -492,20 +501,20 @@ public class AI extends Player{
 								if(tile4Group.get(i).getColor() == Tile.Color.JOKER) 
 									jokerNum++;
 							}
-							tile4Group.clear();	
+							tile4Group = new ArrayList<Tile>();
 							tile4Group.add(this.getHand(handIndex));
 							playIndex = 0;
 							handIndex++;
 						} else {
-							tile2Play.addAll(tile4Group);
-							tile4Group.clear();
+							tile2Play.add(tile4Group);
+							tile4Group = new ArrayList<Tile>();
 							tile4Group.add(this.getHand(handIndex));
 							handIndex++;
 							playIndex = 0;
 						}
 					} else {
-						tile2Play.addAll(tile4Group);
-						tile4Group.clear();
+						tile2Play.add(tile4Group);
+						tile4Group = new ArrayList<Tile>();
 						tile4Group.add(this.getHand(handIndex));
 						handIndex++;
 						playIndex = 0;
@@ -529,55 +538,69 @@ public class AI extends Player{
 				
 				if(disconnect) {
 					if(tile4Group.size() >= 3) {
-						tile2Play.addAll(tile4Group);
-						tile4Group.clear();
+						tile2Play.add(tile4Group);
+						tile4Group = new ArrayList<Tile>();
 						tile4Group.add(this.getHand(i));
 						playIndex = 0;
 					} else {	
-						tile4Group.clear();	
+						tile4Group = new ArrayList<Tile>();
 						tile4Group.add(this.getHand(i));
 						playIndex = 0;
 					}
 				}
 			}
 		}
-		
 		return tile2Play;
 	}
 
-	public ArrayList<Tile> findComb30() {
+	public ArrayList<ArrayList<Tile>> findComb30() {
 		// TODO Auto-generated method stub
 		//find all runs, if < 30, + find all sets
-		ArrayList<Tile> tempArray = new ArrayList<Tile>();
-		tile4Run = new ArrayList<Tile>();
-		tile4Group = new ArrayList<Tile>();
-		tile4Run = this.findRun();
-		tile4Group = this.findGroup();
-		int runSum = this.checkSum(tile4Run);
-		int groupSum = this.checkSum(tile4Group);
+		int runSum = 0;
+		int groupSum = 0;
+		ArrayList<ArrayList<Tile>> tempArray = new ArrayList<ArrayList<Tile>>();
+		ArrayList<ArrayList<Tile>> tile4RunList = new ArrayList<ArrayList<Tile>>();
+		ArrayList<ArrayList<Tile>> tile4GroupList = new ArrayList<ArrayList<Tile>>();
+		tile4RunList = this.findRun();
+		tile4GroupList = this.findGroup();
+		
+		runSum = this.checkSum2arr(tile4RunList);
+		groupSum = this.checkSum2arr(tile4GroupList);
+		
+		//System.out.println(tile4RunList);
+		//System.out.println(tile4GroupList);
+		
 		if(runSum >= 30) {
-			return tile4Run;
+			return tile4RunList;
 		}  else if(groupSum  >= 30) {
-			return tile4Group;
+			return tile4GroupList;
 		} else {
 			if(runSum > groupSum) {
-				tile4Group.clear();
-				this.getHands().removeAll(tile4Run);
-				tile4Group = this.findGroup();
-				if(runSum + this.checkSum(tile4Group) >= 30) {
-					this.getHands().addAll(tile4Run);
-					tempArray.addAll(tile4Run);
-					tempArray.addAll(tile4Group);
+				tile4GroupList.clear();
+				for(ArrayList<Tile> arr : tile4RunList) {
+					this.getHands().removeAll(arr);
+				}
+				tile4GroupList = this.findGroup();
+				if(runSum + this.checkSum2arr(tile4GroupList) >= 30) {
+					for(ArrayList<Tile> arr : tile4RunList) {
+						this.getHands().addAll(arr);
+					}
+					tempArray.addAll(tile4RunList);
+					tempArray.addAll(tile4GroupList);
 					return tempArray;
 				} 
 			} else {
-				tile4Run.clear();
-				this.getHands().removeAll(tile4Group);
-				tile4Run = this.findRun();
-				if(groupSum + this.checkSum(tile4Run) >= 30) {
-					this.getHands().addAll(tile4Group);
-					tempArray.addAll(tile4Run);
-					tempArray.addAll(tile4Group);
+				tile4RunList.clear();
+				for(ArrayList<Tile> arr : tile4GroupList) {
+					this.getHands().removeAll(arr);
+				}
+				tile4RunList = this.findRun();
+				if(groupSum + this.checkSum2arr(tile4RunList) >= 30) {
+					for(ArrayList<Tile> arr : tile4GroupList) {
+						this.getHands().addAll(arr);
+					}
+					tempArray.addAll(tile4RunList);
+					tempArray.addAll(tile4GroupList);
 					return tempArray;
 				} 
 			}
@@ -585,40 +608,42 @@ public class AI extends Player{
 		return null;
 	}
 
-	public ArrayList<Tile> findCombAll() {
+	public ArrayList<ArrayList<Tile>> findCombAll() {
 		// TODO Auto-generated method stub
 		//find all runs, and sets
-				ArrayList<Tile> tempArray = new ArrayList<Tile>();
-				tile4Run = new ArrayList<Tile>();
-				tile4Group = new ArrayList<Tile>();
-				tile4Run = this.findRun();
-				tile4Group = this.findGroup();
-				//System.out.println(tile4Run);
-				//System.out.println(tile4Group);
-				int runSum = this.checkSum(tile4Run);
-				int groupSum = this.checkSum(tile4Group);
-				if(runSum > groupSum) {
-					tile4Group.clear();
-					this.getHands().removeAll(tile4Run);
-					tile4Group = this.findGroup();
-					if(runSum + this.checkSum(tile4Group) >= 30) {
-						this.getHands().addAll(tile4Run);
-						tempArray.addAll(tile4Run);
-						tempArray.addAll(tile4Group);
-							return tempArray;
-					} 
-				} else {
-					tile4Run.clear();
-					this.getHands().removeAll(tile4Group);
-					tile4Run = this.findRun();
-					if(groupSum + this.checkSum(tile4Run) >= 30) {
-						this.getHands().addAll(tile4Group);
-						tempArray.addAll(tile4Run);
-						tempArray.addAll(tile4Group);
-						return tempArray;
-					} 
+		ArrayList<ArrayList<Tile>> tempArray = new ArrayList<ArrayList<Tile>>();
+		ArrayList<ArrayList<Tile>> tile4RunList = new ArrayList<ArrayList<Tile>>();
+		ArrayList<ArrayList<Tile>> tile4GroupList = new ArrayList<ArrayList<Tile>>();
+		tile4RunList = this.findRun();
+		tile4GroupList = this.findGroup();
+		if(tile4RunList.size() != 0 || tile4Group.size() !=0) {
+			if(tile4RunList.size() > tile4GroupList.size()) {
+				tile4GroupList.clear();
+				tempArray.addAll(tile4RunList);
+				for(ArrayList<Tile> arr : tile4RunList) {
+					this.getHands().removeAll(arr);
 				}
-				return null;
+				tile4GroupList = this.findGroup();
+				tempArray.addAll(tile4GroupList);
+				for(ArrayList<Tile> arr : tile4RunList) {
+					this.getHands().addAll(arr);
+				}	
+				return tempArray;
+			} else {
+				tile4RunList.clear();
+				tempArray.addAll(tile4GroupList);
+				for(ArrayList<Tile> arr : tile4GroupList) {
+					this.getHands().removeAll(arr);
+				}
+				tile4RunList = this.findRun();
+				tempArray.addAll(tile4RunList);
+				for(ArrayList<Tile> arr : tile4GroupList) {
+					this.getHands().addAll(arr);	
+				} 
+				return tempArray;
+			}
+		} else
+			return null;
 	}
 
 	public HashMap<Tile,Integer> findMeldsOnTable(Table table) throws AbleToAddBothSideException {
@@ -663,36 +688,33 @@ public class AI extends Player{
 		return mdlesMap;
 	}
 
-	public ArrayList<Meld> arrayList2MeldList(ArrayList<Tile> tileArray) {
-		ArrayList<Meld> meldList = new ArrayList<Meld>();
-		Meld tempMeld = new Meld();
-		for(Tile t : tileArray) {
-			if(t.getColor() == Tile.Color.JOKER) 
-				tempMeld.addTail(t);
-			else
-				if(tempMeld.addHead(t)) continue;
-				else {
-					meldList.add(tempMeld);
-					tempMeld = new Meld();
-					tempMeld.addHead(t);
-				}
-		}
-		meldList.add(tempMeld);
+	public ArrayList<Meld> arrayList2MeldList(ArrayList<ArrayList<Tile>> tileArray) throws AbleToAddBothSideException {
 		// TODO Auto-generated method stub
+		ArrayList<Meld> meldList = new ArrayList<Meld>();
+		Meld tempMeld;
+		for(ArrayList<Tile> arr : tileArray) {
+			tempMeld = new Meld();
+			for(Tile t : arr) {
+				tempMeld.addTail(t);
+			}
+			meldList.add(tempMeld);
+		}
 		return meldList;
 	}
 
-	public void playMeld(Meld meld) {
+	public void playMeld(ArrayList<Meld> meldList, Table table) {
 		// TODO Auto-generated method stub
 		int handsize = this.handSize();
-		//System.out.println(handsize);
-		for(int i=handsize-1; i>-1;i--) {
-			for(int j=0; j<meld.size(); j++) {
-				if(this.getHand(i) == meld.get(j)) {
-					this.getHands().remove(i);
-					break;
-				}	
+		for(Meld meld : meldList) {
+			for(int m = 0; m < meld.size(); m++) {
+				for(int h=0;h<this.getHands().size();h++) {
+					if(this.getHand(h) == meld.get(m)) {
+						this.getHands().remove(h);
+						break;
+					}
+				}
 			}
+			table.add(meld);
 		}
 	}
 
