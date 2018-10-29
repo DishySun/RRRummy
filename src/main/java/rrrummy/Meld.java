@@ -82,7 +82,7 @@ public class Meld {
 		return true;
 	}
 	
-	protected boolean isSet() {
+	public boolean isSet() {
 		if (tileNumber <= 1) return true;
 		if(size() > 4) return false;
 		int n = 0;//meld.get(0).getNumber();

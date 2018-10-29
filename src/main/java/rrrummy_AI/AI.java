@@ -134,7 +134,12 @@ public class AI extends Player{
 						&& this.getHand(i).getNumber()-1 == tile4Run.get(playIndex).getNumber()) {
 					tile4Run.add(this.getHand(i));
 					playIndex++;
-				} else {
+					disconnect = false;
+					if(this.handSize()-1 == i)
+						disconnect = true;
+				} else
+					disconnect = true;
+				if(disconnect) {
 					countPoint = checkSum(tile4Run);
 					if(countPoint >= 30) {
 						tile2Play.addAll(tile4Run);
@@ -230,7 +235,13 @@ public class AI extends Player{
 						&& this.getHand(i).getNumber() == tile4Group.get(playIndex).getNumber()) {
 					tile4Group.add(this.getHand(i));
 					playIndex++;
-				} else {
+					disconnect = false;
+					if(i == this.handSize()-1)
+						disconnect = true;
+				} else
+					disconnect = true;
+				
+				if(disconnect){
 					countPoint = checkSum(tile4Group);
 					if(countPoint >= 30) {
 						tile2Play.addAll(tile4Group);
@@ -252,6 +263,7 @@ public class AI extends Player{
 	
 	public int checkSum(ArrayList<Tile> tileArray) {
 		// TODO Auto-generated method stub
+		if(tileArray == null) return 0;
 		int count = 0;
 		int tilePosition = 0;
 		for(int i=0; i<tileArray.size();i++) {
@@ -298,23 +310,6 @@ public class AI extends Player{
 		return false;	
 	}
 
-	/*public int play(Tile t) {
-		// TODO Auto-generated method stub
-		boolean has = false;
-		int index = 0 ;
-		for(int i=0; i<this.getHands().size();i++) {
-			if(this.getHand(i) == t) {
-				has = true;
-				index = i;
-				break;
-			}	
-		}
-		if(!has)
-			System.out.println("can not find the Tile ---- AI.java 315");
-		
-		return index;
-	}*/
-
 	public ArrayList<Tile> findRun() {
 		// TODO Auto-generated method stub
 		tile4Run = new ArrayList<Tile>();
@@ -342,6 +337,7 @@ public class AI extends Player{
 			tile4Run.add(this.getHand(0));
 			handIndex = 1;
 			while(handIndex < this.handSize()-jokerorg) {
+				
 				if(tile4Run.get(playIndex).getColor() != Tile.Color.JOKER) { // last tile in tile4Run is not joker
 					if(tile4Run.get(playIndex).getColor() == this.getHand(handIndex).getColor() 			//continuously 1 2 3 4 5
 							&& this.getHand(handIndex).getNumber()-1 == tile4Run.get(playIndex).getNumber())
@@ -421,7 +417,13 @@ public class AI extends Player{
 						&& this.getHand(i).getNumber()-1 == tile4Run.get(playIndex).getNumber()) {
 					tile4Run.add(this.getHand(i));
 					playIndex++;
-				} else {
+					disconnect = false;
+					if(i == this.handSize()-1)
+						disconnect = true;
+				} else
+					disconnect = true;
+				
+				if(disconnect) {
 					if(tile4Run.size() >= 3) {
 						tile2Play.addAll(tile4Run);
 						tile4Run.clear();
@@ -440,6 +442,8 @@ public class AI extends Player{
 
 	public ArrayList<Tile> findGroup() {
 		// TODO Auto-generated method stub
+		if(this.handSize() == 0) return null;
+		
 		tile4Group = new ArrayList<Tile>();
 		tile2Play = new ArrayList<Tile>();
 		boolean run = true;		// used to stop loop when reach 30 points
@@ -517,7 +521,13 @@ public class AI extends Player{
 						&& this.getHand(i).getNumber() == tile4Group.get(playIndex).getNumber()) {
 					tile4Group.add(this.getHand(i));
 					playIndex++;
-				} else {
+					disconnect = false;
+					if(i == this.handSize()-1)
+						disconnect = true;
+				} else 
+					disconnect = true;
+				
+				if(disconnect) {
 					if(tile4Group.size() >= 3) {
 						tile2Play.addAll(tile4Group);
 						tile4Group.clear();
@@ -583,6 +593,8 @@ public class AI extends Player{
 				tile4Group = new ArrayList<Tile>();
 				tile4Run = this.findRun();
 				tile4Group = this.findGroup();
+				//System.out.println(tile4Run);
+				//System.out.println(tile4Group);
 				int runSum = this.checkSum(tile4Run);
 				int groupSum = this.checkSum(tile4Group);
 				if(runSum > groupSum) {
@@ -612,17 +624,39 @@ public class AI extends Player{
 	public HashMap<Tile,Integer> findMeldsOnTable(Table table) throws AbleToAddBothSideException {
 		// TODO Auto-generated method stub
 		// find if any hand tile can form a mile from table
-		/*HashMap<Tile, Integer> mdlesMap = new HashMap<Tile,Integer>();
-		for(int i=0; i<table.size();i++) {
-			for(int j=0; j<this.getHands().size();j++) {	
-				if(this.getHand(i).getColor() == Tile.Color.JOKER) continue;
-				if(table.getMeld(i).add(this.getHand(j))) {
-					table.remove(i, this.getHand(j));
-					mdlesMap.put(this.getHand(j),i);
+		HashMap<Tile, Integer> mdlesMap = new HashMap<Tile,Integer>();
+		Table tableClone = new Table();
+		tableClone = table;
+		this.getHands().sort();
+		//System.out.println(this.getHands());
+		while(true) {	// find all possible combinatino without joker
+			int size = mdlesMap.size();
+			for(int i=0; i<tableClone.size();i++) {
+				for(int j=0; j<this.getHands().size();j++) {	
+					if(this.getHand(j).getColor() == Tile.Color.JOKER) continue;
+					else if(tableClone.getMeld(i).add(this.getHand(j))) {	//if can add and not used
+						mdlesMap.put(this.getHand(j),i);
+					}
 				}
-			
-		}}*/
+			}
+			if (mdlesMap.size() == size)
+				break;
+		}
 		
+		while(true) {
+			int size = mdlesMap.size();
+			for(int i=0; i<tableClone.size();i++) {
+				for(int j=0; j<this.getHands().size();j++) {	
+					if(this.getHand(j).getColor() == Tile.Color.JOKER) {
+						if(tableClone.getMeld(i).addHead(this.getHand(j))) {
+							mdlesMap.put(this.getHand(j),i);
+						}
+					}	
+				}
+			}
+			if (mdlesMap.size() == size)
+				break;
+		}
 		
 		if(mdlesMap.size() == 0)
 			return null;
@@ -650,7 +684,6 @@ public class AI extends Player{
 
 	public void playMeld(Meld meld) {
 		// TODO Auto-generated method stub
-		System.out.println(meld.toString());
 		int handsize = this.handSize();
 		//System.out.println(handsize);
 		for(int i=handsize-1; i>-1;i--) {

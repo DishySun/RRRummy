@@ -205,5 +205,8 @@ public class STR1Test {
 		ai.getSTY().playRest();;
 		assertEquals(5, ai.handSize());
 		assertEquals(3,table.size());
+		assertEquals("[G8, R8, JK]", table.getMeld(0).toString());
+		assertEquals("[O10, G10, B10]", table.getMeld(1).toString());
+		assertEquals("[G3, G4, G5]", table.getMeld(2).toString());
 	}
 }
