@@ -280,13 +280,13 @@ public class MeldTest extends TestCase {
 			assertTrue(testMeld.add(r6));
 			assertTrue(testMeld.add(r7));
 			assertTrue(testMeld.add(r8));
-			ArrayList<Tile> returnArr = testMeld.cut(3); // cut at r4
+			Meld returnMeld = testMeld.cut(3); // cut at r4
 			assertEquals(4, testMeld.size());
-			assertEquals(4, returnArr.size());
-			assertEquals(Tile.Color.RED, returnArr.get(0).getColor());
-			assertEquals(1, returnArr.get(0).getNumber());
-			assertEquals(Tile.Color.RED, returnArr.get(returnArr.size() - 1).getColor());
-			assertEquals(4, returnArr.get(returnArr.size() - 1).getNumber());
+			assertEquals(4, returnMeld.size());
+			assertEquals(returnMeld.removeHead(), r1);
+			assertEquals(returnMeld.removeHead(), r2);
+			assertEquals(returnMeld.removeHead(), r3);
+			assertEquals(returnMeld.removeHead(), r4);
 			assertEquals(r5, testMeld.removeHead());
 			assertEquals(r8, testMeld.removeTail());
 		} catch (AbleToAddBothSideException e) {
