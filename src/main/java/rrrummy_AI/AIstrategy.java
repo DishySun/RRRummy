@@ -5,6 +5,6 @@ import java.util.ArrayList;
 import rrrummy.*;
 
 public interface AIstrategy {
-	public void playInitial();
-	public void playRest();
+	public boolean playInitial();
+	public boolean playRest();
 }

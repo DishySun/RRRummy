@@ -22,16 +22,13 @@ public class Meld {
 		tileMap = null;
 		this.add(t);
 	}
-	private Meld(ArrayList<Tile> m) {
+	public Meld(ArrayList<Tile> m) {
 		meld = new ArrayList<Tile>();
 		tileNumber = 0;
 		tileMap = null;
 		while (m.size()>0) {
-			try {
-				this.add(m.remove(0));
-			}catch(AbleToAddBothSideException e) {
-				
-			}
+			this.addTail(m.remove(0));
+			
 		}
 	}
 	

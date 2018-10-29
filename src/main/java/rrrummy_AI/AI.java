@@ -693,10 +693,7 @@ public class AI extends Player{
 		ArrayList<Meld> meldList = new ArrayList<Meld>();
 		Meld tempMeld;
 		for(ArrayList<Tile> arr : tileArray) {
-			tempMeld = new Meld();
-			for(Tile t : arr) {
-				tempMeld.addTail(t);
-			}
+			tempMeld = new Meld(arr);
 			meldList.add(tempMeld);
 		}
 		return meldList;
@@ -704,7 +701,6 @@ public class AI extends Player{
 
 	public void playMeld(ArrayList<Meld> meldList, Table table) {
 		// TODO Auto-generated method stub
-		int handsize = this.handSize();
 		for(Meld meld : meldList) {
 			for(int m = 0; m < meld.size(); m++) {
 				for(int h=0;h<this.getHands().size();h++) {

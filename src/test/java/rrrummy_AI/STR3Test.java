@@ -16,7 +16,7 @@ public class STR3Test {
 	private Tile atile1,atile2,atile3,atile4,atile5,atile6,atile7,atile8,atile9,atile10,atile11,atile12,atile13;
 	private Tile aJoker;
 	private Tile bJoker;
-	private AI ai;
+	private AI ai,ai2,ai3;
 	private AIstrategy aISty;
 	private GameData data;
 	private Table table;
@@ -25,6 +25,8 @@ public class STR3Test {
 	public void setUp() throws Exception {
 		table = new Table();
 		ai = new AI("Hunter");
+		ai2 = new AI("Tony");
+		ai3 = new AI("Bob");
 		data = new GameData();
 		aISty = new STR3(data);
 		ai.setSTY(aISty);
@@ -57,20 +59,23 @@ public class STR3Test {
 		ai.draw(atile4);
 		ai.draw(atile5);
 		ai.draw(atile6);
-		ai.draw(atile7);
-		ai.draw(atile8);
-		ai.draw(atile9);
-		ai.draw(atile10);
-		ai.draw(atile11);
-		ai.draw(atile12);
+		ai2.draw(atile7);
+		ai2.draw(atile8);
+		ai2.draw(atile9);
+		ai3.draw(atile10);
+		ai3.draw(atile11);
+		ai3.draw(atile12);
 		ai.draw(atile13);
 		ai.draw(aJoker);
 		
 		players.add(ai);
+		players.add(ai2);
+		players.add(ai3);
 		data.setValue(table, players);
-		ai.getSTY().playInitial();
 		assertEquals(8, ai.handSize());
-		ai.getSTY().playRest();
+		ai.getSTY().playInitial();
+		assertEquals3, ai.handSize());
+		//ai.getSTY().playRest();
 	}
 
 	@Test
