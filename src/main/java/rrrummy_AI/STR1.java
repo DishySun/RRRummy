@@ -39,28 +39,22 @@ public class STR1 implements Observer, AIstrategy{
 		AI AI = (AI)players.get(0);
 		tile4Run = AI.findInitRun();
 		tile4Group = AI.findInitGroup();
-		try {
-			if(tile4Run != null || tile4Group != null) {
-				if(tile4Run.size() > tile4Group.size()) {		//first run or first set
-					meldListRun = AI.arrayList2MeldList(tile4Run);
-					AI.playMeld(meldListRun,table);
-				} else {
-					meldListSet = AI.arrayList2MeldList(tile4Group);
-					AI.playMeld(meldListSet,table);
-				}
-			} else {	//if no run or set reach 30
-				tile2Play =AI.findComb30();
-				if(tile2Play != null) {
-					meldListTotal = AI.arrayList2MeldList(tile2Play);
-					AI.playMeld(meldListTotal,table);
-				} else
-					hasPlay = false;
-					System.out.println("No melds to play");
+		if(tile4Run != null || tile4Group != null) {
+			if(tile4Run.size() > tile4Group.size()) {		//first run or first set
+				meldListRun = AI.arrayList2MeldList(tile4Run);
+				AI.playMeld(meldListRun,table);
+			} else {
+				meldListSet = AI.arrayList2MeldList(tile4Group);
+				AI.playMeld(meldListSet,table);
 			}
-		} catch (AbleToAddBothSideException e) {
-			// TODO Auto-generated catch block
-			hasPlay = false;
-			e.printStackTrace();
+		} else {	//if no run or set reach 30
+			tile2Play =AI.findComb30();
+			if(tile2Play != null) {
+				meldListTotal = AI.arrayList2MeldList(tile2Play);
+				AI.playMeld(meldListTotal,table);
+			} else
+				hasPlay = false;
+				System.out.println("No melds to play");
 		}
 		return hasPlay;
 	}
@@ -82,35 +76,28 @@ public class STR1 implements Observer, AIstrategy{
 		AI AI = (AI)players.get(0);
 		tile4Run = AI.findRun();
 		tile4Group = AI.findGroup();
-		try{
-			if(tile4Run == null && tile4Group == null) {
-				hasPlay = false;
-			} else if(tile4Run == null){
-				meldListSet = AI.arrayList2MeldList(tile4Group);
-				AI.playMeld(meldListSet,table);
-			} else if(tile4Group == null) {
+		if(tile4Run == null && tile4Group == null) {
+			hasPlay = false;
+		} else if(tile4Run == null){
+			meldListSet = AI.arrayList2MeldList(tile4Group);
+			AI.playMeld(meldListSet,table);
+		} else if(tile4Group == null) {
+			meldListRun = AI.arrayList2MeldList(tile4Run);
+			AI.playMeld(meldListRun,table);
+		} else {
+			if(tile4Run.size() > tile4Group.size()) { //first run
 				meldListRun = AI.arrayList2MeldList(tile4Run);
 				AI.playMeld(meldListRun,table);
-			} else {
-				if(tile4Run.size() > tile4Group.size()) { //first run
-					meldListRun = AI.arrayList2MeldList(tile4Run);
-					AI.playMeld(meldListRun,table);
-					tile4Group = AI.findGroup();
-					meldListSet = AI.arrayList2MeldList(tile4Group);
-					AI.playMeld(meldListSet,table);
-				}	 else {		//first group
-					meldListSet = AI.arrayList2MeldList(tile4Group);
-					AI.playMeld(meldListSet,table);
-					tile4Run = AI.findRun();
-					meldListRun = AI.arrayList2MeldList(tile4Run);
-					AI.playMeld(meldListRun,table);
-					}
+				tile4Group = AI.findGroup();
+				meldListSet = AI.arrayList2MeldList(tile4Group);
+				AI.playMeld(meldListSet,table);
+			}	 else {		//first group
+				meldListSet = AI.arrayList2MeldList(tile4Group);
+				AI.playMeld(meldListSet,table);
+				tile4Run = AI.findRun();
+				meldListRun = AI.arrayList2MeldList(tile4Run);
+				AI.playMeld(meldListRun,table);
 				}
-			
-			}catch (AbleToAddBothSideException e) {
-				// TODO Auto-generated catch block
-				hasPlay = false;
-				e.printStackTrace();
 			}
 		return hasPlay;
 		}

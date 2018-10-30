@@ -3,6 +3,8 @@ package rrrummy_AI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import rrrummy.*;
 
@@ -567,45 +569,49 @@ public class AI extends Player{
 		runSum = this.checkSum2arr(tile4RunList);
 		groupSum = this.checkSum2arr(tile4GroupList);
 		
-		//System.out.println(tile4RunList);
-		//System.out.println(tile4GroupList);
+		System.out.println(tile4RunList);
+		System.out.println(tile4GroupList);
 		
 		if(runSum >= 30) {
 			return tile4RunList;
 		}  else if(groupSum  >= 30) {
 			return tile4GroupList;
-		} else {
+		} else  if(runSum == 0 && groupSum == 0){
+			return null;
+		} else
+		{
 			if(runSum > groupSum) {
 				tile4GroupList.clear();
 				for(ArrayList<Tile> arr : tile4RunList) {
 					this.getHands().removeAll(arr);
 				}
 				tile4GroupList = this.findGroup();
+				for(ArrayList<Tile> arr : tile4RunList) {
+					this.getHands().addAll(arr);
+				}
 				if(runSum + this.checkSum2arr(tile4GroupList) >= 30) {
-					for(ArrayList<Tile> arr : tile4RunList) {
-						this.getHands().addAll(arr);
-					}
 					tempArray.addAll(tile4RunList);
 					tempArray.addAll(tile4GroupList);
 					return tempArray;
-				} 
+				} else 
+					return null;
 			} else {
 				tile4RunList.clear();
 				for(ArrayList<Tile> arr : tile4GroupList) {
 					this.getHands().removeAll(arr);
 				}
 				tile4RunList = this.findRun();
+				for(ArrayList<Tile> arr : tile4GroupList) {
+					this.getHands().addAll(arr);
+				}
 				if(groupSum + this.checkSum2arr(tile4RunList) >= 30) {
-					for(ArrayList<Tile> arr : tile4GroupList) {
-						this.getHands().addAll(arr);
-					}
 					tempArray.addAll(tile4RunList);
 					tempArray.addAll(tile4GroupList);
 					return tempArray;
-				} 
+				} else
+					return null;
 			}
 		}
-		return null;
 	}
 
 	public ArrayList<ArrayList<Tile>> findCombAll() {
@@ -646,50 +652,103 @@ public class AI extends Player{
 			return null;
 	}
 
-	public HashMap<Tile,Integer> findMeldsOnTable(Table table) throws AbleToAddBothSideException {
+	public HashMap<Tile,Integer> findMeldsOnTable(Table table) {
 		// TODO Auto-generated method stub
-		// find if any hand tile can form a mile from table
+		// find if any hand tile can form a mile from table, integer is meld index on table
+		Tile tempTileA = null;
+		Tile tempTileB = null;
+		Tile JokerA = null;
+		Tile JokerB = null;
 		HashMap<Tile, Integer> mdlesMap = new HashMap<Tile,Integer>();
 		Table tableClone = new Table();
 		tableClone = table;
 		this.getHands().sort();
 		//System.out.println(this.getHands());
-		while(true) {	// find all possible combinatino without joker
-			int size = mdlesMap.size();
-			for(int i=0; i<tableClone.size();i++) {
-				for(int j=0; j<this.getHands().size();j++) {	
-					if(this.getHand(j).getColor() == Tile.Color.JOKER) continue;
-					else if(tableClone.getMeld(i).add(this.getHand(j))) {	//if can add and not used
-						mdlesMap.put(this.getHand(j),i);
+		//find replace able 
+		/*for(int m=0; m<tableClone.size();m++) {
+			for(int j=0; j<tableClone.getMeld(m).size();j++) {
+				if(tableClone.getMeld(m).get(j).isJoker()) {
+					for(int h=0; h<this.handSize();h++) {
+						if(JokerA == null) {
+							JokerA =tableClone.getMeld(m).replace(this.getHand(h), j);
+							if(JokerA != null) {		//replaced
+								this.getHands().add(JokerA);		//add joker to hand
+								tableClone.getMeld(m).setTile(j, JokerA);						//set back to joker
+								mdlesMap.put(this.getHand(h),m);		// stored
+								tempTileA = this.getHands().remove(h);		//temporary remove from hand
+								break;
+							}
+						} else {	// store in jokerB
+							JokerB =tableClone.getMeld(m).replace(this.getHand(h), j);
+							if(JokerB != null) {		//replaced
+								this.getHands().add(JokerB);		//add joker to hand
+								tableClone.getMeld(m).setTile(j, JokerB);						//set back to joker
+								mdlesMap.put(this.getHand(h),m);		// stored
+								tempTileB = this.getHands().remove(h);		//temporary remove from hand
+								break;
+							}
+						}
 					}
 				}
 			}
-			if (mdlesMap.size() == size)
-				break;
 		}
+		if(tempTileB != null)
+			this.getHands().add(tempTileB);
+		if(tempTileA != null)
+			this.getHands().add(tempTileA);*/
 		
-		while(true) {
-			int size = mdlesMap.size();
-			for(int i=0; i<tableClone.size();i++) {
-				for(int j=0; j<this.getHands().size();j++) {	
+
+		// find all possible combination without joker
+			for(int j=0; j<this.getHands().size();j++) {	
+				for(int i=0; i<tableClone.size();i++) {
 					if(this.getHand(j).getColor() == Tile.Color.JOKER) {
-						if(tableClone.getMeld(i).addHead(this.getHand(j))) {
-							mdlesMap.put(this.getHand(j),i);
+						try {
+							if(tableClone.getMeld(i).add(this.getHand(j))) {
+								mdlesMap.put(this.getHand(j),i);
+								break;
+							}
+						} catch (AbleToAddBothSideException e) {
+							// TODO Auto-generated catch block
+							if(tableClone.getMeld(i).addTail(this.getHand(j))) {
+								mdlesMap.put(this.getHand(j),i);
+								break;
+							}
+							//e.printStackTrace();
 						}
 					}	
+					else
+						try {
+							if(tableClone.getMeld(i).add(this.getHand(j))) {	//if can add and not used
+								mdlesMap.put(this.getHand(j),i);
+								break;
+							}
+						} catch (AbleToAddBothSideException e) {
+							// TODO Auto-generated catch block
+							if(tableClone.getMeld(i).addTail(this.getHand(j))) {	//if can add and not used
+								mdlesMap.put(this.getHand(j),i);
+								break;
+							}
+							//e.printStackTrace();
+						}
 				}
 			}
-			if (mdlesMap.size() == size)
-				break;
-		}
-		
 		if(mdlesMap.size() == 0)
 			return null;
+		else {
+			for(Entry<Tile, Integer> entry : mdlesMap.entrySet()) {
+				Tile tile = entry.getKey();
+				int index = entry.getValue();
+				for(int m=0;m<table.size();m++) {
+					table.getMeld(index).removeTile(tile);
+				}
+			}
+		}
 		return mdlesMap;
 	}
 
-	public ArrayList<Meld> arrayList2MeldList(ArrayList<ArrayList<Tile>> tileArray) throws AbleToAddBothSideException {
+	public ArrayList<Meld> arrayList2MeldList(ArrayList<ArrayList<Tile>> tileArray) {
 		// TODO Auto-generated method stub
+		if(tileArray == null) return null;
 		ArrayList<Meld> meldList = new ArrayList<Meld>();
 		Meld tempMeld;
 		for(ArrayList<Tile> arr : tileArray) {
@@ -714,6 +773,28 @@ public class AI extends Player{
 		}
 	}
 
-	
+	public void play2Table(HashMap<Tile, Integer> tileMap, Table table) {
+		// TODO Auto-generated method stub
+		this.getHands().sort();
+		for(Entry<Tile, Integer> entry : tileMap.entrySet()) {
+			Tile tile = entry.getKey();
+			int index = entry.getValue();
+			
+			for(int h=0;h<this.getHands().size();h++) {
+				if(this.getHand(h) == tile) {
+					this.getHands().remove(h);
+					try {
+						table.getMeld(index).add(tile);	
+						break;
+					} catch (AbleToAddBothSideException e) {
+						// TODO Auto-generated catch block
+						table.getMeld(index).addTail(tile);
+						break;
+						//e.printStackTrace();
+					}	
+				}
+			}
+		}
+	}
 	
 }
