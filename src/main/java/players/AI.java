@@ -2,6 +2,7 @@ package players;
 
 import java.util.ArrayList;
 
+import game.View;
 import rrrummy.Tile;
 
 public class AI extends Player{
@@ -12,11 +13,7 @@ public class AI extends Player{
 		this.strategy = strategy;
 	}
 	
-	public void initHand(ArrayList<Tile> arr) {
-		hand = new Hand(arr);
-	}
-	
-	public String generateCommand() {
+	public String getCommandString(View v) {
 		return strategy.generateCommand();
 	}
 
