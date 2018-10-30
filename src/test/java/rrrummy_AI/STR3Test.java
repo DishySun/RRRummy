@@ -74,7 +74,7 @@ public class STR3Test {
 		data.setValue(table, players);
 		assertEquals(8, ai.handSize());
 		ai.getSTY().playInitial();
-		assertEquals3, ai.handSize());
+		assertEquals(8, ai.handSize());
 		//ai.getSTY().playRest();
 	}
 
@@ -115,6 +115,9 @@ public class STR3Test {
 		
 		players.add(ai);
 		data.setValue(table, players);
+		assertEquals(14, ai.handSize());
 		ai.getSTY().playRest();
+		assertEquals(14, ai.handSize());
+		
 	}
 }

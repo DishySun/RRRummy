@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map.Entry;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -1136,5 +1137,131 @@ public class AITest {
 		testAI.playMeld(meld, table);
 		assertEquals(3, table.size());
 		assertEquals("[G1, JK, JK]", table.getMeld(2).toString());
+	}
+	
+	@Test
+	public void test_play2Table() throws AbleToAddBothSideException {
+		HashMap<Tile,Integer> tile2play = new HashMap<Tile,Integer>();
+		try {
+			atile1 = new Tile("R10");
+			atile2 = new Tile("R11");
+			atile3 = new Tile("R12");
+			atile4 = new Tile("B8");
+			atile5 = new Tile("B1");
+			atile6 = new Tile("O1");
+			atile7 = new Tile("R1");
+			atile8 = new Tile("B3");
+			atile9 = new Tile("R5");
+			atile13 = new Tile("R1");
+			atile10 = new Tile("B7");
+			atile11 = new Tile("R6");
+			atile12 = new Tile("G1");
+			aJoker = new Tile("J");
+			bJoker = new Tile("J");
+		}catch(InvalidTileException e) {
+			fail();
+		}
+		
+		Meld meld1 = new Meld();
+		Meld meld2 = new Meld();
+		meld1.add(atile1);
+		meld1.add(atile2);
+		meld1.add(atile3);
+		meld1.add(atile4);
+		meld2.add(atile5);
+		meld2.add(atile6);
+		meld2.add(atile7);
+		
+		table.add(meld1);
+		table.add(meld2);
+		/*System.out.println(table.getMeld(0));
+		System.out.println(table.getMeld(1));
+		System.out.println("---------");*/
+		assertEquals(2, table.size());
+		//R10 R11 R12
+		//B1 O1 R1
+		testAI.draw(atile8);
+		testAI.draw(atile9);
+		testAI.draw(atile10);
+		testAI.draw(atile11);
+		testAI.draw(atile12);
+		testAI.draw(bJoker);
+		testAI.draw(aJoker);
+		//B3 B7 R5 R6 G1 Jk JK
+		
+		tile2play = testAI.findMeldsOnTable(table);
+		//J R10 R11 R12 J
+		//G1
+		assertEquals(3, tile2play.size());
+		assertTrue(tile2play.containsValue(0));
+		assertTrue(tile2play.containsValue(1));
+		assertEquals(1, tile2play.get(testAI.getHand(4)).intValue());
+		assertEquals(0, tile2play.get(testAI.getHand(5)).intValue());
+		assertEquals(0, tile2play.get(testAI.getHand(6)).intValue());
+		
+		testAI.play2Table(tile2play, table);
+		
+		assertEquals(7-3, testAI.handSize());
+	}
+	
+	@Test
+	public void test_play2Table2() throws AbleToAddBothSideException {
+		HashMap<Tile,Integer> tile2play = new HashMap<Tile,Integer>();
+		try {
+			atile1 = new Tile("R10");
+			atile2 = new Tile("R11");
+			atile3 = new Tile("R12");
+			atile4 = new Tile("B8");
+			atile5 = new Tile("B1");
+			atile6 = new Tile("O1");
+			atile7 = new Tile("R1");
+			atile8 = new Tile("B3");
+			atile9 = new Tile("R4");
+			atile13 = new Tile("R13");
+			atile10 = new Tile("B5");
+			atile11 = new Tile("R6");
+			atile12 = new Tile("G1");
+			aJoker = new Tile("J");
+			bJoker = new Tile("J");
+		}catch(InvalidTileException e) {
+			fail();
+		}
+		
+		Meld meld1 = new Meld();
+		Meld meld2 = new Meld();
+		meld1.add(atile1);
+		meld1.add(atile2);
+		meld1.add(atile3);
+		meld1.add(atile4);
+		meld2.add(atile5);
+		meld2.add(atile6);
+		meld2.add(atile7);
+		//meld2.add(atile13);
+		table.add(meld1);
+		table.add(meld2);
+	
+		assertEquals(2, table.size());
+		//R10, R11, R12
+		//B1, O1, R1
+		testAI.draw(atile8);
+		testAI.draw(atile9);
+		testAI.draw(atile10);
+		testAI.draw(atile11);
+		testAI.draw(atile12);
+		testAI.draw(atile13);
+		testAI.draw(bJoker);
+		//B3, R4, B5, R6, G1, R13, JK
+		tile2play = testAI.findMeldsOnTable(table);
+		//JK, R10, R11, R12, R13
+		//B1, O1, R1, G1
+		assertEquals(3, tile2play.size());
+		assertTrue(tile2play.containsValue(0));
+		assertTrue(tile2play.containsValue(1));
+		assertEquals(0, tile2play.get(testAI.getHand(4)).intValue());
+		assertEquals(1, tile2play.get(testAI.getHand(5)).intValue());
+		assertEquals(0, tile2play.get(testAI.getHand(6)).intValue());
+		
+		testAI.play2Table(tile2play, table);
+		assertEquals(7-3, testAI.handSize());
 	}
 }
