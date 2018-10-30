@@ -1,57 +1,58 @@
 package players;
 
-import static org.junit.Assert.*;
+import java.util.ArrayList;
 
-import org.junit.Before;
-import org.junit.Test;
-
+import junit.framework.TestCase;
 import rrrummy.InvalidTileException;
 import rrrummy.Tile;
 
-public class PlayerTest {
-	private Player testPlayer;	
-	private Tile tile1;
-	private Tile tile2;
-	@Before
-	public void setUp() throws Exception {
-		testPlayer = new Player("Hunter");
+public class PlayerTest extends TestCase {
+	private Player testPlayer = new Player("Hunter");
+
+	public void test_draw() {
 		try {
-			tile1 = new Tile("R3");
-		}catch(InvalidTileException e) {
-			fail();
+			testPlayer.initHand(new ArrayList<Tile>());
+			testPlayer.draw(new Tile("R2"));
+			assertEquals(1, testPlayer.hand.size());
+			assertEquals("R2", testPlayer.getTile(0).toString());
+			testPlayer.draw(new Tile("O9"));
+			assertEquals(2, testPlayer.hand.size());
+			assertEquals("O9", testPlayer.getTile(1).toString());
+			// auto sort, O1 should in position 1
+			testPlayer.draw(new Tile("O1"));
+			assertEquals(3, testPlayer.hand.size());
+			assertEquals("O1", testPlayer.getTile(1).toString());
+		} catch (InvalidTileException e) {
+			fail(e.getErrMsg());
 		}
 	}
 
-	@Test
 	public void test_play() {
-		testPlayer.draw(tile1);
-		assertEquals(1, testPlayer.handSize());
-		testPlayer.play(0);
-		assertEquals(0, testPlayer.handSize());
+		try {
+			testPlayer.initHand(new ArrayList<Tile>());
+			testPlayer.draw(new Tile("B2"));
+			assertEquals(1, testPlayer.hand.size());
+			assertEquals("B2", testPlayer.getTile(0).toString());
+			testPlayer.draw(new Tile("G5"));
+			assertEquals(2, testPlayer.hand.size());
+			assertEquals("G5", testPlayer.getTile(1).toString());
+			testPlayer.draw(new Tile("G7"));
+			assertEquals(3, testPlayer.hand.size());
+			assertEquals("G7", testPlayer.getTile(2).toString());
+			testPlayer.draw(new Tile("O3"));
+			assertEquals(4, testPlayer.hand.size());
+			assertEquals("O3", testPlayer.getTile(3).toString());
+			testPlayer.play(2);
+			assertEquals(3, testPlayer.hand.size());
+			assertEquals("O3", testPlayer.getTile(2).toString());
+			testPlayer.play(0);
+			assertEquals(2, testPlayer.hand.size());
+			assertEquals("G5", testPlayer.getTile(0).toString());
+		} catch (InvalidTileException e) {
+			fail(e.getErrMsg());
+		}
 	}
-	
-	public void test_play2() {
-		testPlayer.draw(tile1);
-		assertEquals(1, testPlayer.handSize());
-		testPlayer.draw(tile2);
-		assertEquals(2, testPlayer.handSize());
-		testPlayer.play(1);
-		assertEquals(1, testPlayer.handSize());
-	}
-	
-	
 
-	@Test
-	public void test_draw() {
-		testPlayer.draw(tile1);
-		assertEquals(1, testPlayer.handSize());
-		assertEquals(tile1, testPlayer.getHand(0));
-		testPlayer.draw(tile2);
-		assertEquals(2, testPlayer.handSize());
-		assertEquals(tile2, testPlayer.getHand(1));
-	}
-	
-	@Test
 	public void test_getName() {
 		testPlayer = new Player("Tony");
 		assertEquals("Tony", testPlayer.getName());
