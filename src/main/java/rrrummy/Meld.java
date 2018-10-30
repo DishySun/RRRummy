@@ -277,12 +277,14 @@ public class Meld {
 		}
 	}
 	public Tile removeHead() {
+		if(size() == 0) return null;
 		Tile t = meld.remove(0);
 		if (!t.isJoker()) tileNumber--;
 		this.generateMap();
 		return t;
 	}
 	public Tile removeTail() {
+		if(size() == 0) return null;
 		Tile t = meld.remove(size()-1);
 		if (!t.isJoker()) tileNumber--;
 		this.generateMap();

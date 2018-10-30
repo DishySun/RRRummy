@@ -1,6 +1,10 @@
 package rrrummy;
 
 import junit.framework.TestCase;
+import rrrummy.AbleToAddBothSideException;
+import rrrummy.InvalidTileException;
+import rrrummy.Meld;
+import rrrummy.Tile;
 
 public class MeldTest extends TestCase {
 	private Meld testMeld;
