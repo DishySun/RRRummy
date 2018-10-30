@@ -1,7 +1,5 @@
 package rrrummy;
 
-import java.util.ArrayList;
-
 import junit.framework.TestCase;
 
 public class MeldTest extends TestCase {
@@ -293,6 +291,31 @@ public class MeldTest extends TestCase {
 			fail();
 		}
 	}
+	
+	public void testCut2() {
+		init();
+		try {
+			assertTrue(testMeld.add(r1));
+			assertTrue(testMeld.add(r2));
+			assertTrue(testMeld.add(r3));
+			assertTrue(testMeld.add(r4));
+			assertTrue(testMeld.add(r5));
+			assertTrue(testMeld.add(r6));
+			assertTrue(testMeld.add(r7));
+			assertTrue(testMeld.add(r8));
+			Meld returnMeld = testMeld.cut(7); // cut at r8
+			assertEquals(7, testMeld.size());
+			assertEquals(1, returnMeld.size());
+			assertEquals(testMeld.removeHead(), r1);
+			assertEquals(testMeld.removeHead(), r2);
+			assertEquals(testMeld.removeHead(), r3);
+			assertEquals(testMeld.removeHead(), r4);
+			assertEquals(r8, returnMeld.removeHead());
+		} catch (AbleToAddBothSideException e) {
+			fail();
+		}
+	}
+
 
 	public void testReplace() {
 		init();
