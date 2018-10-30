@@ -348,7 +348,13 @@ public class Meld {
 		}
 		return str+"]";
 	}
+	
 	public HashMap<String, Integer> getMap(){return tileMap;}
-	public void removeTile(Tile t) {meld.remove(t);}
+	public void removeTile(Tile t) {
+		if (!t.isJoker()) tileNumber--;
+		this.generateMap();
+		meld.remove(t);
+	}
+	public void setTile(int i, Tile t) {meld.set(i, t);}
 	//Methods for test case:
 }

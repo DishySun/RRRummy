@@ -46,4 +46,5 @@ public class Table {
 	}
 	
 	public Meld getMeld(int i) {return table.get(i);}
+	public ArrayList<Meld> getMeld() {return table;}
 }
