@@ -1,18 +1,23 @@
-package rrrummy;
+package players;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+
+import rrrummy.Tile;
 
 public class Hand {
 	private ArrayList<Tile> hand;
 	
-	public Hand() {
-		hand = new ArrayList<Tile>();
+	public Hand(ArrayList<Tile> initHand) {
+		hand = initHand;
+		this.sort();
 	}
 	
-	public ArrayList<Tile> getHand(){return hand;}
-	public void add(Tile t) {hand.add(t);}
+	public Tile getTile(int i){return hand.get(i);}
+	public void add(Tile t) {
+		hand.add(t);
+		this.sort();
+	}
 	public Tile remove(int i) {return hand.remove(i);}
 	public int size() {return hand.size();}
 	public Tile remove() {return hand.remove(size()-1);}
@@ -25,18 +30,16 @@ public class Hand {
 		return aString;
 	}
 	public void sort() {
-		//TODO: need to be implemented
-		//use "boolean Tile.isGreaterThan(Tile)"
+
 		Collections.sort(hand, new Comparator<Tile>(){
 
 			@Override
 			public int compare(Tile t1, Tile t2) {
-				// TODO Auto-generated method stub
-				if (t1.isGreaterThan(t2)) {
+					if (t1.isGreaterThan(t2)) {
 					return 1;
 				}else return -1;
 			}
 		
-	});
-}
+		});
+	}
 }

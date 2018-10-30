@@ -1,40 +1,56 @@
 package rrrummy;
 import java.util.ArrayList;
 
-public class Table {
+import observer.Observer;
+import observer.Subject;
+
+public class Table implements Subject{
 	private ArrayList<Meld> table;
+	private ArrayList<Observer> observers;
 	public Table() {
 		table = new ArrayList<Meld>();
+		observers = new ArrayList<Observer>();
 	}
 	
 	public int size() {return table.size();}
 	public void add(Tile t) {
 			table.add(new Meld(t));
+			notifyObserver();
 	}
 	public void add(ArrayList<Tile> arr) {
 		table.add(new Meld(arr));
+		notifyObserver();
 	}
 	public boolean add(Tile t, int i) throws AbleToAddBothSideException{
 		if (i >= this.size()) return false;
-		return table.get(i).add(t);
+		boolean b =table.get(i).add(t);
+		if(b) notifyObserver();
+		return b;
 	}
 	
 	public Tile removeHead(int i) {
-		return table.get(i).removeHead();
+		Tile t = table.get(i).removeHead();
+		if (t != null) notifyObserver();
+		return t;
 	}
 	
 	public Tile removeTail(int i) {
-		return table.get(i).removeTail();
+		Tile t = table.get(i).removeTail();
+		if (t != null) notifyObserver();
+		return t;
 	}
 	
 	public Tile replace(Tile t, int tableIndex, int meldIndex) {
-		return table.get(tableIndex).replace(t, meldIndex);
+		Tile tt = table.get(tableIndex).replace(t, meldIndex);
+		if (tt != null) notifyObserver();
+		return tt;
 	}
 	
 	public boolean cut(int meldIndex, int tileIndex) {
 		Meld m = table.get(meldIndex).cut(tileIndex);
 		if (m == null) return false;
 		table.add(m);
+		notifyObserver();
 		return true;
 	}
 	
@@ -46,5 +62,22 @@ public class Table {
 		}
 		return result;
 	}
-	//protected Meld getMeld(int i) {return table.get(i);}
+
+	@Override
+	public void register(Observer o) {
+		observers.add(o);	
+	}
+
+	@Override
+	public void unregister(Observer o) {
+		int index = observers.indexOf(o);
+		observers.remove(index);
+	}
+
+	@Override
+	public void notifyObserver() {
+		for (Observer o: observers) {
+			o.update(table);
+		}
+	}
 }
