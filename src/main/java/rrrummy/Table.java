@@ -8,15 +8,11 @@ public class Table {
 	}
 	
 	public int size() {return table.size();}
-	public boolean add(Tile t) {
-		//TODO: add Tile t to a new meld
-		try{
+	public void add(Tile t) {
 			table.add(new Meld(t));
-			return true;
-		}catch(AbleToAddBothSideException e) {
-			return false;
-		}
-		
+	}
+	public void add(ArrayList<Tile> arr) {
+		table.add(new Meld(arr));
 	}
 	public boolean add(Tile t, int i) throws AbleToAddBothSideException{
 		if (i >= this.size()) return false;
@@ -35,8 +31,11 @@ public class Table {
 		return table.get(tableIndex).replace(t, meldIndex);
 	}
 	
-	public void cut(int meldIndex, int tileIndex) {
-		table.add(table.get(meldIndex).cut(tileIndex));
+	public boolean cut(int meldIndex, int tileIndex) {
+		Meld m = table.get(meldIndex).cut(tileIndex);
+		if (m == null) return false;
+		table.add(m);
+		return true;
 	}
 	
 	public String toString() {

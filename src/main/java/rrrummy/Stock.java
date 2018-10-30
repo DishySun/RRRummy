@@ -12,8 +12,8 @@ public class Stock {
 	public Tile draw() {return stock.pop();}
 	private void initStock() throws InvalidTileException{
 		for (Tile.Color c : Tile.Color.values()) {
+			if (c == Tile.Color.JOKER) break;
 			for (int i = 1; i <= 13; i++) {
-				if (c == Tile.Color.JOKER) break;
 				stock.push(new Tile(c,i));
 				stock.push(new Tile(c,i));
 			}

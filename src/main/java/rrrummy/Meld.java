@@ -16,21 +16,28 @@ public class Meld {
 		tileNumber = 0;
 		tileMap = null;
 	}
-	public Meld(Tile t) throws AbleToAddBothSideException{
+	public Meld(Tile t) {
 		meld = new ArrayList<Tile>();
 		tileNumber = 0;
 		tileMap = null;
-		this.add(t);
+		this.addHead(t);
 	}
-	private Meld(ArrayList<Tile> m) {
+	public Meld(ArrayList<Tile> m) {
 		meld = new ArrayList<Tile>();
 		tileNumber = 0;
 		tileMap = null;
 		while (m.size()>0) {
+			Tile t = m.remove(0);
 			try {
-				this.add(m.remove(0));
+				if(!this.add(t)) {
+					m.add(0, t);
+					break;
+				}
 			}catch(AbleToAddBothSideException e) {
-				
+				if (!this.addTail(t)){
+					m.add(0, t);
+					break;
+				}
 			}
 		}
 	}
@@ -283,6 +290,7 @@ public class Meld {
 	}
 	public Meld cut(int i){
 		if (i >= size() || i <= 0) return null;
+		if (i == size()-1) return new Meld(meld.remove(size() - 1));
 		ArrayList<Tile> returnArr = new ArrayList<Tile>();
 		while (i >= 0) {
 			returnArr.add(meld.remove(0));
