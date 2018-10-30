@@ -34,6 +34,10 @@ public class Player {
 	public void printHand() {
 		System.out.println(name+"'s hand: "+hand);
 	}
+	
+	public int handSize() {return hand.size();}
+	
+	public Tile getHand(int i) {return hand.getTile(i);}
 	/*public String getCommand(View v) {
 	 * TODO: need to be implemented
 		return v.getCommand();

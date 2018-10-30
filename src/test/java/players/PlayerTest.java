@@ -1,9 +1,12 @@
-package rrrummy;
+package players;
 
 import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import rrrummy.InvalidTileException;
+import rrrummy.Tile;
 
 public class PlayerTest {
 	private Player testPlayer;	
