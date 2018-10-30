@@ -2,6 +2,7 @@ package players;
 
 import java.util.ArrayList;
 
+import game.View;
 import rrrummy.Tile;
 
 public class Player {
@@ -20,10 +21,12 @@ public class Player {
 	
 	public void initHand(ArrayList<Tile> arr) {
 		hand = new Hand(arr);
+		hand.sort();
 	}
 	
 	public void draw(Tile t) {
 		hand.add(t);
+		hand.sort();
 	}
 	
 	public Tile play(int index) {
@@ -34,8 +37,9 @@ public class Player {
 	public void printHand() {
 		System.out.println(name+"'s hand: "+hand);
 	}
-	/*public String getCommand(View v) {
-	 * TODO: need to be implemented
+	public String getCommandString(View v) {
 		return v.getCommand();
-	}*/
+	}
+	public int handSize() {return hand.size();}
+	public Tile getHand(int i) {return hand.getTile(i);}
 }

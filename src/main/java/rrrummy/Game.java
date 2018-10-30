@@ -37,4 +37,8 @@ public class Game {
 	public Tile replace(Tile t, int tableIndex, int meldIndex) {
 		return table.replace(t, tableIndex, meldIndex);
 	}
+	
+	public void printTable() {
+		System.out.println(table);
+	}
 }
