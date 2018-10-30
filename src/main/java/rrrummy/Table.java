@@ -32,8 +32,10 @@ public class Table {
 	}
 	
 	public boolean cut(int meldIndex, int tileIndex) {
-		if ()
-		table.add(table.get(meldIndex).cut(tileIndex));
+		Meld m = table.get(meldIndex).cut(tileIndex);
+		if (m == null) return false;
+		table.add(m);
+		return true;
 	}
 	
 	public String toString() {

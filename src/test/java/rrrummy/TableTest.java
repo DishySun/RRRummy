@@ -37,20 +37,20 @@ public class TableTest extends TestCase{
 	
 	public void test_add() {
 		assertEquals(0,testTable.size());
-		assertTrue(testTable.add(r1));
+		testTable.add(r1);
 		assertEquals(1,testTable.size());
 		try {
 			assertTrue(testTable.add(r2, 0));
 			assertEquals(1,testTable.size());
 			assertFalse(testTable.add(r3, 1));//out of bound 
-			assertTrue(testTable.add(r1));
+			testTable.add(r1);
 		}catch (AbleToAddBothSideException e) {
 			fail();
 		}
 	}
 	
 	public void test_cut() {
-		assertTrue(testTable.add(r1));
+		testTable.add(r1);
 		try {
 			assertTrue(testTable.add(r2, 0));
 			assertTrue(testTable.add(r3, 0));
