@@ -30,6 +30,7 @@ public class Player {
 	}
 	
 	public Tile play(int index) {
+		if (index >= handSize() || index < 0) return null;
 		return hand.remove(index);
 	}
 	
@@ -41,5 +42,8 @@ public class Player {
 		return v.getCommand();
 	}
 	public int handSize() {return hand.size();}
-	public Tile getHand(int i) {return hand.getTile(i);}
+	public Tile getHand(int i) {
+		if (i >= handSize() || i < 0) return null;
+		return hand.getTile(i);
+	}
 }

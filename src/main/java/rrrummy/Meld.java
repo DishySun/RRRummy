@@ -321,7 +321,6 @@ public class Meld {
 		return 0;
 	}
 	public Tile replace(Tile t, int index) {
-		//TODO: require implementation
 		//return the Tile that has been replaced, or return null if nothing to replace
 		if (!meld.get(index).isJoker()) return null;
 		if (t.isJoker()) return null;
@@ -361,5 +360,12 @@ public class Meld {
 		return str+"]";
 	}
 	public HashMap<String, Integer> getMap(){return tileMap;}
-	//Methods for test case:
+	public static Meld newMeld(ArrayList<Tile> arr) {
+		Meld m = new Meld();
+		for (int i = 0; i < arr.size(); i++) {
+			if (!m.addTail(arr.get(i))) return null;
+		}
+		arr.clear();
+		return m;
+	}
 }

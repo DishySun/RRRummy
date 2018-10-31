@@ -9,7 +9,10 @@ public class Stock {
 		initStock();
 	}
 	public int size() {return stock.size();}
-	public Tile draw() {return stock.pop();}
+	public Tile draw() {
+		if (size() == 0) return null;
+		return stock.pop();
+	}
 	private void initStock() throws InvalidTileException{
 		for (Tile.Color c : Tile.Color.values()) {
 			if (c == Tile.Color.JOKER) break;
