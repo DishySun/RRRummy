@@ -365,7 +365,6 @@ public class Meld {
 		for (int i = 0; i < arr.size(); i++) {
 			if (!m.addTail(arr.get(i))) return null;
 		}
-		arr.clear();
 		return m;
 	}
 }

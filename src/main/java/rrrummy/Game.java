@@ -16,12 +16,20 @@ public class Game {
 	private View view;
 	private CommandControl commandControl;
 	
-	public Game(ArrayList<Player> ps, View v) throws InvalidTileException{
+	public Game(ArrayList<Player> ps, View v){
 		this.table = new Table();
 		this.stock = new Stock();
 		players = ps;
 		view = v;
 		commandControl = new CommandControl();
+	}
+	
+	public Game(ArrayList<Player> ps, ArrayList<Tile> fileStock, View v){
+		this.table = new Table();
+		this.stock = new Stock(fileStock);
+		players = ps;
+		view = v;
+	commandControl = new CommandControl();				
 	}
 	private void initPlayersHand() {
 		for (Player p: players) {
@@ -51,13 +59,17 @@ public class Game {
 	public boolean playerPlays(int playerIndex,ArrayList<Integer> playerHandIndexs) {
 		//play an ArrayList of Tiles to new meld
 		ArrayList<Tile> arr = new ArrayList<Tile>();
+		
 		for (Integer i : playerHandIndexs) {
-			if(players.get(playerIndex).getHand(i) == null) return false;
-		}
-		for (Integer i : playerHandIndexs) {
-			arr.add(players.get(playerIndex).play(i));
+			Tile t =players.get(playerIndex).getHand(i);
+			if(t == null) return false;
+			arr.add(t);
 		}
 		if(!table.add(arr)) return false;
+		for (Tile t : arr) {
+			int i = players.get(playerIndex).getHand(t);
+			players.get(playerIndex).play(i);
+		}
 		hasPlayed++;
 		return true;
 		
@@ -136,14 +148,20 @@ public class Game {
 		hasPlayed = 0;
 		Player winner = null;
 		while (winner == null) {
+			players.get(currentPlayer).printHand();
+			System.out.println(table);
+			System.out.println("Stock Left: "+stock.size());
 			String str = players.get(currentPlayer).getCommandString(view);
 			commandControl.newCommand(this, str, players.get(currentPlayer));
 			winner = determineWinner();
 		}
+		System.out.println("The winner is: "+ winner.getName());
 		return winner;
 	}
 	
 	public void printTable() {
 		System.out.println(table);
 	}
+	public int stockSize() {return stock.size();}
+	public int tableSize() {return table.size();}
 }
