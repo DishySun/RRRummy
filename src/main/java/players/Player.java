@@ -9,7 +9,7 @@ public class Player {
 	private String name;
 	protected Hand hand;
 	private int playerId;
-	static private int idTracker = 0;
+	protected static int idTracker = 0;
 	
 	public Player(String name) {
 		this.name = name;
