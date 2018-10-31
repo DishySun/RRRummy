@@ -15,7 +15,7 @@ public class CommandControl {
 	public boolean newCommand(GameControl gc, String command, Player p) {
 		if (command.compareToIgnoreCase("End") == 0) {
 			System.out.println(p.getName() + " decided to draw a tile and end his turn.");
-			Command c = new DrawAndEndCommand(gc);
+			Command c = new EndTurnCommand(gc);
 			commandHistory.add(c);
 			c.excute();
 			return true;

@@ -77,6 +77,10 @@ public class Tile {
 	public boolean compareTo(String s) {
 		return s.equals(this.toString());
 	}
+	public boolean isEqualThan(Tile t) {
+		if (this.number > t.number) return true;
+		else return false;
+	}
 	public String toString() {
 		String str = "";
 		switch(color) {
