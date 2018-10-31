@@ -42,4 +42,11 @@ public class Hand {
 		
 		});
 	}
+	// hand color order after sorted: BLUE, RED, GREEN, ORANGE,JOKER
+	public boolean contaions(Tile t) {
+		return hand.contains(t);
+	}
+	public int indexOf(Tile t) {
+		return hand.indexOf(t);
+	}
 }

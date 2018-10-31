@@ -46,4 +46,11 @@ public class Player {
 		if (i >= handSize() || i < 0) return null;
 		return hand.getTile(i);
 	}
+	public int getHand(Tile t) {
+		if (!hand.contaions(t)) return -1;
+		return hand.indexOf(t);
+	}
+	public boolean handContains(Tile t) {
+		return hand.contaions(t);
+	}
 }
