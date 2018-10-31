@@ -17,4 +17,7 @@ public class AI extends Player{
 		return strategy.generateCommand();
 	}
 
+	public AIStrategy getSrategy() {
+		return strategy;
+	}
 }
