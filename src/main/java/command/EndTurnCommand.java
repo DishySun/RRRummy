@@ -1,16 +1,19 @@
 package command;
 
-import game.GameControl;
+import players.Player;
+import rrrummy.Game;
 
 public class EndTurnCommand implements Command{
 
-	private GameControl gameControl;
-	public EndTurnCommand(GameControl gc) {
-		gameControl = gc;
+	private Game game;
+	private Player player;
+	public EndTurnCommand(Game game, Player player) {
+		this.game = game;
+		this.player = player;
 	}
 	@Override
 	public void excute() {
-		gameControl.playerEndTurn();
+		game.endTurn(player.getId());
 	}
 
 }
