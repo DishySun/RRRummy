@@ -71,8 +71,14 @@ public class PlayCommand implements Command{
 							return game.playerPlays(handIndex, meldIndex);
 						}catch(AbleToAddBothSideException e) {
 							String str = view.getHeadOrTail("play");
-							if(str.equalsIgnoreCase("head")) return game.playerPlays(handIndex, meldIndex, true);
-							else return game.playerPlays(handIndex, meldIndex, false);
+							if(str.equalsIgnoreCase("head")) {
+								headOrTail = 0;
+								return game.playerPlays(handIndex, meldIndex, true);
+							}
+							else {
+								headOrTail = 1;
+								return game.playerPlays(handIndex, meldIndex, false);
+							}
 						}
 			case 0:		return game.playerPlays(handIndex, meldIndex, true);
 			default:	return game.playerPlays(handIndex, meldIndex, false);
