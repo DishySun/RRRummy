@@ -248,6 +248,7 @@ public class Meld {
 				this.generateMap();
 				return true;
 		case 3: if (isSet()) {
+					if(t.isJoker()&&isRun())throw new AbleToAddBothSideException(this.toString(), t.toString());
 					meld.add(t);
 					if(!t.isJoker()) tileNumber++;
 					this.generateMap();
