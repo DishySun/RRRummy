@@ -53,7 +53,6 @@ public class Table implements Subject{
 	}
 	
 	public Tile removeTail(int i) {
-		
 		Tile t = table.get(i).removeTail();
 		if (table.get(i).size() == 0) table.remove(i);
 		if (t != null) notifyObserver();

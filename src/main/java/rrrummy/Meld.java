@@ -247,7 +247,7 @@ public class Meld {
 				if(!t.isJoker()) tileNumber++;
 				this.generateMap();
 				return true;
-		case 3: if ((isSet() && !t.isJoker())) {
+		case 3: if (isSet()) {
 					meld.add(t);
 					if(!t.isJoker()) tileNumber++;
 					this.generateMap();
@@ -291,7 +291,7 @@ public class Meld {
 		return t;
 	}
 	public Meld cut(int i){
-		if (i >= size() || i <= 0) return null;
+		if (i >= size() || i < 0 || size() == 1) return null;
 		if (i == size()-1) return new Meld(meld.remove(size() - 1));
 		ArrayList<Tile> returnArr = new ArrayList<Tile>();
 		while (i >= 0) {
