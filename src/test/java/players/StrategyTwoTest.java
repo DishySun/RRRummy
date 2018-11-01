@@ -74,11 +74,11 @@ public class StrategyTwoTest {
 //B6, B11, R1, R2, R3, R3, R4, R4, G5, G10, O7, O11, JK, JK
 		testAI.getSrategy().setHand(hand2);
 		data.setValue(table, handSizes);
-		//other 2 players haven not play initial, thu draw
+		//other 2 players haven not play initial, thu END
 		String command = testAI.getSrategy().generateCommand();
-		assertEquals("DRAW", command);
+		assertEquals("END", command);
 		handSizes.put(1,13);
-		//someone have play initial, thu draw
+		//someone have play initial, thu END
 		command = testAI.getSrategy().generateCommand();
 		//first play run
 		assertEquals("Play[R1, R2, R3, R4]", command);
@@ -104,28 +104,13 @@ public class StrategyTwoTest {
 		hand2.remove(hand.indexOf(bJoker));
 //G5, B6, O7, G10
 		command = testAI.getSrategy().generateCommand();
-		//after initial,2 player, no one has less 3 tile than ai, nothing to play, end
+		//after initial,nothing to play, end
 		assertEquals("END", command);
-		hand2.add(atile1);
-		hand2.add(atile2);
-		hand2.add(atile3);
-		command = testAI.getSrategy().generateCommand();
-		//2 player, one has less 3 tile than ai, play, or end
-		assertEquals("Play[R1, R2, R3]", command);
-		hand2.remove(hand.indexOf(atile1));
-		hand2.remove(hand.indexOf(atile2));
-		hand2.remove(hand.indexOf(atile3));
-		hand2.add(atile1);
-		hand2.add(atile5);
-		hand2.add(atile9);
-		command = testAI.getSrategy().generateCommand();
-		//2 player, one has less 3 tile than ai, play, or draw
-		assertEquals("DRAW", command);
 	}
 	
 	@Test
 	public void test_generateCommand2() {
-		//draw
+		//END
 		try {
 			atile1 = new Tile("R1");
 			atile2 = new Tile("R2");
@@ -169,8 +154,8 @@ public class StrategyTwoTest {
 		testAI.getSrategy().setHand(hand2);
 		data.setValue(table, handSizes);
 		String command = testAI.getSrategy().generateCommand();
-		//total no. < 30, DRAW
-		assertEquals("DRAW", command);
+		//total no. < 30, END
+		assertEquals("END", command);
 	}
 	
 	@Test
@@ -245,7 +230,8 @@ public class StrategyTwoTest {
 //JK, G10, O11, B11
 		command = testAI.getSrategy().generateCommand();
 		// initial no. > 30, no way to play all, END
-		assertEquals("Play[O11, B11, JK]", command);
+		assertEquals("END", command);
+		
 	}
 
 	@Test
@@ -318,9 +304,19 @@ public class StrategyTwoTest {
 		hand2.remove(hand.indexOf(atile7));
 		hand2.remove(hand.indexOf(atile12));
 //JK, G10, O11, B11
-		// initial no. > 30, check playing
+		// initial no. > 30, check playing,
 		command = testAI.getSrategy().generateCommand();
-		assertEquals("Play[O11, B11, JK]", command);
+		assertEquals("END", command);
+		System.out.println(hand);
+		ArrayList<Tile> melds = new ArrayList<Tile>();
+		melds.add(atile2);
+		melds.add(atile3);
+		melds.add(atile4);
+		Meld meld = new Meld(melds);
+		table.add(meld);
+		//  check playing,cannot play all, check if tile can match meld on table
+		command = testAI.getSrategy().generateCommand();
+		assertEquals("PlayJKto[R2, R3, R4]", command);
 	}
 	
 }

@@ -54,7 +54,7 @@ public class StrategyThree implements AIStrategy, Observer {
 						return "Something went wrong";
 				}
 			}	else
-					return "DRAW";
+				return "END";
 		}else {
 			for(Entry<Integer, Integer> entry : playerHandSizes.entrySet()) {
 				//int id = entry.getKey();
@@ -88,54 +88,40 @@ public class StrategyThree implements AIStrategy, Observer {
 								return "Play" + tile + "to" + table.get(index) ;
 							}
 						}else {
-							if(hasPlayInit) {
-								hasPlayInit  = false;
-								return "END";
-							} else {
-								if(hasPlayRest) {
-									hasPlayRest = false;
-									return "End";
-								}
-								else {
-									System.out.println("p3 could play but has not tile to play,p3 would reuse table");
-									return "DRAW";
-								}
-									
-							}	
+									System.out.println("p3 could play but has not tile to play,p3 tried reuse table");
+									return "END";
 						}
 					}	
 				}
 			}else {
-				if(myHand.canPlayAll(null)) {	//if can play all, not request use of table
+				if(myHand.canPlayAll(table)) {	//if can play all, request use of table
 					run = myHand.findRun();
 					if(run != null) {
 						countInitial += myHand.checkSum(run);
 						hasPlayRest = true;
 						return "Play" + run;
-					}
-					else {
+					} else {
 						group = myHand.findGroup();
 						if(group != null) {
 							countInitial += myHand.checkSum(group);
 							hasPlayRest = true;
 							return "Play" + group;
-						}	
-						else
-							return "Something wrong";
+						}	else {
+							meldOnTable = myHand.findMeldsOnTable(table);
+							if(meldOnTable != null) {
+								for(Entry<Tile, Integer>Entry : meldOnTable.entrySet()) {
+									Tile tile = Entry.getKey();
+									int index = Entry.getValue();
+									hasPlayRest = true;
+									return "Play" + tile + "to" + table.get(index) ;
+								}
+							}else {
+										return "Something Wrong";
+							}
+						}
 					}
 				}else {
-					if(hasPlayInit) {
-						hasPlayInit  = false;
-						return "END";
-					} else {
-						if(hasPlayRest) {
-							hasPlayRest = false;
-							return "End";
-						}
-						else {
-							return "DRAW";
-						}
-					}
+					return "END";
 				}			
 			}
 			return "??";

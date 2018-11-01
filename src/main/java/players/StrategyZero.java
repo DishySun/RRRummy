@@ -51,7 +51,7 @@ public class StrategyZero implements AIStrategy, Observer{
 						return "Something wrong";
 				}
 			}	else
-					return "DRAW";
+				return "END";
 		}else {
 			run = myHand.findRun();
 			if(run != null)	{
@@ -69,9 +69,9 @@ public class StrategyZero implements AIStrategy, Observer{
 				return "END";
 			} else {
 				if(hasPlayRest)
-					return "End";
+					return "END";
 				else
-					return "DRAW";
+					return "END";
 			}	
 		}
 	}

@@ -95,7 +95,7 @@ public class StrategyZeroTest {
 	
 	@Test
 	public void test_generateCommand2() {
-		//draw
+		//END
 		try {
 			atile1 = new Tile("R1");
 			atile2 = new Tile("R2");
@@ -132,11 +132,10 @@ public class StrategyZeroTest {
 		
 		Hand hand2 = new Hand(hand);
 		testAI.initHand(hand);
-		testAI.printHand();
 		testAI.getSrategy().setHand(hand2);
 		String command = testAI.getSrategy().generateCommand();
-		//total no. < 30, DRAW
-		assertEquals("DRAW", command);
+		//total no. < 30, END
+		assertEquals("END", command);
 	}
 	
 	@Test
