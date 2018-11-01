@@ -14,7 +14,7 @@ public class CommandControl {
 	
 	public void newCommand(Game game, String command, Player p) {
 		if (command.compareToIgnoreCase("end") == 0) {
-			Command c = new EndTurnCommand(game, p);
+			Command c = new EndTurnCommand(game);
 			commandHistory.add(c);
 			c.excute();
 		}
