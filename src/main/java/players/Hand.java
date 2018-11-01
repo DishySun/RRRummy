@@ -111,6 +111,8 @@ public class Hand {
 	
 	public ArrayList<Tile> findRun() {
 		// TODO Auto-generated method stub
+		if(hand.size() == 0)
+			return null;
 		ArrayList<Tile> tile4Run = new ArrayList<Tile>();
 		boolean disconnect = true;	// check if next tile number & color is connecte
 		boolean run = true;		// used to stop loop when reach 30 points
@@ -129,6 +131,7 @@ public class Hand {
 				
 			hasJoker = true;
 		}
+		
 		
 		tile4Run.add(hand.get(0));
 		for(int i=1; i<size()-jokerNum;i++) {
@@ -153,7 +156,8 @@ public class Hand {
 		if(jokerorg > 1) jokerNum--;
 		while(count != 0) {
 			if(hasJoker) {
-				
+				if(hand.size() < 2)
+					return null;
 				tile4Run.add(hand.get(0));
 				handIndex = 1;
 				while(handIndex < size()-jokerorg && run) {
@@ -245,6 +249,8 @@ public class Hand {
 	
 	public ArrayList<Tile> findGroup() {
 		// TODO Auto-generated method stub
+		if(hand.size() == 0)
+			return null;
 		ArrayList<Tile> tile4Set = new ArrayList<Tile>();
 		boolean disconnect = true;	// check if next tile number & color is connecte
 		boolean run = true;		// used to stop loop when reach 30 points
@@ -279,12 +285,16 @@ public class Hand {
 		if(tile4Set.size() >= 3)
 			return tile4Set;
 		//if not return above, check if has joker, if has,run, else return null
+		if(hand.size() == 0)
+			return null;
 		tile4Set = new ArrayList<Tile>();
 		playIndex = 0;
 		int count = jokerorg;
 		if(jokerorg > 1) jokerNum--;
 		while(count != 0) {
 			if(hasJoker) {
+				if(hand.size() < 2)
+					return null;
 				tile4Set.add(hand.get(jokerorg));	// J 1 5 5 ....
 				handIndex = jokerorg;
 				while(handIndex < size()) {	
@@ -303,14 +313,14 @@ public class Hand {
 					
 					if (disconnect){ // disconnect
 						disconnect = false;
-						if(tile4Set.size() < 3) {
+						if(tile4Set.size() <= 3) {
 							if(jokerNum > 0) {
 								tile4Set.add( hand.get(0)); // add joker
 								jokerNum--;
 								playIndex++;
 								if(tile4Set.size() >= 3 && handIndex == size()) 
 									return tile4Set;
-							} else {
+							} else if(jokerNum == 0 && tile4Set.size() < 3){
 								for(int i = 0; i<tile4Set.size();i++) {
 									if(tile4Set.get(i).getColor() == Tile.Color.JOKER) 
 										jokerNum++;
@@ -319,7 +329,9 @@ public class Hand {
 								tile4Set.add(hand.get(handIndex));
 								playIndex = 0;
 								handIndex++;
-							} 
+							} else {
+								return tile4Set;
+							}
 						} else {
 							return tile4Set;
 						}
@@ -355,8 +367,12 @@ public class Hand {
 			}	else
 					break;
 		}
+		if(temphand.size() ==0)
+			return count;
+
 		if(count < 30) {
 			while(true) {
+				//System.out.println(temphand.size());
 				group = temphand.findGroup();
 				if(group != null) {
 					for(Tile tile : group) {
@@ -371,10 +387,13 @@ public class Hand {
 	}
 	
 	public HashMap<Tile,Integer> findMeldsOnTable(ArrayList<Meld> meldList) {
+		if(hand.size() == 0)
+			return null;
 		HashMap<Tile, Integer> mdlesMap = new HashMap<Tile,Integer>();
 		ArrayList<Tile>tempHandArray = new  ArrayList<Tile>(hand);
 		Hand temphand = new Hand(tempHandArray);
 		ArrayList<Meld> tempMeldList = new ArrayList<Meld>(meldList);
+		
 		
 		for(int j=0; j<temphand.size();j++) {	
 			for(int i=0; i<tempMeldList.size();i++) {
@@ -423,46 +442,46 @@ public class Hand {
 		int count = 0;
 		
 		while(true) {
-			run = temphand.findRun();
-			if(run != null) {
-				//System.out.println(run);
-				for(Tile tile : run) {
-					temphand.remove(tempHandArray.indexOf(tile));
-					count++;
-				}
-			}	else
-					break;
+				run = temphand.findRun();
+				if(run != null) {
+					//System.out.println(run);
+					for(Tile tile : run) {
+						temphand.remove(tempHandArray.indexOf(tile));
+						count++;
+					}
+				}	else
+						break;
 		}
 	
 		while(true) {
 			//System.out.println(temphand);
-			group = temphand.findGroup();
-			if(group != null) {
-				//System.out.println(group);
-				for(Tile tile : group) {
-					temphand.remove(tempHandArray.indexOf(tile));
-					count++;
-				}
-			}else
-					break;
+				group = temphand.findGroup();
+				if(group != null) {
+					//System.out.println(group);
+					for(Tile tile : group) {
+						temphand.remove(tempHandArray.indexOf(tile));
+						count++;
+					}
+				}else
+						break;
 		}
 		//System.out.println(hand);
-		/*while(true) {
-			meld2Table = temphand.findMeldsOnTable(tempMeldList);
+		while(true) {
+			meld2Table = temphand.findMeldsOnTable(meldList);
 			if(meld2Table != null) {
-				//System.out.println(meld2Table);
-				temphand.play2Table(mdlesMap, tempMeldList);
+				//temphand.play2Table(mdlesMap, meldList);
 				for(Entry<Tile, Integer> entry : meld2Table.entrySet()) {
 					Tile tile = entry.getKey();
 					int index = entry.getValue();
 					temphand.remove(tempHandArray.indexOf(tile));
-					tempMeldList.get(index).addTail(tile);
 				}
 				count++;
 			}else
 					break;
-		}*/
-		
+		}
+		//System.out.println());
+		///System.out.println(size());
+		//System.out.println(count);
 		return count == size();
 	}
 	

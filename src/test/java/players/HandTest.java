@@ -854,7 +854,7 @@ public class HandTest {
 		hand.add(atile12);
 		hand.add(atile13);
 		hand.add(aJoker);
-		System.out.println(hand);
+		
 		canPlay = hand.canPlayAll(meldList);
 		assertTrue(canPlay);
 	}
@@ -896,7 +896,6 @@ public class HandTest {
 
 		meldList.add(melda);
 		meldList.add(meldb);
-		System.out.println(meldList);
 //[[R1, R2, R3], [R4, G4, JK]]
 		assertEquals(2, meldList.size());
 		hand.add(atile6);//R8*
@@ -912,9 +911,12 @@ public class HandTest {
 //[B4, B5, B6], [R4, JK, R6], {O4=1} = 7
 		assertFalse(canPlay);
 //B4, B5, B6, R4, R6, R8, G7, O4, JK
+		System.out.println(hand);
 		hand.remove(5);
 		hand.remove(5);
-		System.out.println(meldList);
+//B4, B5, B6, R4, R6, O4, JK
+//[[R1, R2, R3], [R4, G4, JK]]
+		canPlay = hand.canPlayAll(meldList);
 		assertTrue(canPlay);
 	}
 }
