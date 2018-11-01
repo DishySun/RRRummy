@@ -22,9 +22,9 @@ public class Game {
 		this.stock = new Stock();
 		players = ps;
 		view = v;
-		commandControl = new CommandControl();
+		commandControl = new CommandControl(view);
 		//set players to random sits
-		Collections.shuffle(players);
+		//Collections.shuffle(players);
 		currentPlayer = 0;
 	}
 	
@@ -33,7 +33,7 @@ public class Game {
 		this.stock = new Stock(fileStock);
 		players = ps;
 		view = v;
-		commandControl = new CommandControl();
+		commandControl = new CommandControl(view);
 		currentPlayer = 0;
 	}
 	private void initPlayersHand() {
@@ -192,7 +192,7 @@ public class Game {
 			System.out.println(table);
 			System.out.println("Stock Left: "+stock.size());
 			String str = players.get(currentPlayer).getCommandString(view);
-			commandControl.newCommand(this, str, players.get(currentPlayer));
+			commandControl.newCommand(this, str);
 			winner = determineWinner();
 		}
 		System.out.println("The winner is: "+ winner.getName());
