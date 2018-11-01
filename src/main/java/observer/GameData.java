@@ -35,9 +35,7 @@ public class GameData implements Subject{
 	@Override
 	public void notifyObserver() {
 		// TODO Auto-generated method stub
-		//System.out.println(observers.size());
 		for (Observer o: observers) {
-			//System.out.println(handSizes);
 			o.update(handSizes);
 			o.update(table);
 		}

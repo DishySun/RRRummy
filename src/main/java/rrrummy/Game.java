@@ -2,10 +2,12 @@ package rrrummy;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 
 import command.CommandControl;
 import game.View;
-import players.Player;
+import observer.GameData;
+import players.*;
 
 public class Game {
 	private static final int INIT_HAND_SIZE = 14;
@@ -16,10 +18,13 @@ public class Game {
 	private Stock stock;
 	private View view;
 	private CommandControl commandControl;
+	private GameData data;
+	private HashMap<Integer, Integer> handSizes;
 	
-	public Game(ArrayList<Player> ps, View v){
+	public Game(ArrayList<Player> ps, View v, GameData d){
 		this.table = new Table();
 		this.stock = new Stock();
+		data = d;
 		players = ps;
 		view = v;
 		commandControl = new CommandControl(view);
@@ -44,6 +49,7 @@ public class Game {
 			}
 			p.initHand(h);
 		}
+		
 	}
 	
 	public boolean playerDraw() {
@@ -183,9 +189,14 @@ public class Game {
 	
 	public Player startGame() {
 		//the winner will be returned
+		handSizes = new HashMap<Integer, Integer>();
 		initPlayersHand();
 		currentPlayer = 0; 
 		hasPlayed = 0;
+		for(Player player : players) {
+			handSizes.put(player.getId(), player.handSize());
+		}
+		data.setValue(table.getMeld(), handSizes );
 		Player winner = null;
 		while (winner == null) {
 			players.get(currentPlayer).printHand();
