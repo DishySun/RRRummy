@@ -1,6 +1,7 @@
 package rrrummy;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import command.CommandControl;
 import game.View;
@@ -22,6 +23,9 @@ public class Game {
 		players = ps;
 		view = v;
 		commandControl = new CommandControl();
+		//set players to random sits
+		Collections.shuffle(players);
+		currentPlayer = 0;
 	}
 	
 	public Game(ArrayList<Player> ps, ArrayList<Tile> fileStock, View v){
@@ -29,7 +33,8 @@ public class Game {
 		this.stock = new Stock(fileStock);
 		players = ps;
 		view = v;
-	commandControl = new CommandControl();				
+		commandControl = new CommandControl();
+		currentPlayer = 0;
 	}
 	private void initPlayersHand() {
 		for (Player p: players) {
@@ -41,89 +46,124 @@ public class Game {
 		}
 	}
 	
-	public boolean playerDraw(int playerIndex) {
+	public boolean playerDraw() {
 		Tile t = stock.draw();
 		if (t == null) return false;
-		players.get(playerIndex).draw(t);
+		players.get(currentPlayer).draw(t);
 		return true;
 	}
 	
-	public boolean playerPlays(int playerIndex, int playerHandIndex) {
+	public boolean playerPlays(int playerHandIndex) {
 		//play a single Tile to new meld
-		if(players.get(playerIndex).getHand(playerHandIndex) == null) return false;
-		table.add(players.get(playerIndex).play(playerHandIndex));
+		if(players.get(currentPlayer).getHand(playerHandIndex) == null) return false;
+		table.add(players.get(currentPlayer).play(playerHandIndex));
 		hasPlayed++;
 		return true;
 	}
 	
-	public boolean playerPlays(int playerIndex,ArrayList<Integer> playerHandIndexs) {
+	public boolean playerPlays(ArrayList<Integer> playerHandIndexs) {
 		//play an ArrayList of Tiles to new meld
 		ArrayList<Tile> arr = new ArrayList<Tile>();
 		
 		for (Integer i : playerHandIndexs) {
-			Tile t =players.get(playerIndex).getHand(i);
+			Tile t =players.get(currentPlayer).getHand(i);
 			if(t == null) return false;
 			arr.add(t);
 		}
 		if(!table.add(arr)) return false;
 		for (Tile t : arr) {
-			int i = players.get(playerIndex).getHand(t);
-			players.get(playerIndex).play(i);
+			int i = players.get(currentPlayer).getHand(t);
+			players.get(currentPlayer).play(i);
 		}
 		hasPlayed++;
 		return true;
 		
 	}
-	public boolean playerPlays(int playerIndex, int playerHandIndex ,int toMeldIndex, int headOrTail) throws AbleToAddBothSideException {
+	public boolean playerPlays(int playerHandIndex ,int toMeldIndex) throws AbleToAddBothSideException {
 		//play a Tile to specific meld
 		/*
 		 * headOrTail; -1 => add(); 0 => addHead;  other positive number => add(Tail)
 		 * */
-		Tile t = players.get(playerIndex).getHand(playerHandIndex);
+		Tile t = players.get(currentPlayer).getHand(playerHandIndex);
 		if (t == null) return false;
-		boolean b = false;
-		switch(headOrTail) {
-		case -1: 	b =  table.add(t, toMeldIndex);
-					break;
-		case 0:		b = table.addHead(t, toMeldIndex);
-					break;
-		default: 	b =  table.addTail(t, toMeldIndex);
-					break;
+		if (!table.add(t, toMeldIndex)) return false;
+		players.get(currentPlayer).play(playerHandIndex);
+		hasPlayed++;
+		return true;
+	}
+	public boolean playerPlays(int playerHandIndex ,int toMeldIndex, boolean headOrTail) {
+		//headOrTail: 	true for head
+		//				false for tail
+		Tile t = players.get(currentPlayer).play(playerHandIndex);
+		if (t == null) {
+			players.get(currentPlayer).draw(t);
+			return false;
 		}
-		if (b) hasPlayed++;
+		boolean b = false;
+		if (headOrTail) b = table.addHead(t, toMeldIndex);
+		else b = table.addTail(t, toMeldIndex);
 		return b;
 	}
 	
-	public boolean move (int fromMeld, int removeHeadOrTail, int toMeld, int headOrTail) throws AbleToAddBothSideException{
+	public boolean move (int fromMeld, boolean removeHeadOrTail, int toMeld) throws AbleToAddBothSideException{
 		//removeHeadOrTail 0 for head, others for tail
 		/*
-		 * headOrTail; -1 => add(); 0 => addHead;  other positive number => add(Tail)
+		 * headOrTail: true for head, false for tail
 		 * */
 		if(fromMeld >= table.size() || fromMeld < 0 || toMeld < 0 || toMeld >= table.size()) return false;
 		Tile t = null;
-		if (removeHeadOrTail == 0) t = table.removeHead(fromMeld);
+		if (removeHeadOrTail) t = table.removeHead(fromMeld);
 		else t = table.removeTail(fromMeld);
-		switch(headOrTail) {
-		case -1: 	return table.add(t, toMeld);
-		case 0:		return table.addHead(t, toMeld);
-		default: 	return table.addTail(t, toMeld);
+		boolean b = false;
+		try {
+			b = table.add(t, toMeld);
+		}catch (AbleToAddBothSideException e) {
+			if (removeHeadOrTail)  table.addHead(t, fromMeld);
+			else table.addTail(t, fromMeld);
+			throw new AbleToAddBothSideException(null, null);
 		}
+		if(!b) {
+			if (removeHeadOrTail)  table.addHead(t, fromMeld);
+			else table.addTail(t, fromMeld);
+			return false;
+		}
+		return true;
 	}
+	
+	public boolean move (int fromMeld, boolean removeHeadOrTail, int toMeld, boolean toHeadOrTail) {
+		if(fromMeld >= table.size() || fromMeld < 0 || toMeld < 0 || toMeld >= table.size()) return false;
+		Tile t = null;
+		if (removeHeadOrTail) t = table.removeHead(fromMeld);
+		else t = table.removeTail(fromMeld);
+		boolean b = false;
+		if (toHeadOrTail) b = table.addHead(t, toMeld);
+		else b = table.addTail(t, toMeld);
+		if (!b) {
+			if(removeHeadOrTail) table.addHead(t, fromMeld);
+			else table.addTail(t, fromMeld);
+			return false;
+		}
+		return b;
+	}
+	
+	
 	public boolean cut(int meldIndex, int at) {
 		if (meldIndex < 0 || meldIndex >= table.size()) return false;
-		hasPlayed++;
 		return table.cut(meldIndex, at);
 	}
-	public boolean replace(int playerIndex, int playerHandIndex, int tableIndex, int meldIndex) {
-		Tile t = players.get(playerIndex).getHand(playerHandIndex);
+	public boolean replace(int playerHandIndex, int tableIndex, int meldIndex) {
+		Tile t = players.get(currentPlayer).getHand(playerHandIndex);
 		if(t == null) return false;
 		Tile t2 =  table.replace(t, tableIndex, meldIndex);
-		if (t2 == null)return false;
+		if (t2 == null) {
+			players.get(currentPlayer).draw(t);
+			return false;
+		}
 		table.add(t2);
 		return true;
 	}
-	public void endTurn(int playerIndex) {
-		if(hasPlayed == 0) this.playerDraw(playerIndex);
+	public void endTurn() {
+		if(hasPlayed == 0) this.playerDraw();
 		currentPlayer = (currentPlayer + 1) % players.size();
 		hasPlayed = 0;
 	}
