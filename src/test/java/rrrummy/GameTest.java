@@ -1,13 +1,11 @@
 package rrrummy;
 import java.util.ArrayList;
 
-import game.View;
 import  junit.framework.TestCase;
 import players.Player;
 
 public class GameTest extends TestCase{
-	private final int PLAYERINDEX = 0;
-	private ArrayList<Player> players;//= new ArrayList<Player>();
+	private Player player;
 	private Game game;
 	private Tile b5;
 	
@@ -25,9 +23,10 @@ public class GameTest extends TestCase{
 	private Tile jk;
 	
 	protected void setUp() {
-		players = new ArrayList<Player>();
-		Player p = new Player ("Test Player");
-		players.add(p);
+		
+		ArrayList<Player> players = new ArrayList<Player>();
+		player = new Player ("Test Player");
+		players.add(player);
 		jk = new Tile();
 		try {
 			b5 = new Tile("B5");
@@ -52,7 +51,7 @@ public class GameTest extends TestCase{
 		testHand.add(o5);
 		testHand.add(b5);
 		testHand.add(jk);
-		p.initHand(testHand);
+		player.initHand(testHand);
 		ArrayList<Tile> testStock = new ArrayList<Tile>();
 		testStock.add(r1);
 		testStock.add(r2);
@@ -61,26 +60,26 @@ public class GameTest extends TestCase{
 	}
 	
 	public void test_playerDraw() {
-		assertEquals(8, players.get(PLAYERINDEX).handSize());
+		assertEquals(8, player.handSize());
 		assertEquals(3, game.stockSize());
-		assertTrue(game.playerDraw(PLAYERINDEX));
-		assertTrue(game.playerDraw(PLAYERINDEX));
-		assertTrue(game.playerDraw(PLAYERINDEX));
+		assertTrue(game.playerDraw());
+		assertTrue(game.playerDraw());
+		assertTrue(game.playerDraw());
 		//run out of stock
-		assertFalse(game.playerDraw(PLAYERINDEX));
+		assertFalse(game.playerDraw());
 	}
 	
 	//order B5, R4, R5, R6, R7, G5, O5, JK
 	public void test_playerPlays1() {
-		assertTrue(game.playerPlays(PLAYERINDEX, 0));// b5
-		assertEquals(7, players.get(PLAYERINDEX).handSize());
-		assertFalse(players.get(PLAYERINDEX).handContains(b5));
-		assertTrue(game.playerPlays(PLAYERINDEX, 6));// jk
-		assertEquals(6, players.get(PLAYERINDEX).handSize());
-		assertFalse(players.get(PLAYERINDEX).handContains(jk));
-		assertTrue(game.playerPlays(PLAYERINDEX, 1));// r5
-		assertEquals(5, players.get(PLAYERINDEX).handSize());
-		assertFalse(players.get(PLAYERINDEX).handContains(r5));
+		assertTrue(game.playerPlays(0));// b5
+		assertEquals(7, player.handSize());
+		assertFalse(player.handContains(b5));
+		assertTrue(game.playerPlays(6));// jk
+		assertEquals(6, player.handSize());
+		assertFalse(player.handContains(jk));
+		assertTrue(game.playerPlays(1));// r5
+		assertEquals(5, player.handSize());
+		assertFalse(player.handContains(r5));
 	}
 	
 	//hand order B5, R4, R5, R6, R7, G5, O5, JK
@@ -90,24 +89,181 @@ public class GameTest extends TestCase{
 		arr.add(1); // r4
 		arr.add(2); // r5
 		arr.add(3); // r6
-		assertTrue(game.playerPlays(PLAYERINDEX, arr));
+		assertTrue(game.playerPlays(arr));
 		assertEquals(1, game.tableSize());
 		//order B5, R7, G5, O5, JK
-		assertEquals(5, players.get(PLAYERINDEX).handSize());
+		assertEquals(5, player.handSize());
 		arr.clear();
 		arr.add(0);
 		arr.add(1);
 		arr.add(2);
-		assertFalse(game.playerPlays(PLAYERINDEX, arr));
+		assertFalse(game.playerPlays(arr));
 		assertEquals(1, game.tableSize());
-		assertEquals(5, players.get(PLAYERINDEX).handSize());
+		assertEquals(5, player.handSize());
 		arr.clear();
 		arr.add(0);
 		arr.add(2);
 		arr.add(3);
 		arr.add(4);
-		assertTrue(game.playerPlays(PLAYERINDEX, arr));
+		assertTrue(game.playerPlays(arr));
 		assertEquals(2, game.tableSize());
-		assertEquals(1, players.get(PLAYERINDEX).handSize());
+		assertEquals(1, player.handSize());
+	}
+	
+	//hand order B5, R4, R5, R6, R7, G5, O5, JK
+	public void test_playerPlays3() {
+		//B5, R4, R5, R6, R7, G5, O5, JK
+		assertTrue(game.playerPlays(0));
+		//R4, R5, R6, R7, G5, O5, JK
+		assertTrue(game.playerPlays(0));
+		//R5, R6, R7, G5, O5, JK
+		//meld 0 : B5
+		//meld 1 : R4
+		try {
+			//play r5 to m1 with add() method
+			assertTrue(game.playerPlays(0, 1));
+		}catch (AbleToAddBothSideException e) {
+			fail();
+		}
+		//R6, R7, G5, O5, JK
+		//meld 0 : B5
+		//meld 1 : R4 R5
+		assertEquals(5, player.handSize());
+		try {
+			//play jk to m1 with add() method : should throw both side exception
+			game.playerPlays(4, 1);
+			fail();
+		}catch (AbleToAddBothSideException e) {	
+			assertTrue(game.playerPlays(4, 1 , false));
+		}
+		//R6, R7, G5, O5
+		//meld 0 : B5
+		//meld 1 : R4 R5 JK
+		assertEquals(4, player.handSize());
+		assertEquals(2,game.tableSize());
+		assertTrue(game.playerPlays(1, 1 , true)); // r7 can be added with either 3 of add functions
+		//R6, G5, O5
+		//meld 0 : B5
+		//meld 1 : R4 R5 JK R7
+		try {
+			//play a tile to a set, the tile should be added to the tail by default
+			//unless user point where to add
+			assertTrue(game.playerPlays(2, 0));// O5
+		}catch (AbleToAddBothSideException e) {
+			e.getStackTrace();
+			fail();
+		}
+	}
+	
+	public void test_move() {
+		//hand order B5, R4, R5, R6, R7, G5, O5, JK
+		assertTrue(game.playerPlays(0));
+		//R4, R5, R6, R7, G5, O5, JK
+		assertTrue(game.playerPlays(1));
+		//R4, R6, R7, G5, O5, JK
+		//m0: B5
+		//m1: R5
+		assertTrue(game.playerPlays(1, 1, true));
+		//R4, R7, G5, O5, JK
+		//m0: B5
+		//m1: R5 R6
+		assertTrue(game.playerPlays(1, 1, true));
+		//R4, G5, O5, JK
+		//m0: B5
+		//m1: R5 R6 R7
+		try {
+			//try to move R7 in m2 to m1
+			//result false and no change
+			assertFalse(game.move(1, false, 0));
+		}catch (AbleToAddBothSideException e) {
+			e.getStackTrace();
+			fail();
+		}
+		assertEquals(4, player.handSize());
+		assertEquals(2,game.tableSize());
+		try {
+			//try to move r5 in m2 to m1
+			assertTrue(game.move(1, true, 0));
+		}catch (AbleToAddBothSideException e) {
+			e.getStackTrace();
+			fail();
+		}
+		//R4, G5, O5, JK
+		//m0: B5 R5
+		//m1: R6 R7
+		assertTrue(game.playerPlays(3, 1, false));
+		//R4, G5, O5
+		//m0: B5 R5
+		//m1: R6 R7 JK
+		try {
+			//JK should be able to add to the tail of a set
+			assertTrue(game.move(1, false, 0));
+		}catch (AbleToAddBothSideException e) {
+			fail();
+		}
+		//R4, G5, O5
+		//m0: B5 R5 JK
+		//m1: R6 R7
+		try {
+			assertTrue(game.move(0, false, 1));
+			fail();
+		}catch (AbleToAddBothSideException e) {
+			assertTrue(game.move(0, false, 1, true));
+		}
+		//R4, G5, O5
+		//m0: B5 R5
+		//m1: JK R6 R7
+		assertTrue(game.move(1, true, 1, false));
+	}
+	
+	public void test_cut() {
+		//hand order B5, R4, R5, R6, R7, G5, O5, JK
+		assertTrue(game.playerPlays(0));
+		//R4, R5, R6, R7, G5, O5, JK
+		assertTrue(game.playerPlays(1));
+		//R4, R6, R7, G5, O5, JK
+		//m0: B5
+		//m1: R5
+		assertTrue(game.playerPlays(1, 1, true));
+		//R4, R7, G5, O5, JK
+		//m0: B5
+		//m1: R5 R6
+		assertTrue(game.playerPlays(1, 1, true));
+		//R4, G5, O5, JK
+		//m0: B5
+		//m1: R5 R6 R7
+		assertTrue(game.cut(1, 0));
+		//0. [B5]
+		//1. [R6, R7]
+		//2. [R5]
+		assertEquals(3, game.tableSize());
+		assertFalse(game.cut(1, 2));
+		assertEquals(3, game.tableSize());
+		assertTrue(game.cut(1, 1));
+		assertEquals(4, game.tableSize());
+		assertFalse(game.cut(1, 0)); // can not cut when meld.size() == 1
+		assertEquals(4, game.tableSize());
+	}
+	
+	public void test_replace() {
+		//B5, R4, R5, R6, R7, G5, O5, JK
+		assertTrue(game.playerPlays(0));
+		//R4, R5, R6, R7, G5, O5, JK
+		assertTrue(game.playerPlays(0));
+		//R5, R6, R7, G5, O5, JK
+		//meld 0 : B5
+		//meld 1 : R4
+		try {
+			//play r5 to m1 with add() method
+			assertTrue(game.playerPlays(0, 1));
+		}catch (AbleToAddBothSideException e) {
+			fail();
+		}
+		//R6, R7, G5, O5, JK
+		//meld 0 : B5
+		//meld 1 : R4 R5
+		assertEquals(5, player.handSize());
+		assertTrue(game.playerPlays(4, 1 , false));
+		assertTrue(game.replace(0, 1, 2));
 	}
 }
