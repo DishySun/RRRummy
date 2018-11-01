@@ -27,8 +27,7 @@ public class StrategyThreeTest {
 	@Before
 	public void setUp() throws Exception {
 		data = new GameData();
-		aiSTY = new StrategyThree(data);
-		testAI = new AI(aiSTY);
+		testAI = new AI(new StrategyThree(data));
 		hand = new ArrayList<Tile>();
 		table = new Table();
 	}
@@ -103,8 +102,8 @@ public class StrategyThreeTest {
 		hand2.remove(hand.indexOf(bJoker));
 //G5, B6, O7, G10
 		command = testAI.getSrategy().generateCommand();
-		//2 player, no one has less 3 tile than ai, nothing to play, end
-		assertEquals("DRAW", command);
+		//after initial,2 player, no one has less 3 tile than ai, nothing to play, end
+		assertEquals("END", command);
 		hand2.add(atile1);
 		hand2.add(atile2);
 		hand2.add(atile3);
@@ -118,10 +117,7 @@ public class StrategyThreeTest {
 		hand2.add(atile5);
 		hand2.add(atile9);
 		command = testAI.getSrategy().generateCommand();
-		//after initial. nothing to play
-		assertEquals("END", command);
-		command = testAI.getSrategy().generateCommand();
-		// 2 player, one has less 3 tile than ai, play, or DRAW
+		//2 player, one has less 3 tile than ai, play, or draw
 		assertEquals("DRAW", command);
 	}
 	
@@ -147,6 +143,10 @@ public class StrategyThreeTest {
 		}catch(InvalidTileException e) {
 			fail();
 		}
+		HashMap<Integer, Integer> handSizes = new HashMap<Integer, Integer>();
+		ArrayList<Meld> table = new ArrayList<Meld>();
+		handSizes.put(1,1);
+		handSizes.put(2,5);
 		hand.add(atile1);
 		hand.add(atile2);
 		hand.add(atile3);
@@ -164,8 +164,8 @@ public class StrategyThreeTest {
 		
 		Hand hand2 = new Hand(hand);
 		testAI.initHand(hand);
-		testAI.printHand();
 		testAI.getSrategy().setHand(hand2);
+		data.setValue(table, handSizes);
 		String command = testAI.getSrategy().generateCommand();
 		//total no. < 30, DRAW
 		assertEquals("DRAW", command);
@@ -208,11 +208,15 @@ public class StrategyThreeTest {
 		hand.add(atile12);
 		hand.add(bJoker);
 		hand.add(aJoker);
-		
+		HashMap<Integer, Integer> handSizes = new HashMap<Integer, Integer>();
+		ArrayList<Meld> table = new ArrayList<Meld>();
+		handSizes.put(1,1);
+		handSizes.put(2,5);
 		Hand hand2 = new Hand(hand);
 		testAI.initHand(hand);
 //B6, B11, R1, R2, R3, R3, R4, R4, G5, G10, O7, O11, JK, JK
 		testAI.getSrategy().setHand(hand2);
+		data.setValue(table, handSizes);
 		String command = testAI.getSrategy().generateCommand();
 		//first play run
 		assertEquals("Play[R1, R2, R3, R4]", command);
@@ -238,8 +242,11 @@ public class StrategyThreeTest {
 		hand2.remove(hand.indexOf(atile12));
 //JK, G10, O11, B11
 		command = testAI.getSrategy().generateCommand();
-		// initial no. > 30, keep play
-		assertEquals("Play[O11, B11, JK]", command);
+		// initial no. > 30, no way to play all, END
+		assertEquals("END", command);
+		command = testAI.getSrategy().generateCommand();
+		// initial no. > 30, no way to play all, END
+		assertEquals("DRAW", command);
 	}
 
 	@Test
@@ -264,7 +271,10 @@ public class StrategyThreeTest {
 		}catch(InvalidTileException e) {
 			fail();
 		}
-		
+		HashMap<Integer, Integer> handSizes = new HashMap<Integer, Integer>();
+		ArrayList<Meld> table = new ArrayList<Meld>();
+		handSizes.put(1,1);
+		handSizes.put(2,5);
 		hand.add(atile1);
 		hand.add(atile2);
 		hand.add(atile3);
@@ -284,6 +294,7 @@ public class StrategyThreeTest {
 		testAI.initHand(hand);
 //B6, B11, R1, R2, R3, R3, R4, R4, G5, G10, O7, O11, JK, JK
 		testAI.getSrategy().setHand(hand2);
+		data.setValue(table, handSizes);
 		String command = testAI.getSrategy().generateCommand();
 		//first play run
 		assertEquals("Play[R1, R2, R3, R4]", command);
@@ -310,9 +321,9 @@ public class StrategyThreeTest {
 //JK, G10, O11, B11
 		// initial no. > 30, check playing
 		command = testAI.getSrategy().generateCommand();
-		
-		assertEquals("Play[O11, B11, JK]", command);
-		System.out.println(hand);
+		assertEquals("END", command);
+		command = testAI.getSrategy().generateCommand();
+		assertEquals("DRAW", command);
 	}
 	
 }

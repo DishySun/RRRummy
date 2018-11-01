@@ -3,7 +3,9 @@ package players;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import observer.GameData;
 import observer.Observer;
+import observer.Subject;
 import rrrummy.Meld;
 import rrrummy.Tile;
 
@@ -16,8 +18,10 @@ public class StrategyZero implements AIStrategy, Observer{
 	private int countInitial;
 	private boolean hasPlayInit;
 	private boolean hasPlayRest;
+
 	
-	public StrategyZero() {
+	public StrategyZero(Subject data) {
+		data.register(this);
 		hasPlayInit = false;
 		hasPlayRest = false;
 		countInitial = 0;

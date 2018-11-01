@@ -7,16 +7,19 @@ import java.util.ArrayList;
 import org.junit.Before;
 import org.junit.Test;
 
+import observer.GameData;
 import rrrummy.InvalidTileException;
 import rrrummy.Tile;
 
 public class StrategyZeroTest {
 	private Tile atile1,atile2,atile3,atile4,atile5,atile6,atile7,atile8,atile9,atile10,atile11,atile12,atile13,aJoker,bJoker;
 	private ArrayList<Tile>  hand;
+	private GameData data;
 	AI testAI;
 	@Before
 	public void setUp() throws Exception {
-		testAI = new AI(new StrategyZero());
+		data = new GameData();
+		testAI = new AI(new StrategyZero(data));
 		hand = new ArrayList<Tile>();
 	}
 	

@@ -33,6 +33,7 @@ public class StrategyThree implements AIStrategy, Observer {
 		run = new ArrayList<Tile>();
 		group = new ArrayList<Tile>();
 		meldOnTable = new HashMap<Tile,Integer>();
+		boolean hasLess = false;
 		
 		if(countInitial < 30) {	//play initial
 			if(myHand.checkInitialSum() >= 30-countInitial) {
@@ -50,7 +51,7 @@ public class StrategyThree implements AIStrategy, Observer {
 						return "Play" + group;
 					}	
 					else
-						return "Something wrong";
+						return "Something went wrong";
 				}
 			}	else
 					return "DRAW";
@@ -58,12 +59,58 @@ public class StrategyThree implements AIStrategy, Observer {
 			for(Entry<Integer, Integer> entry : playerHandSizes.entrySet()) {
 				//int id = entry.getKey();
 				int handsize = entry.getValue();
-				if(handsize+3 < myHand.size()) {		//has 3 fewer tiles than p3, play all request use of table
+				if(handsize+3 < myHand.size()) {
+					hasLess = true;
+					break;
+				} 
+			}
+			if(hasLess) {		//has 3 fewer tiles than p3, play all request use of table
+				run = myHand.findRun();
+				if(run != null) {
+					countInitial += myHand.checkSum(run);
+					hasPlayRest = true;
+					return "Play" + run;
+				}
+				else {
+					group = myHand.findGroup();
+					if(group != null) {
+						countInitial += myHand.checkSum(group);
+						hasPlayRest = true;
+						return "Play" + group;
+					}	
+					else {
+						meldOnTable = myHand.findMeldsOnTable(table);
+						if(meldOnTable != null) {
+							for(Entry<Tile, Integer>Entry : meldOnTable.entrySet()) {
+								Tile tile = Entry.getKey();
+								int index = Entry.getValue();
+								hasPlayRest = true;
+								return "Play" + tile + "to" + table.get(index) ;
+							}
+						}else {
+							if(hasPlayInit) {
+								hasPlayInit  = false;
+								return "END";
+							} else {
+								if(hasPlayRest) {
+									hasPlayRest = false;
+									return "End";
+								}
+								else {
+									System.out.println("p3 could play but has not tile to play,p3 would reuse table");
+									return "DRAW";
+								}
+									
+							}	
+						}
+					}	
+				}
+			}else {
+				if(myHand.canPlayAll(null)) {	//if can play all, not request use of table
 					run = myHand.findRun();
 					if(run != null) {
 						countInitial += myHand.checkSum(run);
 						hasPlayRest = true;
-						System.out.println(run);
 						return "Play" + run;
 					}
 					else {
@@ -73,56 +120,25 @@ public class StrategyThree implements AIStrategy, Observer {
 							hasPlayRest = true;
 							return "Play" + group;
 						}	
-						else {
-							meldOnTable = myHand.findMeldsOnTable(table);
-							if(meldOnTable != null) {
-								for(Entry<Tile, Integer>Entry : meldOnTable.entrySet()) {
-									Tile tile = Entry.getKey();
-									int index = Entry.getValue();
-									hasPlayRest = true;
-									return "Play" + tile + "to" + table.get(index) ;
-								}
-							}else {
-								if(hasPlayInit) {
-									hasPlayInit  = false;
-									return "END";
-								} else {
-									if(hasPlayRest) {
-										hasPlayRest = false;
-										return "End";
-									}
-									else {
-										System.out.println("p3 could play but has not tile to play");
-										return "DRAW";
-									}
-										
-								}	
-							}
-						}	
+						else
+							return "Something wrong";
 					}
 				}else {
-					if(myHand.canPlayAll(null)) {	//if can play all, not request use of table
-						run = myHand.findRun();
-						if(run != null) {
-							countInitial += myHand.checkSum(run);
-							hasPlayRest = true;
-							return "Play" + run;
+					if(hasPlayInit) {
+						hasPlayInit  = false;
+						return "END";
+					} else {
+						if(hasPlayRest) {
+							hasPlayRest = false;
+							return "End";
 						}
 						else {
-							group = myHand.findGroup();
-							if(group != null) {
-								countInitial += myHand.checkSum(group);
-								hasPlayRest = true;
-								return "Play" + group;
-							}	
-							else
-								return "Something wrong";
+							return "DRAW";
 						}
-					}else 
-						return "DRAW";					
-				}	
+					}
+				}			
 			}
-		return "??";
+			return "??";
 		}
 	}
 
