@@ -19,6 +19,7 @@ public class StrategyThree implements AIStrategy, Observer {
 	private int countInitial;
 	private boolean hasPlayInit;
 	private boolean hasPlayRest;
+	private String returnString;
 	
 	public StrategyThree (Subject data) {
 		data.register(this);
@@ -29,6 +30,7 @@ public class StrategyThree implements AIStrategy, Observer {
 	
 	@Override
 	public String generateCommand() {
+		returnString = "";
 		hasPlayRest = false;
 		run = new ArrayList<Tile>();
 		group = new ArrayList<Tile>();
@@ -40,18 +42,30 @@ public class StrategyThree implements AIStrategy, Observer {
 				run = myHand.findRun();
 				if(run != null) {
 					countInitial += myHand.checkSum(run);
-					hasPlayInit = true;
-					return "Play" + run;
+					myHand.sort();
+					returnString = "Play ";
+					for(int i=0; i<run.size();i++) {
+						returnString += myHand.handIndexOf(run.get(i)) + " ";
+					}
+					return returnString;
 				}
 				else {
 					group = myHand.findGroup();
 					if(group != null) {
 						countInitial += myHand.checkSum(group);
-						hasPlayInit = true;
-						return "Play" + group;
+						myHand.sort();
+						returnString = "Play ";
+						for(int i=0; i<group.size();i++) {
+							returnString += myHand.handIndexOf(group.get(i)) + " ";
+						}
+						return returnString;
 					}	
-					else
-						return "Something went wrong";
+					else {
+						System.out.println("Something went wrong");
+						return "END";
+					}
+						
+						
 				}
 			}	else
 				return "END";
@@ -68,15 +82,23 @@ public class StrategyThree implements AIStrategy, Observer {
 				run = myHand.findRun();
 				if(run != null) {
 					countInitial += myHand.checkSum(run);
-					hasPlayRest = true;
-					return "Play" + run;
+					myHand.sort();
+					returnString = "Play ";
+					for(int i=0; i<run.size();i++) {
+						returnString += myHand.handIndexOf(run.get(i)) + " ";
+					}
+					return returnString;
 				}
 				else {
 					group = myHand.findGroup();
 					if(group != null) {
 						countInitial += myHand.checkSum(group);
-						hasPlayRest = true;
-						return "Play" + group;
+						myHand.sort();
+						returnString = "Play ";
+						for(int i=0; i<group.size();i++) {
+							returnString += myHand.handIndexOf(group.get(i)) + " ";
+						}
+						return returnString;
 					}	
 					else {
 						meldOnTable = myHand.findMeldsOnTable(table);
@@ -84,8 +106,9 @@ public class StrategyThree implements AIStrategy, Observer {
 							for(Entry<Tile, Integer>Entry : meldOnTable.entrySet()) {
 								Tile tile = Entry.getKey();
 								int index = Entry.getValue();
-								hasPlayRest = true;
-								return "Play" + tile + "to" + table.get(index) ;
+								myHand.sort();
+								returnString = "Play "  + myHand.handIndexOf(tile) + " to " + index;
+								return returnString;
 							}
 						}else {
 									System.out.println("p3 could play but has not tile to play,p3 tried reuse table");
@@ -98,25 +121,35 @@ public class StrategyThree implements AIStrategy, Observer {
 					run = myHand.findRun();
 					if(run != null) {
 						countInitial += myHand.checkSum(run);
-						hasPlayRest = true;
-						return "Play" + run;
+						myHand.sort();
+						returnString = "Play ";
+						for(int i=0; i<run.size();i++) {
+							returnString += myHand.handIndexOf(run.get(i)) + " ";
+						}
+						return returnString;
 					} else {
 						group = myHand.findGroup();
 						if(group != null) {
 							countInitial += myHand.checkSum(group);
-							hasPlayRest = true;
-							return "Play" + group;
+							myHand.sort();
+							returnString = "Play ";
+							for(int i=0; i<run.size();i++) {
+								returnString += myHand.handIndexOf(group.get(i)) + " ";
+							}
+							return returnString;
 						}	else {
 							meldOnTable = myHand.findMeldsOnTable(table);
 							if(meldOnTable != null) {
 								for(Entry<Tile, Integer>Entry : meldOnTable.entrySet()) {
 									Tile tile = Entry.getKey();
 									int index = Entry.getValue();
-									hasPlayRest = true;
-									return "Play" + tile + "to" + table.get(index) ;
+									myHand.sort();
+									returnString = "Play "  + myHand.handIndexOf(tile) + " to " + index;
+									return returnString;
 								}
 							}else {
-										return "Something Wrong";
+								System.out.println("Something went wrong");
+								return "END";
 							}
 						}
 					}
@@ -124,7 +157,8 @@ public class StrategyThree implements AIStrategy, Observer {
 					return "END";
 				}			
 			}
-			return "??";
+			System.out.println("Something went wrong");
+			return "END";
 		}
 	}
 

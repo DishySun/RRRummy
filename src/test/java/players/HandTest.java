@@ -206,7 +206,27 @@ public class HandTest {
 		assertFalse(hand.hasSameColor(tileArray, aJoker));
 	}
 	
-	
+	@Test
+	public void test_indexOf() {
+		Hand testHand = new Hand(new ArrayList<Tile>());
+		try {
+			testHand.add(new Tile("R5"));
+			testHand.add(new Tile("B3"));
+			testHand.add(new Tile("O6"));
+			testHand.add(new Tile("J"));
+			testHand.add(new Tile("B7"));
+			testHand.add(new Tile("R11"));
+			testHand.add(new Tile("G1"));
+			testHand.add(new Tile("G10"));
+			//R5 B3 O6 J B7 R11 G1 G10
+			testHand.sort();
+			//B3 B7 R5 R11 G1 G10 O6 J
+			testHand.handIndexOf(testHand.getTile(3));
+			assertEquals(3, testHand.handIndexOf(testHand.getTile(3)));
+		}catch(InvalidTileException e) {
+			fail(e.getErrMsg());
+		}
+	}
 	@Test
 	public void test_findRun0() {
 		try {

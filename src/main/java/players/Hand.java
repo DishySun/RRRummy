@@ -60,6 +60,11 @@ public class Hand {
 		});
 	}
 	
+	public int handIndexOf(Tile tile) {
+		sort();
+		return hand.indexOf(tile);
+	}
+	
 	public int checkSum(ArrayList<Tile> tileArray) {
 		// TODO Auto-generated method stub
 		if(tileArray == null) return 0;
