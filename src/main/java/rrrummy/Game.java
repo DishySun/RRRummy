@@ -193,12 +193,14 @@ public class Game {
 		initPlayersHand();
 		currentPlayer = 0; 
 		hasPlayed = 0;
-		for(Player player : players) {
-			handSizes.put(player.getId(), player.handSize());
-		}
-		data.setValue(table.getMeld(), handSizes );
+		
+		//data.setValue(table.getMeld(), handSizes );
 		Player winner = null;
 		while (winner == null) {
+			for(Player player : players) {
+				handSizes.put(player.getId(), player.handSize());
+			}
+			data.setValue(table.getMeld(), handSizes );
 			players.get(currentPlayer).printHand();
 			System.out.println(table);
 			System.out.println("Stock Left: "+stock.size());
