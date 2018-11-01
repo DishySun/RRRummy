@@ -77,9 +77,10 @@ public class StrategyThreeTest {
 //B6, B11, R1, R2, R3, R3, R4, R4, G5, G10, O7, O11, JK, JK
 		testAI.getSrategy().setHand(hand2);
 		data.setValue(table, handSizes);
+		hand2.sort();
 		String command = testAI.getSrategy().generateCommand();
 		//first play run
-		assertEquals("Play[R1, R2, R3, R4]", command);
+		assertEquals("Play 2 3 4 7", command);
 		//remove hand R1 R2 R3 R4
 		hand2.remove(hand.indexOf(atile2));
 		hand2.remove(hand.indexOf(atile3));
@@ -87,34 +88,39 @@ public class StrategyThreeTest {
 		hand2.remove(hand.indexOf(atile1));
 		testAI.getSrategy().setHand(hand2);
 //B6, B11, R3, R4, G5, G10, O7, O11, JK, JK
+		hand2.sort();
 		command = testAI.getSrategy().generateCommand();
 		//play second run
-		assertEquals("Play[R3, R4, JK]", command);
+		assertEquals("Play 2 3 9", command);
 		hand2.remove(hand.indexOf(atile5));
 		hand2.remove(hand.indexOf(atile8));
 		hand2.remove(hand.indexOf(aJoker));
 //B6, B11, G5, G10, O7, O11, JK
+		hand2.sort();
 		command = testAI.getSrategy().generateCommand();
 		//no run to play , play first group
-		assertEquals("Play[O11, B11, JK]", command);
+		assertEquals("Play 5 1 6", command);
 		hand2.remove(hand.indexOf(atile10));
 		hand2.remove(hand.indexOf(atile11));
 		hand2.remove(hand.indexOf(bJoker));
 //G5, B6, O7, G10
+		hand2.sort();
 		command = testAI.getSrategy().generateCommand();
 		//after initial,2 player, no one has less 3 tile than ai, nothing to play, end
 		assertEquals("END", command);
 		hand2.add(atile1);
 		hand2.add(atile2);
 		hand2.add(atile3);
+		hand2.sort();
 		command = testAI.getSrategy().generateCommand();
 		//2 player, one has less 3 tile than ai, play, or end
-		assertEquals("Play[R1, R2, R3]", command);
+		assertEquals("Play 1 2 3", command);
 		hand2.remove(hand.indexOf(atile1));
 		hand2.remove(hand.indexOf(atile2));
 		hand2.remove(hand.indexOf(atile3));
 		hand2.add(atile1);
 //B6, R1, G5, G10, O7
+		hand2.sort();
 		command = testAI.getSrategy().generateCommand();
 		//2 player, one has less 3 tile than ai, tried play, but END
 		assertEquals("END", command);
@@ -125,10 +131,12 @@ public class StrategyThreeTest {
 		Meld meld = new Meld(melds);
 		table.add(meld);
 //[[R2, R3, R4]]
+		hand2.sort();
 		command = testAI.getSrategy().generateCommand();
 		//2 player, one has less 3 tile than ai, play 2 table
-		assertEquals("PlayR1to[R2, R3, R4]", command);
+		assertEquals("Play 1 to 0 1", command);
 		hand2.remove(hand.indexOf(atile1));
+		hand2.sort();
 		command = testAI.getSrategy().generateCommand();
 		//no one has less 3 tile than ai, nothing to play, end
 		assertEquals("END", command);
@@ -230,9 +238,10 @@ public class StrategyThreeTest {
 //B6, B11, R1, R2, R3, R3, R4, R4, G5, G10, O7, O11, JK, JK
 		testAI.getSrategy().setHand(hand2);
 		data.setValue(table, handSizes);
+		hand2.sort();
 		String command = testAI.getSrategy().generateCommand();
 		//first play run
-		assertEquals("Play[R1, R2, R3, R4]", command);
+		assertEquals("Play 2 3 4 7", command);
 		//remove hand R1 R2 R3 R4
 		hand2.remove(hand.indexOf(atile2));
 		hand2.remove(hand.indexOf(atile3));
@@ -240,23 +249,27 @@ public class StrategyThreeTest {
 		hand2.remove(hand.indexOf(atile1));
 		testAI.getSrategy().setHand(hand2);
 //B6, B11, R3, R4, G5, G10, O7, O11, JK, JK
+		hand2.sort();
 		command = testAI.getSrategy().generateCommand();
 		//play second run
-		assertEquals("Play[R3, R4, JK]", command);
+		assertEquals("Play 2 3 9", command);
 		hand2.remove(hand.indexOf(atile5));
 		hand2.remove(hand.indexOf(atile8));
 		hand2.remove(hand.indexOf(aJoker));
 //B6, B11, G5, G10, O7, O11, JK
+		hand2.sort();
 		command = testAI.getSrategy().generateCommand();
 		//no run to play , play first group
-		assertEquals("Play[O5, G5, B5]", command);
+		assertEquals("Play 4 2 0", command);
 		hand2.remove(hand.indexOf(atile6));
 		hand2.remove(hand.indexOf(atile7));
 		hand2.remove(hand.indexOf(atile12));
 //JK, G10, O11, B11
+		hand2.sort();
 		command = testAI.getSrategy().generateCommand();
 		// initial no. > 30, no way to play all, END
 		assertEquals("END", command);
+		hand2.sort();
 		command = testAI.getSrategy().generateCommand();
 		// initial no. > 30, no way to play all, END
 		assertEquals("END", command);
@@ -308,9 +321,10 @@ public class StrategyThreeTest {
 //B6, B11, R1, R2, R3, R3, R4, R4, G5, G10, O7, O11, JK, JK
 		testAI.getSrategy().setHand(hand2);
 		data.setValue(table, handSizes);
+		hand2.sort();
 		String command = testAI.getSrategy().generateCommand();
 		//first play run
-		assertEquals("Play[R1, R2, R3, R4]", command);
+		assertEquals("Play 2 3 4 7", command);
 		//remove hand R1 R2 R3 R4
 		hand2.remove(hand.indexOf(atile2));
 		hand2.remove(hand.indexOf(atile3));
@@ -320,14 +334,15 @@ public class StrategyThreeTest {
 //B6, B11, R3, R4, G5, G10, O7, O11, JK, JK
 		command = testAI.getSrategy().generateCommand();
 		//play second run
-		assertEquals("Play[R3, R4, JK]", command);
+		assertEquals("Play 2 3 9", command);
 		hand2.remove(hand.indexOf(atile5));
 		hand2.remove(hand.indexOf(atile8));
 		hand2.remove(hand.indexOf(aJoker));
 //B6, B11, G5, G10, O7, O11, JK
 		command = testAI.getSrategy().generateCommand();
 		//no run to play , play first group
-		assertEquals("Play[O5, G5, B5]", command);
+		hand2.sort();
+		assertEquals("Play 4 2 0", command);
 		hand2.remove(hand.indexOf(atile6));
 		hand2.remove(hand.indexOf(atile7));
 		hand2.remove(hand.indexOf(atile12));
@@ -387,7 +402,7 @@ public class StrategyThreeTest {
 		data.setValue(table, handSizes);
 		String command = testAI.getSrategy().generateCommand();
 		//first play run
-		assertEquals("Play[R1, R2, R3, R4]", command);
+		assertEquals("Play 2 3 4 7", command);
 		//remove hand R1 R2 R3 R4
 		hand2.remove(hand.indexOf(atile2));
 		hand2.remove(hand.indexOf(atile3));
@@ -397,22 +412,20 @@ public class StrategyThreeTest {
 //B6, B11, R3, R4, G5, G10, O7, O11, JK, JK
 		command = testAI.getSrategy().generateCommand();
 		//play second run
-		assertEquals("Play[R3, R4, JK]", command);
+		assertEquals("Play 2 3 9", command);
 		hand2.remove(hand.indexOf(atile5));
 		hand2.remove(hand.indexOf(atile8));
 		hand2.remove(hand.indexOf(aJoker));
 //B6, B11, G5, G10, O7, O11, JK
 		command = testAI.getSrategy().generateCommand();
 		//no run to play , play first group
-		assertEquals("Play[O5, G5, B5]", command);
+		assertEquals("Play 4 2 0", command);
 		hand2.remove(hand.indexOf(atile6));
 		hand2.remove(hand.indexOf(atile7));
 		hand2.remove(hand.indexOf(atile12));
 //JK, G10, O11, B11
 		// initial no. > 30, check playing
 		hand2.add(atile4);
-		System.out.println(table);
-		System.out.println(hand2);
 		command = testAI.getSrategy().generateCommand();
 		//can not play all tile
 		assertEquals("END", command);
@@ -426,14 +439,14 @@ public class StrategyThreeTest {
 //B11, R4, G11, O11, JK
 		command = testAI.getSrategy().generateCommand();
 		// can play all tile
-		assertEquals("Play[O11, G11, B11, JK]", command);
+		assertEquals("Play 3 2 0 4", command);
 		hand2.remove(hand.indexOf(atile9));
 		hand2.remove(hand.indexOf(atile10));
 		hand2.remove(hand.indexOf(atile11));
 		hand2.remove(hand.indexOf(bJoker));
 		command = testAI.getSrategy().generateCommand();
 		// can play all tile
-		assertEquals("PlayR4to[R1, R2, R3]", command);
+		assertEquals("Play 0 to 0 1", command);
 	}
 	
 }

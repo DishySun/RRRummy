@@ -17,21 +17,16 @@ public class StrategyThree implements AIStrategy, Observer {
 	private ArrayList<Tile> group;
 	private HashMap<Tile,Integer> meldOnTable;;
 	private int countInitial;
-	private boolean hasPlayInit;
-	private boolean hasPlayRest;
 	private String returnString;
 	
 	public StrategyThree (Subject data) {
 		data.register(this);
-		hasPlayInit = false;
-		hasPlayRest = false;
 		countInitial = 0;
 	}
 	
 	@Override
 	public String generateCommand() {
 		returnString = "";
-		hasPlayRest = false;
 		run = new ArrayList<Tile>();
 		group = new ArrayList<Tile>();
 		meldOnTable = new HashMap<Tile,Integer>();
@@ -43,9 +38,9 @@ public class StrategyThree implements AIStrategy, Observer {
 				if(run != null) {
 					countInitial += myHand.checkSum(run);
 					myHand.sort();
-					returnString = "Play ";
+					returnString = "Play";
 					for(int i=0; i<run.size();i++) {
-						returnString += myHand.handIndexOf(run.get(i)) + " ";
+						returnString += " " + myHand.handIndexOf(run.get(i)); 
 					}
 					return returnString;
 				}
@@ -54,9 +49,9 @@ public class StrategyThree implements AIStrategy, Observer {
 					if(group != null) {
 						countInitial += myHand.checkSum(group);
 						myHand.sort();
-						returnString = "Play ";
+						returnString = "Play";
 						for(int i=0; i<group.size();i++) {
-							returnString += myHand.handIndexOf(group.get(i)) + " ";
+							returnString += " " + myHand.handIndexOf(group.get(i)); 
 						}
 						return returnString;
 					}	
@@ -81,22 +76,20 @@ public class StrategyThree implements AIStrategy, Observer {
 			if(hasLess) {		//has 3 fewer tiles than p3, play all request use of table
 				run = myHand.findRun();
 				if(run != null) {
-					countInitial += myHand.checkSum(run);
 					myHand.sort();
-					returnString = "Play ";
+					returnString = "Play";
 					for(int i=0; i<run.size();i++) {
-						returnString += myHand.handIndexOf(run.get(i)) + " ";
+						returnString += " " + myHand.handIndexOf(run.get(i));
 					}
 					return returnString;
 				}
 				else {
 					group = myHand.findGroup();
 					if(group != null) {
-						countInitial += myHand.checkSum(group);
 						myHand.sort();
-						returnString = "Play ";
+						returnString = "Play";
 						for(int i=0; i<group.size();i++) {
-							returnString += myHand.handIndexOf(group.get(i)) + " ";
+							returnString += " " + myHand.handIndexOf(group.get(i));
 						}
 						return returnString;
 					}	
@@ -107,7 +100,7 @@ public class StrategyThree implements AIStrategy, Observer {
 								Tile tile = Entry.getKey();
 								int index = Entry.getValue();
 								myHand.sort();
-								returnString = "Play "  + myHand.handIndexOf(tile) + " to " + index;
+								returnString = "Play "  + myHand.handIndexOf(tile) + " to " + index + " " + 1;
 								return returnString;
 							}
 						}else {
@@ -120,21 +113,19 @@ public class StrategyThree implements AIStrategy, Observer {
 				if(myHand.canPlayAll(table)) {	//if can play all, request use of table
 					run = myHand.findRun();
 					if(run != null) {
-						countInitial += myHand.checkSum(run);
 						myHand.sort();
-						returnString = "Play ";
+						returnString = "Play";
 						for(int i=0; i<run.size();i++) {
-							returnString += myHand.handIndexOf(run.get(i)) + " ";
+							returnString += " " + myHand.handIndexOf(run.get(i));
 						}
 						return returnString;
 					} else {
 						group = myHand.findGroup();
 						if(group != null) {
-							countInitial += myHand.checkSum(group);
 							myHand.sort();
-							returnString = "Play ";
-							for(int i=0; i<run.size();i++) {
-								returnString += myHand.handIndexOf(group.get(i)) + " ";
+							returnString = "Play";
+							for(int i=0; i<group.size();i++) {
+								returnString += " " + myHand.handIndexOf(group.get(i));
 							}
 							return returnString;
 						}	else {
@@ -144,7 +135,7 @@ public class StrategyThree implements AIStrategy, Observer {
 									Tile tile = Entry.getKey();
 									int index = Entry.getValue();
 									myHand.sort();
-									returnString = "Play "  + myHand.handIndexOf(tile) + " to " + index;
+									returnString = "Play "  + myHand.handIndexOf(tile) + " to " + index + " " +1;
 									return returnString;
 								}
 							}else {
@@ -163,10 +154,6 @@ public class StrategyThree implements AIStrategy, Observer {
 	}
 
 	@Override
-	public String name() {
-		return "Computer (Very Easy)";
-	}
-	@Override
 	public void update(ArrayList<Meld> table) {
 		this.table = table;
 	}
@@ -178,5 +165,11 @@ public class StrategyThree implements AIStrategy, Observer {
 	@Override
 	public void setHand(Hand hand) {
 		myHand = hand;
+	}
+
+	@Override
+	public String getDifficulty() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

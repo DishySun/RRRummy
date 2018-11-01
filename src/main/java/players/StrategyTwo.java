@@ -17,27 +17,23 @@ public class StrategyTwo implements AIStrategy, Observer{
 	private ArrayList<Tile> group;
 	private HashMap<Tile,Integer> meldOnTable;;
 	private int countInitial;
-	private boolean hasPlayInit;
-	private boolean hasPlayRest;
-	
+	private String returnString;
 	
 	public StrategyTwo (Subject data) {
 		data.register(this);
-		hasPlayInit = false;
-		hasPlayRest = false;
 		countInitial = 0;
 	}
 	
 	@Override
 	public String generateCommand() {
-		hasPlayRest = false;
+		returnString = "";
 		run = new ArrayList<Tile>();
 		group = new ArrayList<Tile>();
 		meldOnTable = new HashMap<Tile,Integer>();
 		boolean hasInitial = false;
-		boolean hasLess = false;
 		
 		if(countInitial < 30) {	//play initial
+			System.out.println(playerHandSizes);
 			for(Entry<Integer, Integer> entry : playerHandSizes.entrySet()) {
 				//int id = entry.getKey();
 				int handsize = entry.getValue();
@@ -51,18 +47,28 @@ public class StrategyTwo implements AIStrategy, Observer{
 					run = myHand.findRun();
 					if(run != null) {
 						countInitial += myHand.checkSum(run);
-						hasPlayInit = true;
-						return "Play" + run;
+						myHand.sort();
+						returnString = "Play";
+						for(int i=0; i<run.size();i++) {
+							returnString += " " + myHand.handIndexOf(run.get(i)); 
+						}
+						return returnString;
 					}
 					else {
 						group = myHand.findGroup();
 						if(group != null) {
 							countInitial += myHand.checkSum(group);
-							hasPlayInit = true;
-							return "Play" + group;
+							myHand.sort();
+							returnString = "Play";
+							for(int i=0; i<group.size();i++) {
+								returnString += " " + myHand.handIndexOf(group.get(i)); 
+							}
+							return returnString;
 						}	
-						else
-							return "Something went wrong";
+						else {
+							System.out.println( "Something went wrong");
+							return "END";
+						}
 					}
 				}	else {
 					System.out.print("Someone has played initial, but P2 can't play 30+points");
@@ -75,23 +81,30 @@ public class StrategyTwo implements AIStrategy, Observer{
 			if(myHand.canPlayAll(table)) {	//if can play all, request use of table
 				run = myHand.findRun();
 				if(run != null) {
-					countInitial += myHand.checkSum(run);
-					hasPlayRest = true;
-					return "Play" + run;
+					myHand.sort();
+					returnString = "Play";
+					for(int i=0; i<run.size();i++) {
+						returnString += " " + myHand.handIndexOf(run.get(i)); 
+					}
+					return returnString;
 				} else {
 					group = myHand.findGroup();
 					if(group != null) {
-						countInitial += myHand.checkSum(group);
-						hasPlayRest = true;
-						return "Play" + group;
+						myHand.sort();
+						returnString = "Play";
+						for(int i=0; i<group.size();i++) {
+							returnString += " " + myHand.handIndexOf(group.get(i)); 
+						}
+						return returnString;
 					}	else {
 						meldOnTable = myHand.findMeldsOnTable(table);
 						if(meldOnTable != null) {
 							for(Entry<Tile, Integer>Entry : meldOnTable.entrySet()) {
 								Tile tile = Entry.getKey();
 								int index = Entry.getValue();
-								hasPlayRest = true;
-								return "Play" + tile + "to" + table.get(index) ;
+								myHand.sort();
+								returnString = "Play "  + myHand.handIndexOf(tile) + " to " + index+ " " +1;
+								return returnString;
 							}
 						}else {
 									return "Something Wrong";
@@ -104,20 +117,18 @@ public class StrategyTwo implements AIStrategy, Observer{
 					for(Entry<Tile, Integer>Entry : meldOnTable.entrySet()) {
 						Tile tile = Entry.getKey();
 						int index = Entry.getValue();
-						hasPlayRest = true;
-						return "Play" + tile + "to" + table.get(index) ;
+						myHand.sort();
+						returnString = "Play "  + myHand.handIndexOf(tile) + " to " + index + " " +1;
+						return returnString;
 					}
 				} else
 					return "END";
 			}	
-			return "??";
+			System.out.println( "Something went wrong");
+			return "END";
 		}
 	}
 
-	@Override
-	public String name() {
-		return "Computer (Very Easy)";
-	}
 	@Override
 	public void update(ArrayList<Meld> table) {
 		this.table = table;
@@ -130,5 +141,11 @@ public class StrategyTwo implements AIStrategy, Observer{
 	@Override
 	public void setHand(Hand hand) {
 		myHand = hand;
+	}
+
+	@Override
+	public String getDifficulty() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

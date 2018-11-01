@@ -18,7 +18,7 @@ public class StrategyZero implements AIStrategy, Observer{
 	private int countInitial;
 	private boolean hasPlayInit;
 	private boolean hasPlayRest;
-
+	private String returnString;
 	
 	public StrategyZero(Subject data) {
 		data.register(this);
@@ -29,7 +29,7 @@ public class StrategyZero implements AIStrategy, Observer{
 	
 	@Override
 	public String generateCommand() {
-		hasPlayRest = false;
+		returnString = "";
 		run = new ArrayList<Tile>();
 		group = new ArrayList<Tile>();
 		if(countInitial < 30) {	//play initial
@@ -37,15 +37,23 @@ public class StrategyZero implements AIStrategy, Observer{
 				run = myHand.findRun();
 				if(run != null) {
 					countInitial += myHand.checkSum(run);
-					hasPlayInit = true;
-					return "Play" + run;
+					myHand.sort();
+					returnString = "Play";
+					for(int i=0; i<run.size();i++) {
+						returnString += " " + myHand.handIndexOf(run.get(i)); 
+					}
+					return returnString;
 				}
 				else {
 					group = myHand.findGroup();
 					if(group != null) {
 						countInitial += myHand.checkSum(group);
-						hasPlayInit = true;
-						return "Play" + group;
+						myHand.sort();
+						returnString = "Play";
+						for(int i=0; i<group.size();i++) {
+							returnString += " " + myHand.handIndexOf(group.get(i)); 
+						}
+						return returnString;
 					}	
 					else
 						return "Something wrong";
@@ -55,23 +63,23 @@ public class StrategyZero implements AIStrategy, Observer{
 		}else {
 			run = myHand.findRun();
 			if(run != null)	{
-				hasPlayRest = true;
-				return "Play" + run;
+				myHand.sort();
+				returnString = "Play";
+				for(int i=0; i<run.size();i++) {
+					returnString += " " + myHand.handIndexOf(run.get(i)); 
+				}
+				return returnString;
 			} else {
 				group  = myHand.findGroup();
 				if(group != null) {
-					hasPlayRest = true;
-					return "Play" + group;
+					myHand.sort();
+					returnString = "Play";
+					for(int i=0; i<group.size();i++) {
+						returnString += " " + myHand.handIndexOf(group.get(i)); 
+					}
+					return returnString;
 				}
-			}
-			if(hasPlayInit) {
-				hasPlayInit  = false;
 				return "END";
-			} else {
-				if(hasPlayRest)
-					return "END";
-				else
-					return "END";
 			}	
 		}
 	}

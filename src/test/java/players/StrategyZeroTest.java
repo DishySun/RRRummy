@@ -66,7 +66,7 @@ public class StrategyZeroTest {
 		testAI.getSrategy().setHand(hand2);
 		String command = testAI.getSrategy().generateCommand();
 		//first play run
-		assertEquals("Play[R1, R2, R3, R4]", command);
+		assertEquals("Play 2 3 4 7", command);
 		//remove hand R1 R2 R3 R4
 		hand2.remove(hand.indexOf(atile2));
 		hand2.remove(hand.indexOf(atile3));
@@ -76,14 +76,14 @@ public class StrategyZeroTest {
 //B6, B11, R3, R4, G5, G10, O7, O11, JK, JK
 		command = testAI.getSrategy().generateCommand();
 		//play second run
-		assertEquals("Play[R3, R4, JK]", command);
+		assertEquals("Play 2 3 9", command);
 		hand2.remove(hand.indexOf(atile5));
 		hand2.remove(hand.indexOf(atile8));
 		hand2.remove(hand.indexOf(aJoker));
 //B6, B11, G5, G10, O7, O11, JK
 		command = testAI.getSrategy().generateCommand();
 		//no run to play , play first group
-		assertEquals("Play[O11, B11, JK]", command);
+		assertEquals("Play 5 1 6", command);
 		hand2.remove(hand.indexOf(atile10));
 		hand2.remove(hand.indexOf(atile11));
 		hand2.remove(hand.indexOf(bJoker));
@@ -182,7 +182,7 @@ public class StrategyZeroTest {
 		testAI.getSrategy().setHand(hand2);
 		String command = testAI.getSrategy().generateCommand();
 		//first play run
-		assertEquals("Play[R1, R2, R3, R4]", command);
+		assertEquals("Play 2 3 4 7", command);
 		//remove hand R1 R2 R3 R4
 		hand2.remove(hand.indexOf(atile2));
 		hand2.remove(hand.indexOf(atile3));
@@ -192,20 +192,20 @@ public class StrategyZeroTest {
 //B6, B11, R3, R4, G5, G10, O7, O11, JK, JK
 		command = testAI.getSrategy().generateCommand();
 		//play second run
-		assertEquals("Play[R3, R4, JK]", command);
+		assertEquals("Play 2 3 9", command);
 		hand2.remove(hand.indexOf(atile5));
 		hand2.remove(hand.indexOf(atile8));
 		hand2.remove(hand.indexOf(aJoker));
 //B6, B11, G5, G10, O7, O11, JK
 		command = testAI.getSrategy().generateCommand();
 		//no run to play , play first group
-		assertEquals("Play[O5, G5, B5]", command);
+		assertEquals("Play 4 2 0", command);
 		hand2.remove(hand.indexOf(atile6));
 		hand2.remove(hand.indexOf(atile7));
 		hand2.remove(hand.indexOf(atile12));
 //JK, G10, O11, B11
 		command = testAI.getSrategy().generateCommand();
 		// initial no. > 30, keep play
-		assertEquals("Play[O11, B11, JK]", command);
+		assertEquals("Play 2 0 3", command);
 	}
 }
