@@ -8,8 +8,9 @@ public class EndTurnCommand implements Command{
 		this.game = game;
 	}
 	@Override
-	public void excute() {
+	public boolean excute() {
 		game.endTurn();
+		return true;
 	}
 
 }

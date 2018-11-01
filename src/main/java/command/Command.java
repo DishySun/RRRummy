@@ -7,18 +7,18 @@ package command;
  * 		- Play int(hand index) to int(meld index) head/tail
  * 		- Play ArrayList<Integer>(hand indexs)
  * Move:
- * 		- Move int(meld) head/tail to int(meld)
- * 		- Move int head/tail to int head/tail
+ * 		- Move int(fromMeldIndex) head/tail to int(toMeldIndex)
+ * 		- Move int(fromMeldIndex) head/tail to int(toMeldIndex) head/tail
  * Cut:
- * 		- Cut int at int
+ * 		- Cut int(tableIndex) at int(meldIndex)
  * Replace:
- * 		- Replace int to int int
+ * 		- Replace int(handIndex) to int(tableIndex) int(meldIndex)
  * End:
  * 		- End
  * */
 
 public interface Command {
-	public void excute();
+	public boolean excute();
 	public String toString();
 	//public void undo();
 }
