@@ -9,7 +9,7 @@ public class Player {
 	private String name;
 	protected Hand hand;
 	private int playerId;
-	static private int idTracker = 0;
+	protected static int idTracker = 0;
 	
 	public Player(String name) {
 		this.name = name;
@@ -30,6 +30,7 @@ public class Player {
 	}
 	
 	public Tile play(int index) {
+		if (index >= handSize() || index < 0) return null;
 		return hand.remove(index);
 	}
 	
@@ -41,5 +42,15 @@ public class Player {
 		return v.getCommand();
 	}
 	public int handSize() {return hand.size();}
-	public Tile getHand(int i) {return hand.getTile(i);}
+	public Tile getHand(int i) {
+		if (i >= handSize() || i < 0) return null;
+		return hand.getTile(i);
+	}
+	public int getHand(Tile t) {
+		if (!hand.contaions(t)) return -1;
+		return hand.indexOf(t);
+	}
+	public boolean handContains(Tile t) {
+		return hand.contaions(t);
+	}
 }

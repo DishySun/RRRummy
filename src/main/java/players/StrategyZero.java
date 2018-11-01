@@ -77,8 +77,8 @@ public class StrategyZero implements AIStrategy, Observer{
 	}
 
 	@Override
-	public String name() {
-		return "Computer (Very Easy)";
+	public String getDifficulty() {
+		return "Retard";
 	}
 	@Override
 	public void update(ArrayList<Meld> table) {
