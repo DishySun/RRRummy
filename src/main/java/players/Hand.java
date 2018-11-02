@@ -497,4 +497,190 @@ public class Hand {
 		return count == size();
 	}
 	
+	public HashMap<ArrayList<Tile>,Integer> findRunMove(Meld meld){
+		if(hand.size() == 0)
+			return null;
+		HashMap<ArrayList<Tile>, Integer> runCanMove = new HashMap<ArrayList<Tile>,Integer>();
+		ArrayList<Tile> tile4Run = new ArrayList<Tile>();
+		boolean disconnect = true;	// check if next tile number & color is connecte
+		boolean run = true;		// used to stop loop when reach 30 points
+		int playIndex = 0;	//point to tile4Run position;
+		int handIndex;  //used when looping hand cards
+		int jokerNum = 0;	// joker number
+		int jokerorg = 0;	// joker number (final)
+		boolean hasJoker = false;
+		sort();		//sort
+		//check if has joker
+		for(int i = 0; i<size();i++) {			//count size of joker;
+			if(hand.get(i).getColor() == Tile.Color.JOKER) {
+				jokerNum++;
+				jokerorg++;
+			}
+				
+			hasJoker = true;
+		}
+		
+		
+		tile4Run.add(hand.get(0));
+
+		for(int i=1; i<hand.size()-jokerNum;i++) {
+			if(tile4Run.get(playIndex).getColor() == hand.get(i).getColor() 
+					&& hand.get(i).getNumber()-1 == tile4Run.get(playIndex).getNumber()) {
+				tile4Run.add(hand.get(i));
+				playIndex++;
+				disconnect  = false;
+				if(i == hand.size()-jokerNum-1) 
+					disconnect = true;
+			}else
+				disconnect = true;
+		
+			if(disconnect) {
+				disconnect  = false;
+				if(tile4Run.size() == 2) {
+					Tile removeTail = meld.removeTail();
+					if(meld.isValid()) {	// if can move
+						if(removeTail.isJoker()) {	// if is joker, can move for sure
+							meld.addTail(removeTail);
+							runCanMove.put(tile4Run, meld.size()-1);
+							return runCanMove;
+						}else {	//check if can move to add 
+							if(tile4Run.get(0).getColor() == removeTail.getColor() 
+									&& tile4Run.get(0).getNumber() -1 == removeTail.getNumber()
+									|| tile4Run.get(1).getNumber() + 1 == removeTail.getNumber()) {
+								meld.addTail(removeTail);
+								runCanMove.put(tile4Run, meld.size()-1);
+								return runCanMove;
+							}
+							meld.addTail(removeTail);
+						}
+					}else {	//cannot move, add back
+						meld.addTail(removeTail);
+					}
+					//tail cannot move, check head
+					Tile removeHead = meld.removeHead();
+					if(meld.isValid()) {	// if can move
+						if(removeHead.isJoker()) {	// if is joker, can move for sure
+							meld.addHead(removeHead);
+							runCanMove.put(tile4Run, 0);
+							return runCanMove;
+						}else {	//check if can move to add 
+							if(tile4Run.get(0).getColor() == removeHead.getColor() 
+									&& tile4Run.get(0).getNumber() -1 == removeHead.getNumber()
+									|| tile4Run.get(1).getNumber() + 1 == removeHead.getNumber()) {
+										meld.addHead(removeHead);
+										runCanMove.put(tile4Run, 0);
+										return runCanMove;
+								}
+							meld.addHead(removeHead);
+							}
+						}else {	//cannot move, add back
+							meld.addHead(removeHead);
+						}
+					}
+					//both cannot be movied, check next
+					tile4Run = new ArrayList<Tile>();
+					tile4Run.add(hand.get(i));
+					playIndex = 0;
+				}
+		}
+		return null;
+		/*if(tile4Run.size() >= 3)
+			return tile4Run;
+		//if not return above, check if has joker, if has,run, else return null
+		tile4Run = new ArrayList<Tile>();
+		playIndex = 0;
+		int count = jokerorg;
+		if(jokerorg > 1) jokerNum--;
+		while(count != 0) {
+			if(hasJoker) {
+				if(hand.size() < 2)
+					return null;
+				tile4Run.add(hand.get(0));
+				handIndex = 1;
+				while(handIndex < size()-jokerorg && run) {
+					if(tile4Run.get(playIndex).getColor() != Tile.Color.JOKER) { // last tile in tile4Run is not joker
+						if(tile4Run.get(playIndex).getColor() == hand.get(handIndex).getColor() 			//continuously 1 2 3 4 5
+								&& hand.get(handIndex).getNumber()-1 == tile4Run.get(playIndex).getNumber())
+						{
+							tile4Run.add(hand.get(handIndex));
+							playIndex++;		
+							disconnect = false;
+							handIndex++;
+							if(handIndex == size()-jokerorg)
+								disconnect = true;
+						} else
+							disconnect = true;
+					}
+					else {	// last tile in tile4Run is joker _ _ J
+						if(tile4Run.get(playIndex-1).getColor() == Tile.Color.JOKER  // _ J J 
+								&& hand.get(handIndex).getNumber() - 3 !=  tile4Run.get(playIndex-2).getNumber()) {
+							disconnect = true;
+						} else if (tile4Run.get(playIndex-1).getColor() == Tile.Color.JOKER // _ J J
+								&& hand.get(handIndex).getNumber() - 3 ==  tile4Run.get(playIndex-2).getNumber()) {
+							tile4Run.add(hand.get(handIndex));
+							playIndex++;		
+							handIndex++;
+							disconnect = false;
+						} else if (tile4Run.get(playIndex-1).getColor() != Tile.Color.JOKER // _ _ J
+								&& hand.get(handIndex).getNumber() - 2 !=  tile4Run.get(playIndex-1).getNumber()) {
+							disconnect = true;
+						} else if (tile4Run.get(playIndex-1).getColor() != Tile.Color.JOKER // _ _ J
+								&& hand.get(handIndex).getNumber() - 2 ==  tile4Run.get(playIndex-1).getNumber()) {
+							tile4Run.add(hand.get(handIndex));
+							playIndex++;	
+							handIndex++;
+							disconnect = false;
+						}
+					}
+
+					if (disconnect){ // disconnect
+						disconnect = false;
+						if(tile4Run.size() < 3) {
+							if(jokerNum > 0) {
+								if(tile4Run.size() >= 2 && tile4Run.get(tile4Run.size()-2).getNumber() == 12 
+										&& tile4Run.get(tile4Run.size()-1).getColor() == Tile.Color.JOKER 
+										|| tile4Run.get(tile4Run.size()-1).getNumber() == 13)
+								{	
+											tile4Run.add(0, hand.get(size()-1)); // add joker
+											jokerNum--;
+											playIndex++;
+											if(tile4Run.size() >= 3 && handIndex == size()-jokerorg)
+												return tile4Run;
+									
+								} else {
+									tile4Run.add(hand.get(size()-1)); // add joker
+									jokerNum--;
+									playIndex++;
+									if(tile4Run.size() >= 3 && handIndex == size()-jokerorg)
+										return tile4Run;
+								}
+							} else {
+								for(int i = 0; i<tile4Run.size();i++) {
+									if(tile4Run.get(i).getColor() == Tile.Color.JOKER) 
+										jokerNum++;
+								}
+								tile4Run = new ArrayList<Tile>();
+								tile4Run.add(hand.get(handIndex));
+								playIndex = 0;
+								handIndex++;
+							}
+						} else {
+							return tile4Run;
+						}
+					}
+				}
+			}
+			
+			for(int i = 0; i<tile4Run.size();i++) {
+				if(tile4Run.get(i).getColor() == Tile.Color.JOKER) 
+					jokerNum++;
+			}
+			playIndex = 0;
+			tile4Run.clear();	
+			if(jokerorg > 1) jokerNum++;		//if 2 joker, first only 1 joker first, than 2
+			count--;
+		}
+		//nothing to return
+*/		
+	}
 }

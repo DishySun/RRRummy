@@ -939,4 +939,62 @@ public class HandTest {
 		canPlay = hand.canPlayAll(meldList);
 		assertTrue(canPlay);
 	}
+	
+	@Test
+	public void test_findMoveRun() throws AbleToAddBothSideException {
+		//test find, and play
+		HashMap<ArrayList<Tile>,Integer> tile2play = new HashMap<ArrayList<Tile>,Integer>();
+		try {
+			atile1 = new Tile("R1");
+			atile2 = new Tile("R2");
+			atile3 = new Tile("R3");
+			atile4 = new Tile("R4");
+			atile5 = new Tile("G4");
+			atile6 = new Tile("R6");
+			atile7 = new Tile("O4");
+			atile8 = new Tile("R4");
+			atile9 = new Tile("G10");
+			atile10 = new Tile("B4");
+			atile11 = new Tile("O11");
+			atile12 = new Tile("B5");
+			atile13 = new Tile("R5");
+			aJoker = new Tile("J");
+			bJoker = new Tile("J");
+		}catch(InvalidTileException e) {
+			fail();
+		}
+		Meld melda;
+		Meld meldb;
+		ArrayList<Meld> meldList = new ArrayList<Meld>();
+		melda = new Meld();
+		meldb = new Meld();
+		melda.add(atile1);
+		melda.add(atile2);
+		melda.add(atile3);
+		melda.add(atile4);
+		meldb.add(atile5);
+		meldb.add(atile8);
+		meldb.addTail(aJoker);
+		meldList.add(melda);
+		meldList.add(meldb);
+		assertEquals(2, meldList.size());
+//[[R1, R2, R3, R4], [G4, R4, JK]]
+		hand.add(atile6);	//r6
+		hand.add(atile13);//r5
+		hand.add(atile12);//b5
+		hand.add(atile10);//b6
+//[R1, R2, R3, R4]
+//B4, B5, R5, R6
+		tile2play = hand.findRunMove(melda);
+		assertEquals("{[R5, R6]=3}", tile2play.toString());
+//[JK, G4, R4,]
+//B4, B5, R5, R6		
+		tile2play = hand.findRunMove(meldb);
+		assertEquals(null, tile2play);
+		meldb.addTail(atile10);//b4
+//[JK, G4, R4, B4]
+//B4, B5, R5, R6
+		tile2play = hand.findRunMove(meldb);
+		assertEquals("{[B4, B5]=0}", tile2play.toString());
+	}
 }
