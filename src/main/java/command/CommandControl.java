@@ -125,7 +125,32 @@ public class CommandControl {
 			//4 parameters
 			c = new MoveCommand(fromMeldIndex, fromMeldHoT, toMeldIndex, toMeldHot ,game);
 			break;
-		case "cut":break;
+		case "cut":
+			int cutFrom = -1;
+			int cutAt = -1;
+			try {
+				temp = commandList.remove(0);
+				cutFrom = Integer.valueOf(temp);
+			}catch (Exception e) {
+				System.out.println("int is expected for 2nd string");
+				return -1;
+			}
+			try {
+				temp = commandList.remove(0);
+				if (!temp.equalsIgnoreCase("at")) return -1;
+			}catch (Exception e) {
+				System.out.println("'at' is expected for 3rd string");
+				return -1;
+			}
+			try {
+				temp = commandList.remove(0);
+				cutAt = Integer.valueOf(temp);
+			}catch (Exception e) {
+				System.out.println("int is expected for 4th string");
+				return -1;
+			}
+			c = new CutCommand(cutFrom, cutAt, game);
+			break;
 		case "replace":break;
 		case "end": 
 			c = new EndTurnCommand(game);

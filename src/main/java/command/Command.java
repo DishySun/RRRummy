@@ -10,7 +10,7 @@ package command;
  * 		- Move int(fromMeldIndex) head/tail to int(toMeldIndex)
  * 		- Move int(fromMeldIndex) head/tail to int(toMeldIndex) head/tail
  * Cut:
- * 		- Cut int(tableIndex) at int(meldIndex)
+ * 		- Cut int(meldIndex) at int(tileMeld)
  * Replace:
  * 		- Replace int(handIndex) to int(tableIndex) int(meldIndex)
  * End:
