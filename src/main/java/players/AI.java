@@ -8,11 +8,12 @@ public class AI extends Player{
 	public AI(AIStrategy strategy) {
 		super("Computer"+idTracker + " ("+strategy.getDifficulty()+")");
 		this.strategy = strategy;
+		this.strategy.setMyId(this.getId());
+		this.strategy.setHand(hand);
 	}
 	
 	public String getCommandString(View v) {
 		return strategy.generateCommand();
 	}
-	
-
+	public AIStrategy getStrategy() {return strategy;}
 }

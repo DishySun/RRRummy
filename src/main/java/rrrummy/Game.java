@@ -24,8 +24,17 @@ public class Game {
 		view = v;
 		commandControl = new CommandControl(view);
 		//set players to random sits
-		//Collections.shuffle(players);
+		
 		currentPlayer = 0;
+		for (Player p : ps) {
+			if (p.getStrategy() == null) continue;
+			table.register(p.getStrategy());
+			for (Player pp: ps) {
+				pp.register(p.getStrategy());
+			}
+		}
+		table.notifyObserver();
+		Collections.shuffle(players);
 	}
 	
 	public Game(ArrayList<Player> ps, ArrayList<Tile> fileStock, View v){

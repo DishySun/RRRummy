@@ -1,9 +1,7 @@
 package game;
 
 import java.util.ArrayList;
-import players.AI;
-import players.Player;
-import players.StrategyZero;
+import players.*;
 import rrrummy.Game;
 
 
@@ -13,14 +11,14 @@ public class GameControl {
 	private View view;
 	
 	
-	public GameControl(int i) {
-		
+	public GameControl(int aiNumber) {
+		players = new ArrayList<Player>();
 		view = new View();
 		players = new ArrayList<Player>();
 		players.add(new Player("Bill"));
-		while (i >0) {
+		while (aiNumber >0) {
 			players.add(new AI(new StrategyZero()));
-			i--;
+			aiNumber--;
 		}
 	}
 	
