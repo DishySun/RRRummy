@@ -5,6 +5,8 @@ import java.util.Arrays;
 
 import game.View;
 import rrrummy.Game;
+import java.lang.NumberFormatException;
+import java.lang.IndexOutOfBoundsException;
 
 public class CommandControl {
 	private ArrayList<Command> commandHistory;
@@ -33,7 +35,7 @@ public class CommandControl {
 					temp = commandList.remove(0);
 					intList.add(Integer.valueOf(temp));
 				}
-			}catch(java.lang.NumberFormatException e){
+			}catch(NumberFormatException e){
 			    //to
 				if (!temp.equalsIgnoreCase("to")) return -1;
 				//TODO:adding a List of indexes to a specific meld feature will be implemented 
@@ -46,7 +48,7 @@ public class CommandControl {
 				}
 				try {
 					temp = commandList.remove(0);
-				}catch (java.lang.IndexOutOfBoundsException ee) {
+				}catch (IndexOutOfBoundsException ee) {
 					//play int to int
 					c = new PlayCommand(intList.get(0), meldIndex, game, view);
 					break;
@@ -72,14 +74,65 @@ public class CommandControl {
 		    		c = new PlayCommand(intList, game);
 		    	}
 		    }
+			break;
 			//return -1;
-		case "move":break;
+		case "move":
+			int fromMeldIndex = 0;
+			int fromMeldHoT = -1;
+			int toMeldIndex = 0;
+			int toMeldHot = -1;
+			try {
+				temp = commandList.remove(0);
+				fromMeldIndex = Integer.valueOf(temp);
+			} catch (Exception e) {
+				System.out.println("int is excepted for 2nd string");
+				return -1;
+			}
+			try {
+				temp = commandList.remove(0);
+				if(temp.equalsIgnoreCase("head")) fromMeldHoT = 0;
+				else if (temp.equalsIgnoreCase("tail")) fromMeldHoT = 1;
+				else return -1;
+			}catch(Exception e) {
+				System.out.println("'Head'/'Tail' is expected for 3rd string");
+				return -1;
+			}
+			try {
+				temp = commandList.remove(0);
+				if(!temp.equalsIgnoreCase("to")) return -1;
+			}catch(IndexOutOfBoundsException e) {
+				System.out.println("'to' is excepted for 4th string");
+				return -1;
+			}
+			try {
+				temp = commandList.remove(0);
+				toMeldIndex = Integer.valueOf(temp);
+			}catch(Exception e) {
+				System.out.println("int is excepted for 5th string");
+				return -1;
+			}
+			try {
+				temp = commandList.remove(0);
+				if (temp.equalsIgnoreCase("head")) toMeldHot = 0;
+				else if (temp.equalsIgnoreCase("tail"))toMeldHot = 1;
+				else System.out.println("'Head'/'Tail' is expected for 6rd string");
+				return -1;
+				
+			}catch(IndexOutOfBoundsException e) {
+				// 3 parameters
+				c = new MoveCommand(fromMeldIndex, fromMeldHoT, toMeldIndex, game, view);
+			}
+			//4 parameters
+			c = new MoveCommand(fromMeldIndex, fromMeldHoT, toMeldIndex, toMeldHot ,game);
+			break;
 		case "cut":break;
 		case "replace":break;
 		case "end": 
 			c = new EndTurnCommand(game);
 			break;
-		default: return -1;
+		default: 
+			System.out.println("[Play, Move, Cut, Replace] for 1st string");
+			return -1;
 		}
 		
 		if (command.compareToIgnoreCase("end") == 0) {

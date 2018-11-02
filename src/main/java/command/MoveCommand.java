@@ -11,6 +11,7 @@ public class MoveCommand implements Command{
 	
 	
 	public MoveCommand(int fromMeldIndex, int fromMeldHoT, int toMeldIndex, Game game, View view) {
+		//3 parameters
 		this.fromMeldIndex = fromMeldIndex;
 		this.fromMeldHoT = fromMeldHoT;
 		this.toMeldIndex = toMeldIndex;
@@ -20,6 +21,7 @@ public class MoveCommand implements Command{
 	}
 	
 	public MoveCommand(int fromMeldIndex, int fromMeldHoT, int toMeldIndex, int toMeldHoT, Game game) {
+		// 4 parameters
 		this.fromMeldIndex = fromMeldIndex;
 		this.fromMeldHoT = fromMeldHoT;
 		this.toMeldIndex = toMeldIndex;
