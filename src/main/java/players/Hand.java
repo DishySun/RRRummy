@@ -520,6 +520,8 @@ public class Hand {
 	}
 	
 	public boolean canPlayAll(ArrayList<Meld> meldList) {
+		if(hand.size() == 0)
+			return false;
 		HashMap<Tile, Integer> mdlesMap = new HashMap<Tile,Integer>();
 		ArrayList<Tile>tempHandArray = new  ArrayList<Tile>(hand);
 		Hand temphand = new Hand(tempHandArray);

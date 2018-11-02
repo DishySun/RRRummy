@@ -19,7 +19,9 @@ public class StrategyThree implements AIStrategy, Observer {
 	private HashMap<ArrayList<Tile>,Integer> moveRunToTable;
 	private HashMap<ArrayList<Tile>,Integer> moveGroupToTable;
 	boolean moveRun2Table;
+	boolean moveSet2Table;
 	int moveRunIndex;
+	int moveSetIndex;
 	private Meld tempMeld;
 	boolean moveGroup2Table;
 	private int countInitial;
@@ -29,7 +31,9 @@ public class StrategyThree implements AIStrategy, Observer {
 		data.register(this);
 		countInitial = 0;
 		moveRunIndex = 0;
-		moveRun2Table =false;
+		moveSetIndex = 0;
+		moveRun2Table = false;
+		moveSet2Table = false;
 		tempMeld = new Meld();
 	}
 	
@@ -71,7 +75,7 @@ public class StrategyThree implements AIStrategy, Observer {
 					}
 				}
 			}	else
-				return "END";
+					return "END";
 		}else {
 			for(Entry<Integer, Integer> entry : playerHandSizes.entrySet()) {
 				//int id = entry.getKey();
@@ -81,8 +85,7 @@ public class StrategyThree implements AIStrategy, Observer {
 					break;
 				} 
 			}
-			if(hasLess) {		//has 3 fewer tiles than p3, play all request use of table
-				System.out.println("forst to run");
+			if(hasLess || moveRun2Table || moveSet2Table) {		//has 3 fewer tiles than p3, play all request use of table
 				run = myHand.findRun();
 				if(run != null) {
 					myHand.sort();
@@ -92,71 +95,100 @@ public class StrategyThree implements AIStrategy, Observer {
 					}
 					return returnString;
 				}
-				else {
-					group = myHand.findGroup();
-					if(group != null) {
+				group = myHand.findGroup();
+				if(group != null) {
+					myHand.sort();
+					returnString = "Play";
+					for(int i=0; i<group.size();i++) {
+						returnString += " " + myHand.handIndexOf(group.get(i));
+					}
+					return returnString;
+				}	
+				meldOnTable = myHand.findMeldsOnTable(table);
+				if(meldOnTable != null) {
+					for(Entry<Tile, Integer>Entry : meldOnTable.entrySet()) {
+						Tile tile = Entry.getKey();
+						int index = Entry.getValue();
+						//System.out.println(meldOnTable);
 						myHand.sort();
-						returnString = "Play";
-						for(int i=0; i<group.size();i++) {
-							returnString += " " + myHand.handIndexOf(group.get(i));
-						}
+						if(tile.isJoker())
+							returnString = "Play "  + myHand.handIndexOf(tile) + " to " + index + " " + "1";
+						else
+							returnString = "Play "  + myHand.handIndexOf(tile) + " to " + index/* + " " + "1"*/;	
 						return returnString;
-					}	
-					else {
-						
-						meldOnTable = myHand.findMeldsOnTable(table);
-						if(meldOnTable != null) {
-							for(Entry<Tile, Integer>Entry : meldOnTable.entrySet()) {
-								Tile tile = Entry.getKey();
-								int index = Entry.getValue();
-								System.out.println(meldOnTable);
+					}
+				}
+						//System.out.println("--"+table);
+						//System.out.println("--"+myHand +  " " +moveRun2Table);
+				if(!moveRun2Table) {		//if not in move run progress
+					for(Meld m : table) {
+						moveRunToTable = myHand.findRunMove(m);
+						if(moveRunToTable != null) {
+							moveRun2Table = true;
+							tempMeld = m;
+							for(Entry<ArrayList<Tile>, Integer> Entry : moveRunToTable.entrySet()) {
+								ArrayList<Tile> runMove = Entry.getKey();
+								moveRunIndex = Entry.getValue();	// 
 								myHand.sort();
-								returnString = "Play "  + myHand.handIndexOf(tile) + " to " + index/* + " " + "1"*/;
-								return returnString;
-							}
-						}else {
-							System.out.println("--"+table);
-							System.out.println("--"+myHand +  " " +moveRun2Table);
-							if(!moveRun2Table) {		//if not in move run progress
-								for(Meld m : table) {
-									moveRunToTable = myHand.findRunMove(m);
-									if(moveRunToTable != null) {
-										moveRun2Table = true;
-										tempMeld = m;
-										for(Entry<ArrayList<Tile>, Integer> Entry : moveRunToTable.entrySet()) {
-											ArrayList<Tile> runMove = Entry.getKey();
-											moveRunIndex = Entry.getValue();	// 
-											myHand.sort();
-											returnString = "Play";
-											for(int i=0; i<runMove.size();i++) {
-												returnString += " " + myHand.handIndexOf(runMove.get(i));
-											}
-											return returnString;
-										}
-									}else { 	//try move group progress
-										
-										return "END";
-									}
-									
-									
+								returnString = "Play";
+								for(int i=0; i<runMove.size();i++) {
+									returnString += " " + myHand.handIndexOf(runMove.get(i));
 								}
-							}else {	// if in move run progress already
-								moveRun2Table = false;
-								System.out.println(tempMeld);
-								System.out.println("move +" +  table.indexOf(tempMeld));
-								returnString = "Move";
-								returnString += " " + table.indexOf(tempMeld);
-								if(moveRunIndex == 0)
-									returnString += " 0";
-								else
-									returnString += " 1 ";
-								returnString +=  table.size()-1;
+								System.out.println("Try using move 2 ");
 								return returnString;
 							}
-									System.out.println("p3 could play but has not tile to play,p3 tried reuse table");
 						}
 					}	
-				}
+				}	else {	// if in move run progress already
+					System.out.println("move run");
+						moveRun2Table = false;
+						//System.out.println(tempMeld);
+						//	System.out.println("move +" +  table.indexOf(tempMeld));
+						returnString = "Move";
+						returnString += " " + table.indexOf(tempMeld);
+						if(moveRunIndex == 0)
+							returnString += " 0 to ";
+						else
+							returnString += " 1 to ";
+						returnString +=  table.size()-1;
+						System.out.println(returnString);
+						return returnString;
+				}	
+				
+				if(!moveSet2Table) {		//if not in move set progress
+					for(Meld m : table) {
+						moveGroupToTable = myHand.findSetMove(m);
+						if(moveGroupToTable != null) {
+							moveSet2Table = true;
+							tempMeld = m;
+							for(Entry<ArrayList<Tile>, Integer> Entry : moveGroupToTable.entrySet()) {
+								ArrayList<Tile> setMove = Entry.getKey();
+								moveSetIndex = Entry.getValue();	// 
+								myHand.sort();
+								returnString = "Play";
+								for(int i=0; i<setMove.size();i++) {
+									returnString += " " + myHand.handIndexOf(setMove.get(i));
+								}
+								System.out.println("Try using move 2 set");
+								return returnString;
+							}
+						}
+					}	
+				}	else {	// if in move set progress already
+					System.out.println("move set");
+					moveSet2Table = false;
+						//System.out.println(tempMeld);
+						//	System.out.println("move +" +  table.indexOf(tempMeld));
+						returnString = "Move";
+						returnString += " " + table.indexOf(tempMeld);
+						returnString += " 1 to ";
+						returnString +=  table.size()-1;
+						System.out.println(returnString);
+						return returnString;
+				}	
+				
+				System.out.println("could play but has not tile to play, tried reuse table");
+				return "END";
 			}else {
 				if(myHand.canPlayAll(table)) {	//if can play all, request use of table
 					run = myHand.findRun();
@@ -183,11 +215,14 @@ public class StrategyThree implements AIStrategy, Observer {
 									Tile tile = Entry.getKey();
 									int index = Entry.getValue();
 									myHand.sort();
-									returnString = "Play "  + myHand.handIndexOf(tile) + " to " + index/* + " " + "1"*/;
+									if(tile.isJoker())
+										returnString = "Play "  + myHand.handIndexOf(tile) + " to " + index + " " + "1";
+									else
+										returnString = "Play "  + myHand.handIndexOf(tile) + " to " + index/* + " " + "1"*/;	
 									return returnString;
 								}
 							}else {
-								System.out.println("Something went wrong");
+								System.out.println("Something might went wrong");
 								return "END";
 							}
 						}
@@ -196,7 +231,7 @@ public class StrategyThree implements AIStrategy, Observer {
 					return "END";
 				}			
 			}
-			System.out.println("Something went wrong");
+			System.out.println("Something might went wrong");
 			return "END";
 		}
 	}

@@ -16,12 +16,24 @@ public class StrategyTwo implements AIStrategy, Observer{
 	private ArrayList<Tile> run;
 	private ArrayList<Tile> group;
 	private HashMap<Tile,Integer> meldOnTable;;
+	private HashMap<ArrayList<Tile>,Integer> moveRunToTable;
+	private HashMap<ArrayList<Tile>,Integer> moveGroupToTable;
+	boolean moveRun2Table;
+	boolean moveSet2Table;
+	int moveRunIndex;
+	int moveSetIndex;
+	private Meld tempMeld;
 	private int countInitial;
 	private String returnString;
 	
 	public StrategyTwo (Subject data) {
 		data.register(this);
 		countInitial = 0;
+		moveRunIndex = 0;
+		moveSetIndex = 0;
+		moveRun2Table = false;
+		moveSet2Table = false;
+		tempMeld = new Meld();
 	}
 	
 	@Override
@@ -66,7 +78,7 @@ public class StrategyTwo implements AIStrategy, Observer{
 							return returnString;
 						}	
 						else {
-							System.out.println( "Something went wrong");
+							System.out.println( "Something might went wrong");
 							return "END";
 						}
 					}
@@ -107,7 +119,7 @@ public class StrategyTwo implements AIStrategy, Observer{
 								return returnString;
 							}
 						}else {
-									return "Something Wrong";
+									return "Something went Wrong";
 						}
 					}
 				}
@@ -118,15 +130,83 @@ public class StrategyTwo implements AIStrategy, Observer{
 						Tile tile = Entry.getKey();
 						int index = Entry.getValue();
 						myHand.sort();
-						returnString = "Play "  + myHand.handIndexOf(tile) + " to " + index/* + " 0"*/;
+						if(tile.isJoker())
+							returnString = "Play "  + myHand.handIndexOf(tile) + " to " + index + " " + "1";
+						else
+							returnString = "Play "  + myHand.handIndexOf(tile) + " to " + index/* + " " + "1"*/;	
 						return returnString;
 					}
 				} else{
-					return "END";
+					if(!moveRun2Table) {		//if not in move run progress
+						for(Meld m : table) {
+							moveRunToTable = myHand.findRunMove(m);
+							if(moveRunToTable != null) {
+								moveRun2Table = true;
+								tempMeld = m;
+								for(Entry<ArrayList<Tile>, Integer> Entry : moveRunToTable.entrySet()) {
+									ArrayList<Tile> runMove = Entry.getKey();
+									moveRunIndex = Entry.getValue();	// 
+									myHand.sort();
+									returnString = "Play";
+									for(int i=0; i<runMove.size();i++) {
+										returnString += " " + myHand.handIndexOf(runMove.get(i));
+									}
+									System.out.println("Try using move 2 run");
+									System.out.println(returnString);
+									return returnString;
+								}
+							}
+						}	
+					}	else {	// if in move run progress already
+							moveRun2Table = false;
+							//System.out.println(tempMeld);
+							//	System.out.println("move +" +  table.indexOf(tempMeld));
+							returnString = "Move";
+							returnString += " " + table.indexOf(tempMeld);
+							if(moveRunIndex == 0)
+								returnString += " 0 to ";
+							else
+								returnString += " 1 to ";
+							returnString +=  table.size()-1;
+							System.out.println(returnString);
+							return returnString;
+					}	
+					
+					if(!moveSet2Table) {		//if not in move set progress
+						for(Meld m : table) {
+							moveGroupToTable = myHand.findSetMove(m);
+							if(moveGroupToTable != null) {
+								moveSet2Table = true;
+								tempMeld = m;
+								for(Entry<ArrayList<Tile>, Integer> Entry : moveGroupToTable.entrySet()) {
+									ArrayList<Tile> setMove = Entry.getKey();
+									moveSetIndex = Entry.getValue();	// 
+									myHand.sort();
+									returnString = "Play";
+									for(int i=0; i<setMove.size();i++) {
+										returnString += " " + myHand.handIndexOf(setMove.get(i));
+									}
+									System.out.println("Try using move 2 set");
+									System.out.println(returnString);
+									return returnString;
+								}
+							}
+						}	
+					}	else {	// if in move set progress already
+						moveSet2Table = false;
+							//System.out.println(tempMeld);
+							//	System.out.println("move +" +  table.indexOf(tempMeld));
+							returnString = "Move";
+							returnString += " " + table.indexOf(tempMeld);
+							returnString += " 1 to ";
+							returnString +=  table.size()-1;
+							System.out.println(returnString);
+							return returnString;
+					}
 				}
 					
 			}	
-			System.out.println( "Something went wrong");
+			System.out.println( "can not win, no tile can play that requires use of tiles of the table");
 			return "END";
 		}
 	}

@@ -16,14 +16,10 @@ public class StrategyZero implements AIStrategy, Observer{
 	private ArrayList<Tile> run;
 	private ArrayList<Tile> group;
 	private int countInitial;
-	private boolean hasPlayInit;
-	private boolean hasPlayRest;
 	private String returnString;
 	
 	public StrategyZero(Subject data) {
 		data.register(this);
-		hasPlayInit = false;
-		hasPlayRest = false;
 		countInitial = 0;
 	}
 	

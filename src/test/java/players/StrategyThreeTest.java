@@ -135,7 +135,7 @@ public class StrategyThreeTest {
 		hand2.sort();
 		command = testAI.getSrategy().generateCommand();
 		//2 player, one has less 3 tile than ai, play 2 table
-		assertEquals("Play 1 to 0 1", command);
+		assertEquals("Play 1 to 0", command);
 		hand2.remove(hand.indexOf(atile1));
 		hand2.sort();
 		command = testAI.getSrategy().generateCommand();
@@ -447,7 +447,7 @@ public class StrategyThreeTest {
 		hand2.remove(hand.indexOf(bJoker));
 		command = testAI.getSrategy().generateCommand();
 		// can play all tile
-		assertEquals("Play 0 to 0 1", command);
+		assertEquals("Play 0 to 0", command);
 	}
 	
 	@Test
@@ -544,21 +544,42 @@ public class StrategyThreeTest {
 		// can play all tile
 		assertEquals("Play 0 to 0", command);
 		hand2.remove(hand.indexOf(atile4));
+		
+		//-------
+		ArrayList<Tile> melds2 = new ArrayList<Tile>();
+		melds.add(atile9);
+		melds.add(atile10);
+		melds.add(atile11);
+		melds.add(bJoker);
+		Meld meld2 = new Meld(melds);
+		table.add(meld2);
 		meld.addTail(atile4);
 		hand2.add(atile2);
 		hand2.add(atile3);
-		System.out.println(table);
-		System.out.println(hand);
+		hand2.add(atile9);
+		hand2.add(atile10);
 		handSizes.put(3,-10);
 		command = testAI.getSrategy().generateCommand();
-		System.out.println(command);
+		assertEquals("Play 1 2", command);
 		Meld meld3 = new Meld(melds);
-		table.add(meld3);
 		meld3.addTail(atile2);
 		meld3.addTail(atile3);
+		table.add(meld3);
 		hand2.remove(hand.indexOf(atile2));
 		hand2.remove(hand.indexOf(atile3));
 		command = testAI.getSrategy().generateCommand();
-		System.out.println(command);
+		assertEquals("Move 0 1 to 2", command);
+		table.get(0).removeTail();
+		meld3.addTail(atile4);
+		command = testAI.getSrategy().generateCommand();
+		assertEquals("Play 0 1", command);
+		Meld meld4 = new Meld(melds);
+		hand2.remove(hand.indexOf(atile9));
+		hand2.remove(hand.indexOf(atile10));
+		meld4.addTail(atile9);
+		meld4.addTail(atile10);
+		table.add(meld4);
+		command = testAI.getSrategy().generateCommand();
+		assertEquals("Move 1 1 to 3", command);
 	}
 }
