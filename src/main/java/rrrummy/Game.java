@@ -200,6 +200,7 @@ public class Game {
 			for(Player player : players) {
 				handSizes.put(player.getId(), player.handSize());
 			}
+			System.out.println("Each player hand size: " + handSizes);
 			data.setValue(table.getMeld(), handSizes );
 			players.get(currentPlayer).printHand();
 			System.out.println(table);

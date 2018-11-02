@@ -75,8 +75,8 @@ public class StrategyTwo implements AIStrategy, Observer{
 					return "END";
 				}
 						
-			} else
-				return "END";
+			} else {
+				return "END";}
 		}else {
 			if(myHand.canPlayAll(table)) {	//if can play all, request use of table
 				run = myHand.findRun();
@@ -103,7 +103,7 @@ public class StrategyTwo implements AIStrategy, Observer{
 								Tile tile = Entry.getKey();
 								int index = Entry.getValue();
 								myHand.sort();
-								returnString = "Play "  + myHand.handIndexOf(tile) + " to " + index+ " " +1;
+								returnString = "Play "  + myHand.handIndexOf(tile) + " to " + index /*+ " 1"*/;
 								return returnString;
 							}
 						}else {
@@ -118,11 +118,13 @@ public class StrategyTwo implements AIStrategy, Observer{
 						Tile tile = Entry.getKey();
 						int index = Entry.getValue();
 						myHand.sort();
-						returnString = "Play "  + myHand.handIndexOf(tile) + " to " + index + " " +1;
+						returnString = "Play "  + myHand.handIndexOf(tile) + " to " + index/* + " 0"*/;
 						return returnString;
 					}
-				} else
+				} else{
 					return "END";
+				}
+					
 			}	
 			System.out.println( "Something went wrong");
 			return "END";
