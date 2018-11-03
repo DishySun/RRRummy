@@ -216,9 +216,8 @@ public class StrategyTwo implements AIStrategy, Observer{
 		this.table = table;
 	}
 	@Override
-	public void update(HashMap<Integer, Integer> handSizes) {
-		this.playerHandSizes = handSizes;
-		
+	public void update(int playerId, int handSize) {
+		playerHandSizes.put(playerId, handSize);
 	}
 	@Override
 	public void setHand(Hand hand) {
@@ -227,7 +226,12 @@ public class StrategyTwo implements AIStrategy, Observer{
 
 	@Override
 	public String getDifficulty() {
+		return "Normal";
+	}
+
+	@Override
+	public void setMyId(int id) {
 		// TODO Auto-generated method stub
-		return null;
+		
 	}
 }

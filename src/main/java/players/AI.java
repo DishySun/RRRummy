@@ -19,4 +19,11 @@ public class AI extends Player{
 		return strategy.generateCommand();
 	}
 	public AIStrategy getStrategy() {return strategy;}
+	public void initHand(ArrayList<Tile> arr) {
+		hand = new Hand(arr);
+		hand.sort();
+		this.strategy.setHand(hand);
+		notifyObserver();
+	}
 }
+

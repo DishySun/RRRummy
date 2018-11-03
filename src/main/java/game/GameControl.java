@@ -9,7 +9,6 @@ public class GameControl {
 	private ArrayList<Player> players;
 	private Game game;
 	private View view;
-	private GameData data;
 	
 	
 	public GameControl(int aiNumber) {
@@ -21,7 +20,6 @@ public class GameControl {
 			players.add(new AI(new StrategyZero()));
 			aiNumber--;
 		}
-		
 	}
 	
 	public void launch() {
@@ -31,7 +29,7 @@ public class GameControl {
 	
 	
 	private void newGame() {
-		game = new Game(players, view, data);
+		game = new Game(players, view);
 		game.startGame();
 	}
 	
