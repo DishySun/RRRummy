@@ -8,5 +8,5 @@ import rrrummy.Meld;
 
 public interface Observer {
 	public void update(ArrayList<Meld> table);
-	public void update(HashMap<Integer,Integer> handSizes);//<playerId, handSize>
+	public void update(int playerId, int handSize);//<playerId, handSize>
 }

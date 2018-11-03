@@ -1,29 +1,21 @@
-package command; 
- 
-import rrrummy.Game; 
+package command;
 
+import rrrummy.Game;
 
-public class CutCommand implements Command { 
-	/* Correct Form: 
-	 * 		keyword			meldIndex		tileindex 
-	 * 1. 	Cut 			meldIndex		tileindex				        cut(int meldIndex, int tileindex) { 
-	*/ 
-	 
+public class CutCommand implements Command{
 
-	private Game game; 
-	private int meldIndex;
-	private int cutPosition;
- 
-	public CutCommand(int m, int c, Game g) { 
-		this.game = g; 
-		meldIndex = m;
-		cutPosition = c;;
-	} 
- 
-	@Override 
-	public boolean excute() { 
-		// TODO Auto-generated method stub 
-		return game.cut(meldIndex, cutPosition);
+	private int meldIndex, tileIndex;
+	private Game game;
+	
+	public CutCommand(int meldIndex, int tileIndex, Game game) {
+		this.meldIndex = meldIndex;
+		this.tileIndex = tileIndex;
+		this.game = game;
 	}
- 
-} 
+	
+	@Override
+	public boolean excute() {
+		return game.cut(meldIndex, tileIndex);
+	}
+
+}

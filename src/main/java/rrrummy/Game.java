@@ -29,8 +29,17 @@ public class Game {
 		view = v;
 		commandControl = new CommandControl(view);
 		//set players to random sits
-		//Collections.shuffle(players);
+		
 		currentPlayer = 0;
+		for (Player p : ps) {
+			if (p.getStrategy() == null) continue;
+			table.register(p.getStrategy());
+			for (Player pp: ps) {
+				pp.register(p.getStrategy());
+			}
+		}
+		table.notifyObserver();
+		Collections.shuffle(players);
 	}
 	
 	public Game(ArrayList<Player> ps, ArrayList<Tile> fileStock, View v){
@@ -116,7 +125,8 @@ public class Game {
 		/*
 		 * headOrTail: true for head, false for tail
 		 * */
-		if(fromMeld >= table.size() || fromMeld < 0 || toMeld < 0 || toMeld >= table.size()) return false;
+		return table.move(fromMeld, removeHeadOrTail, toMeld);
+		/*if(fromMeld >= table.size() || fromMeld < 0 || toMeld < 0 || toMeld >= table.size()) return false;
 		Tile t = null;
 		if (removeHeadOrTail) t = table.removeHead(fromMeld);
 		else t = table.removeTail(fromMeld);
@@ -133,11 +143,12 @@ public class Game {
 			else table.addTail(t, fromMeld);
 			return false;
 		}
-		return true;
+		return true;*/
 	}
 	
 	public boolean move (int fromMeld, boolean removeHeadOrTail, int toMeld, boolean toHeadOrTail) {
-		if(fromMeld >= table.size() || fromMeld < 0 || toMeld < 0 || toMeld >= table.size()) return false;
+		return table.move (fromMeld, removeHeadOrTail, toMeld, toHeadOrTail);
+		/*if(fromMeld >= table.size() || fromMeld < 0 || toMeld < 0 || toMeld >= table.size()) return false;
 		Tile t = null;
 		if (removeHeadOrTail) t = table.removeHead(fromMeld);
 		else t = table.removeTail(fromMeld);
@@ -149,7 +160,7 @@ public class Game {
 			else table.addTail(t, fromMeld);
 			return false;
 		}
-		return b;
+		return b;*/
 	}
 	
 	

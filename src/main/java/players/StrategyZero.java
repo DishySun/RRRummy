@@ -2,15 +2,12 @@ package players;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import observer.GameData;
-import observer.Observer;
-import observer.Subject;
 import rrrummy.Meld;
 import rrrummy.Tile;
 
-public class StrategyZero implements AIStrategy, Observer{
+public class StrategyZero implements AIStrategy{
 	private Hand myHand;
+	private int myId;
 	private ArrayList<Meld> table;
 	private HashMap<Integer, Integer> playerHandSizes;
 	private ArrayList<Tile> run;
@@ -18,9 +15,8 @@ public class StrategyZero implements AIStrategy, Observer{
 	private int countInitial;
 	private String returnString;
 	
-	public StrategyZero(Subject data) {
-		data.register(this);
-		countInitial = 0;
+	public StrategyZero(){
+		playerHandSizes = new HashMap<Integer, Integer>();
 	}
 	
 	@Override
@@ -79,7 +75,10 @@ public class StrategyZero implements AIStrategy, Observer{
 			}	
 		}
 	}
-
+	
+	public void setMyId(int id) { myId = id;}
+	
+	
 	@Override
 	public String getDifficulty() {
 		return "Retard";
@@ -89,12 +88,15 @@ public class StrategyZero implements AIStrategy, Observer{
 		this.table = table;
 	}
 	@Override
-	public void update(HashMap<Integer, Integer> handSizes) {
-		this.playerHandSizes = handSizes;
-		
-	}
-	@Override
 	public void setHand(Hand hand) {
 		myHand = hand;
 	}
+
+
+	@Override
+	public void update(int playerId, int handSize) {
+		// do nothing coz this Strategy doesn't need to know other player's hand size
+		playerHandSizes.put(playerId, handSize);
+	}
+	
 }

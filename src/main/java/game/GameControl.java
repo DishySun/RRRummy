@@ -1,13 +1,7 @@
 package game;
 
 import java.util.ArrayList;
-
-import observer.GameData;
-import players.AI;
-import players.Player;
-import players.StrategyThree;
-import players.StrategyTwo;
-import players.StrategyZero;
+import players.*;
 import rrrummy.Game;
 
 
@@ -18,19 +12,14 @@ public class GameControl {
 	private GameData data;
 	
 	
-	public GameControl(int i) {
-		data = new GameData();
+	public GameControl(int aiNumber) {
+		players = new ArrayList<Player>();
 		view = new View();
 		players = new ArrayList<Player>();
 		players.add(new Player("Bill"));
-		while (i >0) {
-			if(i == 1)
-				 players.add(new AI(new StrategyZero(data)));
-			else if (i == 2)
-				players.add(new AI(new StrategyTwo(data)));
-			else if(i == 3)
-				players.add(new AI(new StrategyThree(data)));
-			i--;
+		while (aiNumber >0) {
+			players.add(new AI(new StrategyZero()));
+			aiNumber--;
 		}
 		
 	}
