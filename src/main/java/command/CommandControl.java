@@ -196,8 +196,10 @@ public class CommandControl {
 		if (command.compareToIgnoreCase("end") == 0) {
 			c = new EndTurnCommand(game);
 		}
-		commandHistory.add(c);
-		if(c.excute()) return 1;
+		if(c.excute()) {
+			commandHistory.add(c);
+			return 1;
+		}
 		return 0;
 	}
 }
