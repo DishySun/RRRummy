@@ -151,7 +151,40 @@ public class CommandControl {
 			}
 			c = new CutCommand(cutFrom, cutAt, game);
 			break;
-		case "replace":break;
+		case "replace":
+			int replaceFrom = -1;
+			int replaceTo = -1;
+			int replaceHandIndex = -1;
+			try {
+				temp = commandList.remove(0);
+				replaceFrom = Integer.valueOf(temp);
+			}catch(Exception e) {
+				System.out.println("int is excepted for 2nd string");
+				return -1;
+			}
+			try {
+				temp = commandList.remove(0);
+				if(!temp.equalsIgnoreCase("to")) return -1;
+			}catch(Exception e) {
+				System.out.println("'to' is excepted for 3rd string");
+				return -1;
+			}
+			try {
+				temp = commandList.remove(0);
+				replaceTo = Integer.valueOf(temp);
+			}catch(Exception e) {
+				System.out.println("int is excepted for 4th string");
+				return -1;
+			}
+			try {
+				temp = commandList.remove(0);
+				replaceHandIndex = Integer.valueOf(temp);
+			}catch(Exception e) {
+				System.out.println("int is excepted for 5th string");
+				return -1;
+			}
+			c = new ReplaceCommand(replaceFrom, replaceTo, replaceHandIndex, game);
+			break;
 		case "end": 
 			c = new EndTurnCommand(game);
 			break;
@@ -166,6 +199,5 @@ public class CommandControl {
 		commandHistory.add(c);
 		if(c.excute()) return 1;
 		return 0;
-		
 	}
 }
