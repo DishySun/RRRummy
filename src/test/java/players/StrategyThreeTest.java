@@ -28,6 +28,7 @@ public class StrategyThreeTest {
 		testAI = new AI(new StrategyThree());
 		hand = new ArrayList<Tile>();
 		table = new Table();
+		table.register(testAI.getStrategy());
 	}
 	
 	@Test
@@ -54,8 +55,9 @@ public class StrategyThreeTest {
 		}
 		HashMap<Integer, Integer> handSizes = new HashMap<Integer, Integer>();
 		ArrayList<Meld> table = new ArrayList<Meld>();
-		handSizes.put(1,1);
-		handSizes.put(2,5);
+		testAI.getStrategy().update(table);
+		testAI.getStrategy().update(1, 1);
+		testAI.getStrategy().update(2, 5);
 		hand.add(atile1);
 		hand.add(atile2);
 		hand.add(atile3);
@@ -161,10 +163,10 @@ public class StrategyThreeTest {
 		}catch(InvalidTileException e) {
 			fail();
 		}
-		HashMap<Integer, Integer> handSizes = new HashMap<Integer, Integer>();
 		ArrayList<Meld> table = new ArrayList<Meld>();
-		handSizes.put(1,1);
-		handSizes.put(2,5);
+		testAI.getStrategy().update(table);
+		testAI.getStrategy().update(1, 1);
+		testAI.getStrategy().update(2, 5);
 		hand.add(atile1);
 		hand.add(atile2);
 		hand.add(atile3);
@@ -225,10 +227,10 @@ public class StrategyThreeTest {
 		hand.add(atile12);
 		hand.add(bJoker);
 		hand.add(aJoker);
-		HashMap<Integer, Integer> handSizes = new HashMap<Integer, Integer>();
 		ArrayList<Meld> table = new ArrayList<Meld>();
-		handSizes.put(1,1);
-		handSizes.put(2,5);
+		testAI.getStrategy().update(table);
+		testAI.getStrategy().update(1, 1);
+		testAI.getStrategy().update(2, 5);
 		Hand hand2 = new Hand(hand);
 		testAI.initHand(hand);
 //B6, B11, R1, R2, R3, R3, R4, R4, G5, G10, O7, O11, JK, JK
@@ -292,10 +294,10 @@ public class StrategyThreeTest {
 		}catch(InvalidTileException e) {
 			fail();
 		}
-		HashMap<Integer, Integer> handSizes = new HashMap<Integer, Integer>();
 		ArrayList<Meld> table = new ArrayList<Meld>();
-		handSizes.put(1,1);
-		handSizes.put(2,5);
+		testAI.getStrategy().update(table);
+		testAI.getStrategy().update(1, 1);
+		testAI.getStrategy().update(2, 5);
 		hand.add(atile1);
 		hand.add(atile2);
 		hand.add(atile3);
@@ -370,10 +372,10 @@ public class StrategyThreeTest {
 		}catch(InvalidTileException e) {
 			fail();
 		}
-		HashMap<Integer, Integer> handSizes = new HashMap<Integer, Integer>();
 		ArrayList<Meld> table = new ArrayList<Meld>();
-		handSizes.put(1,14);
-		handSizes.put(2,14);
+		testAI.getStrategy().update(table);
+		testAI.getStrategy().update(1, 14);
+		testAI.getStrategy().update(2, 14);
 		hand.add(atile1);
 		hand.add(atile2);
 		hand.add(atile3);
@@ -464,10 +466,10 @@ public class StrategyThreeTest {
 		}catch(InvalidTileException e) {
 			fail();
 		}
-		HashMap<Integer, Integer> handSizes = new HashMap<Integer, Integer>();
 		ArrayList<Meld> table = new ArrayList<Meld>();
-		handSizes.put(1,14);
-		handSizes.put(2,14);
+		testAI.getStrategy().update(table);
+		testAI.getStrategy().update(1, 14);
+		testAI.getStrategy().update(2, 14);
 		hand.add(atile1);
 		hand.add(atile2);
 		hand.add(atile3);
@@ -549,7 +551,7 @@ public class StrategyThreeTest {
 		hand2.add(atile3);
 		hand2.add(atile9);
 		hand2.add(atile10);
-		handSizes.put(3,-10);
+		testAI.getStrategy().update(3, -10);
 		command = testAI.getStrategy().generateCommand();
 		assertEquals("Play 1 2", command);
 		Meld meld3 = new Meld(melds);

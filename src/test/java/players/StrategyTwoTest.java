@@ -48,10 +48,10 @@ public class StrategyTwoTest {
 		}catch(InvalidTileException e) {
 			fail();
 		}
-		HashMap<Integer, Integer> handSizes = new HashMap<Integer, Integer>();
 		ArrayList<Meld> table = new ArrayList<Meld>();
-		handSizes.put(1,14);
-		handSizes.put(2,14);
+		testAI.getStrategy().update(table);
+		testAI.getStrategy().update(1, 14);
+		testAI.getStrategy().update(2, 14);
 		hand.add(atile1);
 		hand.add(atile2);
 		hand.add(atile3);
@@ -73,7 +73,7 @@ public class StrategyTwoTest {
 		//other 2 players haven not play initial, thu END
 		String command = testAI.getStrategy().generateCommand();
 		assertEquals("END", command);
-		handSizes.put(1,13);
+		testAI.getStrategy().update(1, 13);
 		//someone have play initial, thu END
 		command = testAI.getStrategy().generateCommand();
 		//first play run
@@ -126,10 +126,10 @@ public class StrategyTwoTest {
 		}catch(InvalidTileException e) {
 			fail();
 		}
-		HashMap<Integer, Integer> handSizes = new HashMap<Integer, Integer>();
 		ArrayList<Meld> table = new ArrayList<Meld>();
-		handSizes.put(1,1);
-		handSizes.put(2,5);
+		testAI.getStrategy().update(table);
+		testAI.getStrategy().update(1, 1);
+		testAI.getStrategy().update(2, 5);
 		hand.add(atile1);
 		hand.add(atile2);
 		hand.add(atile3);
@@ -190,17 +190,16 @@ public class StrategyTwoTest {
 		hand.add(atile12);
 		hand.add(bJoker);
 		hand.add(aJoker);
-		HashMap<Integer, Integer> handSizes = new HashMap<Integer, Integer>();
 		ArrayList<Meld> table = new ArrayList<Meld>();
-		handSizes.put(1,1);
-		handSizes.put(2,5);
+		testAI.getStrategy().update(table);
+		testAI.getStrategy().update(1, 1);
+		testAI.getStrategy().update(2, 5);
 		Hand hand2 = new Hand(hand);
 		testAI.initHand(hand);
 //B6, B11, R1, R2, R3, R3, R4, R4, G5, G10, O7, O11, JK, JK
 		testAI.getStrategy().setHand(hand2);
 		String command = testAI.getStrategy().generateCommand();
 		//first play run
-		System.out.println(hand);
 		assertEquals("Play 2 3 4 7", command);
 		//remove hand R1 R2 R3 R4
 		hand2.remove(hand.indexOf(atile2));
@@ -251,10 +250,10 @@ public class StrategyTwoTest {
 		}catch(InvalidTileException e) {
 			fail();
 		}
-		HashMap<Integer, Integer> handSizes = new HashMap<Integer, Integer>();
 		ArrayList<Meld> table = new ArrayList<Meld>();
-		handSizes.put(1,1);
-		handSizes.put(2,5);
+		testAI.getStrategy().update(table);
+		testAI.getStrategy().update(1, 1);
+		testAI.getStrategy().update(2, 5);
 		hand.add(atile1);
 		hand.add(atile2);
 		hand.add(atile3);
@@ -335,10 +334,10 @@ public class StrategyTwoTest {
 		}catch(InvalidTileException e) {
 			fail();
 		}
-		HashMap<Integer, Integer> handSizes = new HashMap<Integer, Integer>();
 		ArrayList<Meld> table = new ArrayList<Meld>();
-		handSizes.put(1,13);
-		handSizes.put(2,14);
+		testAI.getStrategy().update(table);
+		testAI.getStrategy().update(1, 13);
+		testAI.getStrategy().update(2, 14);
 		hand.add(atile1);
 		hand.add(atile2);
 		hand.add(atile3);
@@ -420,7 +419,7 @@ public class StrategyTwoTest {
 		hand2.add(atile3);
 		hand2.add(atile9);
 		hand2.add(atile10);
-		handSizes.put(3,-10);
+		testAI.getStrategy().update(3, -10);
 		command = testAI.getStrategy().generateCommand();
 		assertEquals("Play 1 2", command);
 		Meld meld3 = new Meld(melds);
