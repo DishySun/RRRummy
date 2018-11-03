@@ -45,7 +45,6 @@ public class StrategyTwo implements AIStrategy, Observer{
 		boolean hasInitial = false;
 		
 		if(countInitial < 30) {	//play initial
-			System.out.println(playerHandSizes);
 			for(Entry<Integer, Integer> entry : playerHandSizes.entrySet()) {
 				//int id = entry.getKey();
 				int handsize = entry.getValue();
@@ -78,7 +77,6 @@ public class StrategyTwo implements AIStrategy, Observer{
 							return returnString;
 						}	
 						else {
-							System.out.println( "Something might went wrong");
 							return "END";
 						}
 					}
@@ -151,16 +149,12 @@ public class StrategyTwo implements AIStrategy, Observer{
 									for(int i=0; i<runMove.size();i++) {
 										returnString += " " + myHand.handIndexOf(runMove.get(i));
 									}
-									System.out.println("Try using move 2 run");
-									System.out.println(returnString);
 									return returnString;
 								}
 							}
 						}	
 					}	else {	// if in move run progress already
 							moveRun2Table = false;
-							//System.out.println(tempMeld);
-							//	System.out.println("move +" +  table.indexOf(tempMeld));
 							returnString = "Move";
 							returnString += " " + table.indexOf(tempMeld);
 							if(moveRunIndex == 0)
@@ -168,7 +162,6 @@ public class StrategyTwo implements AIStrategy, Observer{
 							else
 								returnString += " 1 to ";
 							returnString +=  table.size()-1;
-							System.out.println(returnString);
 							return returnString;
 					}	
 					
@@ -186,21 +179,16 @@ public class StrategyTwo implements AIStrategy, Observer{
 									for(int i=0; i<setMove.size();i++) {
 										returnString += " " + myHand.handIndexOf(setMove.get(i));
 									}
-									System.out.println("Try using move 2 set");
-									System.out.println(returnString);
 									return returnString;
 								}
 							}
 						}	
 					}	else {	// if in move set progress already
 						moveSet2Table = false;
-							//System.out.println(tempMeld);
-							//	System.out.println("move +" +  table.indexOf(tempMeld));
 							returnString = "Move";
 							returnString += " " + table.indexOf(tempMeld);
 							returnString += " 1 to ";
 							returnString +=  table.size()-1;
-							System.out.println(returnString);
 							return returnString;
 					}
 				}

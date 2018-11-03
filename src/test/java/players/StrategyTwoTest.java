@@ -200,6 +200,7 @@ public class StrategyTwoTest {
 		testAI.getStrategy().setHand(hand2);
 		String command = testAI.getStrategy().generateCommand();
 		//first play run
+		System.out.println(hand);
 		assertEquals("Play 2 3 4 7", command);
 		//remove hand R1 R2 R3 R4
 		hand2.remove(hand.indexOf(atile2));
@@ -440,8 +441,6 @@ public class StrategyTwoTest {
 		meld4.addTail(atile9);
 		meld4.addTail(atile10);
 		table.add(meld4);
-		System.out.println(table);
-		System.out.println(hand2);
 		command = testAI.getStrategy().generateCommand();
 		assertEquals("Move 1 1 to 3", command);
 	}

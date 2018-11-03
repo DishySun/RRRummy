@@ -298,7 +298,6 @@ public class Hand {
 					}
 				}
 			}
-			//System.out.println(tile4Run);
 		/*	jokerNum = 0;
 			for(int i = 0; i<size();i++) {			//count size of joker;
 				if(hand.get(i).getColor() == Tile.Color.JOKER) {
