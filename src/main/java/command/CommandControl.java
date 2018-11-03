@@ -21,7 +21,7 @@ public class CommandControl {
 		// return -1 if command is not valid, 0 for excute fail, 1 for success
 		command = command.toLowerCase();
 		ArrayList<String> commandList = new ArrayList<String>(Arrays.asList(command.split("\\s+")));
-		System.out.println("command + ---" + commandList);
+		System.out.println("command ---" + commandList);
 		commandList.remove("");
 		Command c = null;
 		switch (commandList.remove(0)) {

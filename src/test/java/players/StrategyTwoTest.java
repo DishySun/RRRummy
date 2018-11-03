@@ -309,7 +309,7 @@ public class StrategyTwoTest {
 		//  check playing,cannot play all, check if tile can match meld on table
 		command = testAI.getStrategy().generateCommand();
 		//try to play joker, so plus 1
-		assertEquals("Play 3 to 0 1", command);
+		assertEquals("Play 3 to 0 tail", command);
 	}
 	
 	@Test

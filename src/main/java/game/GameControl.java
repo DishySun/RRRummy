@@ -17,7 +17,12 @@ public class GameControl {
 		players = new ArrayList<Player>();
 		players.add(new Player("Bill"));
 		while (aiNumber >0) {
-			players.add(new AI(new StrategyZero()));
+			if(aiNumber == 3)
+				players.add(new AI(new StrategyThree()));
+			else if(aiNumber == 2)
+				players.add(new AI(new StrategyTwo()));
+			else if(aiNumber == 1)
+				players.add(new AI(new StrategyZero()));
 			aiNumber--;
 		}
 	}

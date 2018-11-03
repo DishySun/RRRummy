@@ -39,6 +39,7 @@ public class StrategyThree implements AIStrategy, Observer {
 	
 	@Override
 	public String generateCommand() {
+		System.out.println(playerHandSizes);
 		returnString = "";
 		run = new ArrayList<Tile>();
 		group = new ArrayList<Tile>();
@@ -60,6 +61,7 @@ public class StrategyThree implements AIStrategy, Observer {
 				}
 				else {
 					group = myHand.findGroup();
+					myHand.sort();
 					if(group != null) {
 						countInitial += myHand.checkSum(group);
 						myHand.sort();
@@ -86,6 +88,7 @@ public class StrategyThree implements AIStrategy, Observer {
 				} 
 			}
 			if(hasLess || moveRun2Table || moveSet2Table) {		//has 3 fewer tiles than p3, play all request use of table
+				System.out.println("Some one has 3 fewer tiles than this AI");
 				run = myHand.findRun();
 				if(run != null) {
 					myHand.sort();
@@ -96,6 +99,7 @@ public class StrategyThree implements AIStrategy, Observer {
 					return returnString;
 				}
 				group = myHand.findGroup();
+				myHand.sort();
 				if(group != null) {
 					myHand.sort();
 					returnString = "Play";
@@ -105,6 +109,7 @@ public class StrategyThree implements AIStrategy, Observer {
 					return returnString;
 				}	
 				meldOnTable = myHand.findMeldsOnTable(table);
+				myHand.sort();
 				if(meldOnTable != null) {
 					for(Entry<Tile, Integer>Entry : meldOnTable.entrySet()) {
 						Tile tile = Entry.getKey();
@@ -112,7 +117,7 @@ public class StrategyThree implements AIStrategy, Observer {
 						//System.out.println(meldOnTable);
 						myHand.sort();
 						if(tile.isJoker())
-							returnString = "Play "  + myHand.handIndexOf(tile) + " to " + index + " " + "1";
+							returnString = "Play "  + myHand.handIndexOf(tile) + " to " + index + " " + "tail";
 						else
 							returnString = "Play "  + myHand.handIndexOf(tile) + " to " + index/* + " " + "1"*/;	
 						return returnString;
@@ -158,6 +163,7 @@ public class StrategyThree implements AIStrategy, Observer {
 				if(!moveSet2Table) {		//if not in move set progress
 					for(Meld m : table) {
 						moveGroupToTable = myHand.findSetMove(m);
+						myHand.sort();
 						if(moveGroupToTable != null) {
 							moveSet2Table = true;
 							tempMeld = m;
@@ -201,6 +207,7 @@ public class StrategyThree implements AIStrategy, Observer {
 						return returnString;
 					} else {
 						group = myHand.findGroup();
+						myHand.sort();
 						if(group != null) {
 							myHand.sort();
 							returnString = "Play";
@@ -216,7 +223,7 @@ public class StrategyThree implements AIStrategy, Observer {
 									int index = Entry.getValue();
 									myHand.sort();
 									if(tile.isJoker())
-										returnString = "Play "  + myHand.handIndexOf(tile) + " to " + index + " " + "1";
+										returnString = "Play "  + myHand.handIndexOf(tile) + " to " + index + " " + "tail";
 									else
 										returnString = "Play "  + myHand.handIndexOf(tile) + " to " + index/* + " " + "1"*/;	
 									return returnString;
