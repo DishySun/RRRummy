@@ -27,14 +27,14 @@ public class StrategyThree implements AIStrategy, Observer {
 	private int countInitial;
 	private String returnString;
 	
-	public StrategyThree (Subject data) {
-		data.register(this);
+	public StrategyThree () {
 		countInitial = 0;
 		moveRunIndex = 0;
 		moveSetIndex = 0;
 		moveRun2Table = false;
 		moveSet2Table = false;
 		tempMeld = new Meld();
+		playerHandSizes = new HashMap<Integer, Integer>();
 	}
 	
 	@Override

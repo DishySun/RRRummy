@@ -26,14 +26,7 @@ public class Game {
 		//set players to random sits
 		
 		currentPlayer = 0;
-		for (Player p : ps) {
-			if (p.getStrategy() == null) continue;
-			table.register(p.getStrategy());
-			for (Player pp: ps) {
-				pp.register(p.getStrategy());
-			}
-		}
-		table.notifyObserver();
+		registerObservers();
 		Collections.shuffle(players);
 	}
 	
@@ -44,6 +37,17 @@ public class Game {
 		view = v;
 		commandControl = new CommandControl(view);
 		currentPlayer = 0;
+	}
+	
+	public void registerObservers() {
+		for (Player p : players) {
+			if (p.getStrategy() == null) continue;
+			table.register(p.getStrategy());
+			for (Player pp: players) {
+				pp.register(p.getStrategy());
+			}
+		}
+		table.notifyObserver();
 	}
 	private void initPlayersHand() {
 		for (Player p: players) {

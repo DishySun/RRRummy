@@ -26,8 +26,8 @@ public class StrategyTwo implements AIStrategy, Observer{
 	private int countInitial;
 	private String returnString;
 	
-	public StrategyTwo (Subject data) {
-		data.register(this);
+	public StrategyTwo () {
+		playerHandSizes = new HashMap<Integer, Integer>();
 		countInitial = 0;
 		moveRunIndex = 0;
 		moveSetIndex = 0;

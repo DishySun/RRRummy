@@ -136,8 +136,4 @@ public class Table implements Subject{
 			o.update(table);
 		}
 	}
-
-	public ArrayList<Meld> getMeld() {
-		return table;
-	}
 }
