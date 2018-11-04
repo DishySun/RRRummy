@@ -1,5 +1,8 @@
 package rrrummy;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -16,10 +19,12 @@ public class Game {
 	private Stock stock;
 	private View view;
 	private CommandControl commandControl;
+	private String initStock;
 	
 	public Game(ArrayList<Player> ps, View v){
 		this.table = new Table();
 		this.stock = new Stock();
+		initStock = stock.replay();
 		players = ps;
 		view = v;
 		commandControl = new CommandControl(view);
@@ -27,7 +32,7 @@ public class Game {
 		
 		currentPlayer = 0;
 		registerObservers();
-		Collections.shuffle(players);
+		//Collections.shuffle(players);
 	}
 	
 	public Game(ArrayList<Player> ps, ArrayList<Tile> fileStock, View v){
@@ -62,6 +67,7 @@ public class Game {
 	public boolean playerDraw() {
 		Tile t = stock.draw();
 		if (t == null) return false;
+		System.out.println(players.get(currentPlayer).getName() +" has drawn "+t.toString());
 		players.get(currentPlayer).draw(t);
 		return true;
 	}
@@ -69,6 +75,7 @@ public class Game {
 	public boolean playerPlays(int playerHandIndex) {
 		//play a single Tile to new meld
 		if(players.get(currentPlayer).getHand(playerHandIndex) == null) return false;
+		System.out.println(players.get(currentPlayer).getName() +" has played "+players.get(currentPlayer).getHand(playerHandIndex).toString() +" as a new meld.");
 		table.add(players.get(currentPlayer).play(playerHandIndex));
 		hasPlayed++;
 		return true;
@@ -88,6 +95,7 @@ public class Game {
 			int i = players.get(currentPlayer).getHand(t);
 			players.get(currentPlayer).play(i);
 		}
+		System.out.println(players.get(currentPlayer).getName() +" has played "+arr.toString()+" as a new meld.");
 		hasPlayed++;
 		return true;
 		
@@ -100,7 +108,7 @@ public class Game {
 		Tile t = players.get(currentPlayer).getHand(playerHandIndex);
 		if (t == null) return false;
 		if (!table.add(t, toMeldIndex)) return false;
-		players.get(currentPlayer).play(playerHandIndex);
+		System.out.println(players.get(currentPlayer).getName()+ " has played "+players.get(currentPlayer).play(playerHandIndex) + "to meld" +toMeldIndex);
 		hasPlayed++;
 		return true;
 	}
@@ -113,52 +121,23 @@ public class Game {
 			return false;
 		}
 		boolean b = false;
-		if (headOrTail) b = table.addHead(t, toMeldIndex);
-		else b = table.addTail(t, toMeldIndex);
+		if (headOrTail) {
+			b = table.addHead(t, toMeldIndex);
+			System.out.println(players.get(currentPlayer).getName()+ " has played "+players.get(currentPlayer).play(playerHandIndex) + "to the head of meld" +toMeldIndex);
+		}
+		else {
+			b = table.addTail(t, toMeldIndex);
+			System.out.println(players.get(currentPlayer).getName()+ " has played "+players.get(currentPlayer).play(playerHandIndex) + "to the tail of meld" +toMeldIndex);
+		}
 		return b;
 	}
 	
 	public boolean move (int fromMeld, boolean removeHeadOrTail, int toMeld) throws AbleToAddBothSideException{
-		//removeHeadOrTail 0 for head, others for tail
-		/*
-		 * headOrTail: true for head, false for tail
-		 * */
 		return table.move(fromMeld, removeHeadOrTail, toMeld);
-		/*if(fromMeld >= table.size() || fromMeld < 0 || toMeld < 0 || toMeld >= table.size()) return false;
-		Tile t = null;
-		if (removeHeadOrTail) t = table.removeHead(fromMeld);
-		else t = table.removeTail(fromMeld);
-		boolean b = false;
-		try {
-			b = table.add(t, toMeld);
-		}catch (AbleToAddBothSideException e) {
-			if (removeHeadOrTail)  table.addHead(t, fromMeld);
-			else table.addTail(t, fromMeld);
-			throw new AbleToAddBothSideException(null, null);
-		}
-		if(!b) {
-			if (removeHeadOrTail)  table.addHead(t, fromMeld);
-			else table.addTail(t, fromMeld);
-			return false;
-		}
-		return true;*/
 	}
 	
 	public boolean move (int fromMeld, boolean removeHeadOrTail, int toMeld, boolean toHeadOrTail) {
 		return table.move (fromMeld, removeHeadOrTail, toMeld, toHeadOrTail);
-		/*if(fromMeld >= table.size() || fromMeld < 0 || toMeld < 0 || toMeld >= table.size()) return false;
-		Tile t = null;
-		if (removeHeadOrTail) t = table.removeHead(fromMeld);
-		else t = table.removeTail(fromMeld);
-		boolean b = false;
-		if (toHeadOrTail) b = table.addHead(t, toMeld);
-		else b = table.addTail(t, toMeld);
-		if (!b) {
-			if(removeHeadOrTail) table.addHead(t, fromMeld);
-			else table.addTail(t, fromMeld);
-			return false;
-		}
-		return b;*/
 	}
 	
 	
@@ -215,7 +194,29 @@ public class Game {
 			System.out.println();
 		}
 		view.announceWinner(winner.getName());
+		generateReplayFile();
 		return winner;
+	}
+	
+	private void generateReplayFile() {
+		if(view.saveReplay()) {
+			String path = "src/main/replays/";
+			try {
+				BufferedWriter writer = new BufferedWriter(new FileWriter(path +"stock.txt"));
+				writer.write(initStock);
+			    writer.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			try {
+				BufferedWriter writer = new BufferedWriter(new FileWriter(path +"command.txt"));
+				writer.write(commandControl.toString());
+			    writer.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+		}
 	}
 	
 	public void printTable() {
