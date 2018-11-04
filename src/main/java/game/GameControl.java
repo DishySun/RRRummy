@@ -18,7 +18,9 @@ public class GameControl {
 	}
 	
 	private void launch() {
-		newGame();
+		int gameOrReplay = view.getGameOrReplay();
+		if (gameOrReplay == 1)newGame();
+		else if (gameOrReplay == 2)gameReplay();
 	}
 	
 	
@@ -27,6 +29,10 @@ public class GameControl {
 		initAiPlayers();
 		game = new Game(players, view);
 		game.startGame();
+	}
+	
+	private void gameReplay() {
+		game = new Game();
 	}
 	
 	private void initAiPlayers() {

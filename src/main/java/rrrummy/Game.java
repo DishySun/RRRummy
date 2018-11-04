@@ -1,17 +1,24 @@
 package rrrummy;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 
 import command.CommandControl;
 import game.View;
+import players.AI;
 import players.Player;
+import players.StrategyFile;
 
 public class Game {
-	private static final int INIT_HAND_SIZE = 14;
+	private final int INIT_HAND_SIZE = 14;
+	private final String ROOT_PATH = "src/main/replays/";
 	private ArrayList<Player> players;
 	private int currentPlayer;
 	private int hasPlayed;
@@ -20,6 +27,7 @@ public class Game {
 	private View view;
 	private CommandControl commandControl;
 	private String initStock;
+	private Player winner;
 	
 	public Game(ArrayList<Player> ps, View v){
 		this.table = new Table();
@@ -27,7 +35,7 @@ public class Game {
 		initStock = stock.replay();
 		players = ps;
 		view = v;
-		commandControl = new CommandControl(view);
+		commandControl = new CommandControl(view,this);
 		//set players to random sits
 		
 		currentPlayer = 0;
@@ -40,10 +48,20 @@ public class Game {
 		this.stock = new Stock(fileStock);
 		players = ps;
 		view = v;
-		commandControl = new CommandControl(view);
+		commandControl = new CommandControl(view,this);
 		currentPlayer = 0;
 	}
 	
+	public Game() {
+		players = new ArrayList<Player>();
+		table = new Table();
+		currentPlayer = 0;
+		commandControl = new CommandControl(view,this);
+		view = new View();
+		playReplay();
+		
+	}
+
 	public void registerObservers() {
 		for (Player p : players) {
 			if (p.getStrategy() == null) continue;
@@ -54,6 +72,7 @@ public class Game {
 		}
 		table.notifyObserver();
 	}
+	
 	private void initPlayersHand() {
 		for (Player p: players) {
 			ArrayList<Tile> h = new ArrayList<Tile>();
@@ -112,6 +131,7 @@ public class Game {
 		hasPlayed++;
 		return true;
 	}
+	
 	public boolean playerPlays(int playerHandIndex ,int toMeldIndex, boolean headOrTail) {
 		//headOrTail: 	true for head
 		//				false for tail
@@ -145,6 +165,7 @@ public class Game {
 		if (meldIndex < 0 || meldIndex >= table.size()) return false;
 		return table.cut(meldIndex, at);
 	}
+	
 	public boolean replace(int playerHandIndex, int tableIndex, int meldIndex) {
 		Tile t = players.get(currentPlayer).getHand(playerHandIndex);
 		if(t == null) return false;
@@ -156,25 +177,31 @@ public class Game {
 		table.add(t2);
 		return true;
 	}
+	
 	public void endTurn() {
 		view.endTurnAlert(players.get(currentPlayer).getName());
 		if(hasPlayed == 0) this.playerDraw();
 		currentPlayer = (currentPlayer + 1) % players.size();
 		hasPlayed = 0;
+		determineWinner();
+		if (winner != null) return;
 		view.startTurnAlert(players.get(currentPlayer).getName());
 	}
 	
-	private Player determineWinner() {
-		Player winner = players.get(currentPlayer);
+	private void determineWinner() {
+		winner = players.get(currentPlayer);
 		int i = (currentPlayer+1) % players.size();
 		while (i != currentPlayer) {
-			if (players.get(i).handSize() == 0) return players.get(i);
+			if (players.get(i).handSize() == 0) {
+				winner = players.get(i);
+				return;
+			}
 			// for case of running out of stock
 			if (players.get(i).handSize() < winner.handSize()) winner = players.get(i);
 			i = (i+1) % players.size();
 		}
-		if (stock.size() == 0) return winner;
-		return null;
+		if (stock.size() == 0) return;
+		winner = null;
 	}
 	
 	public Player startGame() {
@@ -183,14 +210,12 @@ public class Game {
 		currentPlayer = 0; 
 		hasPlayed = 0;
 		view.startGameAnnounce(players.get(currentPlayer).getName());
-		Player winner = null;
 		while (winner == null) {
 			System.out.println(table);
 			System.out.println("Stock Left: "+stock.size());
 			players.get(currentPlayer).printHand();
 			String str = players.get(currentPlayer).getCommandString(view);
-			commandControl.newCommand(this, str);
-			winner = determineWinner();
+			commandControl.newCommand(str);
 			System.out.println();
 		}
 		view.announceWinner(winner.getName());
@@ -200,22 +225,97 @@ public class Game {
 	
 	private void generateReplayFile() {
 		if(view.saveReplay()) {
-			String path = "src/main/replays/";
 			try {
-				BufferedWriter writer = new BufferedWriter(new FileWriter(path +"stock.txt"));
+				BufferedWriter writer = new BufferedWriter(new FileWriter(ROOT_PATH +"stock.txt"));
 				writer.write(initStock);
 			    writer.close();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 			try {
-				BufferedWriter writer = new BufferedWriter(new FileWriter(path +"command.txt"));
-				writer.write(commandControl.toString());
+				BufferedWriter writer = new BufferedWriter(new FileWriter(ROOT_PATH +"command.txt"));
+				writer.write(players.size()+"\n"+commandControl.toString());
 			    writer.close();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+		}
+	}
+	
+	private void playReplay() {
+		String stockString = null;
+		try {
+			FileReader fileReader = new FileReader(ROOT_PATH+"stock.txt");
+			BufferedReader bufferedReader = new BufferedReader(fileReader);
+			stockString = bufferedReader.readLine();
+			bufferedReader.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			System.out.println("Replay file for stock is not found.");
+			System.exit(-1);
+		}catch (IOException e) {
+			e.printStackTrace();
+			System.out.println("Fail to read replay file for stock.");
+			System.exit(-1);
+		}
+		ArrayList<String> stockStringArray = new ArrayList<String>(Arrays.asList(stockString.split("\\s+")));
+		ArrayList<Tile> tiles = new ArrayList<Tile>();
+		for (String str: stockStringArray ) {
+			try {
+				tiles.add(new Tile(str));
+			}catch (InvalidTileException e) {
+				e.printStackTrace();
+				System.out.println("Invalid Tile detected.");
+				System.exit(-1);
+			}
+		}
+		stock = new Stock(tiles);
+		ArrayList<String> commandStringArrar = new ArrayList<String>();
+		int playerNumber = -1;
+		try {
+			FileReader fileReader = new FileReader(ROOT_PATH+"command.txt");
+			BufferedReader bufferedReader = new BufferedReader(fileReader);
+			playerNumber = Integer.valueOf(bufferedReader.readLine());
+			if (playerNumber < 2 || playerNumber > 4) {
+				System.out.println("Player number is not valid.");
+				System.exit(-1);
+			}
+			String line;
+			while((line = bufferedReader.readLine()) != null) {
+				commandStringArrar.add(line);
+        	}
+			bufferedReader.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			System.out.println("Replay file for commands is not found.");
+			System.exit(-1);
+		}catch (IOException e) {
+			e.printStackTrace();
+			System.out.println("Fail to read replay file for commands.");
+			System.exit(-1);
+		}catch (NumberFormatException e) {
+			e.printStackTrace();
+			System.out.println("Fail to read correct player number.");
+			System.exit(-1);
+		}
+		for (int i = 0; i < playerNumber; i++) {
+			players.add(new AI(new StrategyFile()));
+		}
+		initPlayersHand();
+		currentPlayer = 0; 
+		hasPlayed = 0;
+		for  (int i = 0; i < commandStringArrar.size(); i++) {
 			
+			System.out.println(table);
+			System.out.println("Stock Left: "+stock.size());
+			players.get(currentPlayer).printHand();
+			String str = commandStringArrar.get(i);
+			commandControl.newCommand(str);
+			System.out.println();
+			if (winner != null) {
+				view.announceWinner(winner.getName());
+				return;
+			}
 		}
 	}
 	
