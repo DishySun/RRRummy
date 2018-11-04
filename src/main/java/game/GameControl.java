@@ -45,6 +45,7 @@ public class GameControl {
 				break;
 			case 3:
 				players.add(new AI(new StrategyThree()));
+				break;
 			default:
 				players.add(new AI(new StrategyThree()));
 			}
