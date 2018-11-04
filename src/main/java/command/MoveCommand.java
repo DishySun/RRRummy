@@ -20,14 +20,14 @@ public class MoveCommand implements Command{
 		this.view = view;
 	}
 	
-	public MoveCommand(int fromMeldIndex, int fromMeldHoT, int toMeldIndex, int toMeldHoT, Game game) {
+	public MoveCommand(int fromMeldIndex, int fromMeldHoT, int toMeldIndex, int toMeldHoT, Game game, View v) {
 		// 4 parameters
 		this.fromMeldIndex = fromMeldIndex;
 		this.fromMeldHoT = fromMeldHoT;
 		this.toMeldIndex = toMeldIndex;
 		this.toMeldHoT = toMeldHoT;
 		this.game = game;
-		this.view = null;
+		this.view = v;
 	}
 	@Override
 	public boolean excute() {
@@ -65,7 +65,7 @@ public class MoveCommand implements Command{
 				else toHoT = false;
 			}
 		}
-		return game.move(toMeldIndex, fromHoT, toMeldIndex, toHoT);
+		return game.move(fromMeldIndex, fromHoT, toMeldIndex, toHoT);
 	}
 	
 }
