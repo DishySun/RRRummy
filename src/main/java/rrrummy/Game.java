@@ -136,19 +136,21 @@ public class Game {
 	public boolean playerPlays(int playerHandIndex ,int toMeldIndex, boolean headOrTail) {
 		//headOrTail: 	true for head
 		//				false for tail
-		Tile t = players.get(currentPlayer).play(playerHandIndex);
+		Tile t = players.get(currentPlayer).getHand(playerHandIndex);
 		if (t == null) {
-			players.get(currentPlayer).draw(t);
 			return false;
 		}
 		boolean b = false;
 		if (headOrTail) {
 			b = table.addHead(t, toMeldIndex);
-			System.out.println(players.get(currentPlayer).getName()+ " has played "+players.get(currentPlayer).play(playerHandIndex) + "to the head of meld" +toMeldIndex);
 		}
 		else {
 			b = table.addTail(t, toMeldIndex);
-			System.out.println(players.get(currentPlayer).getName()+ " has played "+players.get(currentPlayer).play(playerHandIndex) + "to the tail of meld" +toMeldIndex);
+		}
+		if (b) {
+			System.out.print(players.get(currentPlayer).getName()+ " has played "+players.get(currentPlayer).play(playerHandIndex));
+			if (headOrTail) System.out.println("to the head of meld" +toMeldIndex);
+			else System.out.println("to the tail of meld" +toMeldIndex);
 		}
 		return b;
 	}
