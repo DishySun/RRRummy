@@ -561,7 +561,7 @@ public class StrategyThreeTest {
 		hand2.remove(hand.indexOf(atile2));
 		hand2.remove(hand.indexOf(atile3));
 		command = testAI.getStrategy().generateCommand();
-		assertEquals("Move 0 1 to 2", command);
+		assertEquals("Move 0 tail to 2", command);
 		table.get(0).removeTail();
 		meld3.addTail(atile4);
 		command = testAI.getStrategy().generateCommand();
@@ -573,6 +573,6 @@ public class StrategyThreeTest {
 		meld4.addTail(atile10);
 		table.add(meld4);
 		command = testAI.getStrategy().generateCommand();
-		assertEquals("Move 1 1 to 3", command);
+		assertEquals("Move 1 tail to 3 tail", command);
 	}
 }

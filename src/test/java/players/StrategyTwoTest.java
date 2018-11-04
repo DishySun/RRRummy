@@ -429,7 +429,7 @@ public class StrategyTwoTest {
 		hand2.remove(hand.indexOf(atile2));
 		hand2.remove(hand.indexOf(atile3));
 		command = testAI.getStrategy().generateCommand();
-		assertEquals("Move 0 1 to 2", command);
+		assertEquals("Move 0 tail to 2", command);
 		table.get(0).removeTail();
 		meld3.addTail(atile4);
 		command = testAI.getStrategy().generateCommand();
@@ -441,6 +441,47 @@ public class StrategyTwoTest {
 		meld4.addTail(atile10);
 		table.add(meld4);
 		command = testAI.getStrategy().generateCommand();
-		assertEquals("Move 1 1 to 3", command);
+		assertEquals("Move 1 tail to 3 tail", command);
+		try {
+			atile1 = new Tile("O12");
+			atile2 = new Tile("G12");
+			atile3 = new Tile("R12");
+			atile4 = new Tile("B12");
+			atile5 = new Tile("G12");
+			atile6 = new Tile("B12");
+		}catch(InvalidTileException e) {
+			fail();
+		}
+		ArrayList<Meld> table2 = new ArrayList<Meld>();
+		testAI.getStrategy().update(table2);
+		testAI.getStrategy().update(1, 13);
+		testAI.getStrategy().update(2, 14);
+		Meld meld5 = new Meld();
+		meld5.addTail(atile1);
+		meld5.addTail(atile2);
+		meld5.addTail(atile3);
+		meld5.addTail(atile4);
+		ArrayList<Tile> handarr = new ArrayList<Tile>();
+		Hand hand3 = new Hand(hand);
+		hand3.add(atile6);
+		hand3.add(atile5);
+		table2.add(meld5);
+		//System.out.println(table2);
+		command = testAI.getStrategy().generateCommand();
+		assertEquals("Play 1 0", command);
+		
+		Meld meld6 = new Meld();
+		meld6.addTail(atile5);
+		meld6.addTail(atile6);
+		table2.add(meld6);
+		System.out.println("0: " + table2.get(0));
+		System.out.println("1: " + table2.get(1));
+		//System.out.println(hand3);
+		hand2.remove(hand.indexOf(atile6));
+		hand2.remove(hand.indexOf(atile5));
+		command = testAI.getStrategy().generateCommand();
+		System.out.println(command);
+		assertEquals("Move 0 head to 1", command);
+		
 	}
 }

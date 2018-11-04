@@ -37,7 +37,7 @@ public class StrategyZero implements AIStrategy{
 					return returnString;
 				}
 				else {
-					group = myHand.findGroup();
+					group = myHand.findGroup4Initial();
 					myHand.sort();
 					if(group != null) {
 						countInitial += myHand.checkSum(group);

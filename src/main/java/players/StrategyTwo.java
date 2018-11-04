@@ -66,7 +66,7 @@ public class StrategyTwo implements AIStrategy, Observer{
 						return returnString;
 					}
 					else {
-						group = myHand.findGroup();
+						group = myHand.findGroup4Initial();
 						myHand.sort();
 						if(group != null) {
 							countInitial += myHand.checkSum(group);
@@ -128,6 +128,20 @@ public class StrategyTwo implements AIStrategy, Observer{
 				}
 			}else {		// can not win, play tile that match meld on table
 				meldOnTable = myHand.findMeldsOnTable(table);
+				if(meldOnTable != null) {
+					for(Entry<Tile, Integer>Entry : meldOnTable.entrySet()) {
+						Tile tile = Entry.getKey();
+						int index = Entry.getValue();
+						myHand.sort();
+						if(tile.isJoker())
+							returnString = "Play "  + myHand.handIndexOf(tile) + " to " + index + " " + "tail";
+						else
+							returnString = "Play "  + myHand.handIndexOf(tile) + " to " + index/* + " " + "1"*/;	
+						return returnString;
+					}
+				}
+	
+				meldOnTable = myHand.findMeldsOnTable(table);
 				myHand.sort();
 				if(meldOnTable != null) {
 					for(Entry<Tile, Integer>Entry : meldOnTable.entrySet()) {
@@ -165,10 +179,12 @@ public class StrategyTwo implements AIStrategy, Observer{
 							returnString = "Move";
 							returnString += " " + table.indexOf(tempMeld);
 							if(moveRunIndex == 0)
-								returnString += " 0 to ";
+								returnString += " head to ";
 							else
-								returnString += " 1 to ";
+								returnString += " tail to ";
 							returnString +=  table.size()-1;
+							if(tempMeld.getTile(moveRunIndex).isJoker())
+								returnString += " tail";
 							return returnString;
 					}	
 					
@@ -195,8 +211,13 @@ public class StrategyTwo implements AIStrategy, Observer{
 						moveSet2Table = false;
 							returnString = "Move";
 							returnString += " " + table.indexOf(tempMeld);
-							returnString += " 1 to ";
+							if(moveSetIndex == 0)
+								returnString += " head to ";
+							else
+								returnString += " tail to ";
 							returnString +=  table.size()-1;
+							if(tempMeld.getTile(moveSetIndex).isJoker())
+								returnString += " tail";
 							return returnString;
 					}
 				}
