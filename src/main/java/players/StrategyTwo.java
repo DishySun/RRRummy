@@ -82,7 +82,7 @@ public class StrategyTwo implements AIStrategy, Observer{
 						}
 					}
 				}	else {
-					System.out.print("Someone has played initial, but P2 can't play 30+points");
+					//System.out.print("Someone has played initial, but P2 can't play 30+points");
 					return "END";
 				}
 						
@@ -202,7 +202,7 @@ public class StrategyTwo implements AIStrategy, Observer{
 				}
 					
 			}	
-			System.out.println( "can not win, no tile can play that requires use of tiles of the table");
+			//System.out.println( "can not win, no tile can play that requires use of tiles of the table");
 			return "END";
 		}
 	}

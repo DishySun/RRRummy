@@ -39,7 +39,7 @@ public class StrategyThree implements AIStrategy, Observer {
 	
 	@Override
 	public String generateCommand() {
-		System.out.println(playerHandSizes);
+		//System.out.println(playerHandSizes);
 		returnString = "";
 		run = new ArrayList<Tile>();
 		group = new ArrayList<Tile>();
@@ -88,7 +88,7 @@ public class StrategyThree implements AIStrategy, Observer {
 				} 
 			}
 			if(hasLess || moveRun2Table || moveSet2Table) {		//has 3 fewer tiles than p3, play all request use of table
-				System.out.println("Some one has 3 fewer tiles than this AI");
+				//System.out.println("Some one has 3 fewer tiles than this AI");
 				run = myHand.findRun();
 				if(run != null) {
 					myHand.sort();
@@ -139,13 +139,13 @@ public class StrategyThree implements AIStrategy, Observer {
 								for(int i=0; i<runMove.size();i++) {
 									returnString += " " + myHand.handIndexOf(runMove.get(i));
 								}
-								System.out.println("Try using move 2 ");
+								//System.out.println("Try using move 2 ");
 								return returnString;
 							}
 						}
 					}	
 				}	else {	// if in move run progress already
-					System.out.println("move run");
+					//System.out.println("move run");
 						moveRun2Table = false;
 						//System.out.println(tempMeld);
 						//	System.out.println("move +" +  table.indexOf(tempMeld));
@@ -156,7 +156,7 @@ public class StrategyThree implements AIStrategy, Observer {
 						else
 							returnString += " 1 to ";
 						returnString +=  table.size()-1;
-						System.out.println(returnString);
+						//System.out.println(returnString);
 						return returnString;
 				}	
 				
@@ -175,13 +175,13 @@ public class StrategyThree implements AIStrategy, Observer {
 								for(int i=0; i<setMove.size();i++) {
 									returnString += " " + myHand.handIndexOf(setMove.get(i));
 								}
-								System.out.println("Try using move 2 set");
+								//System.out.println("Try using move 2 set");
 								return returnString;
 							}
 						}
 					}	
 				}	else {	// if in move set progress already
-					System.out.println("move set");
+					//System.out.println("move set");
 					moveSet2Table = false;
 						//System.out.println(tempMeld);
 						//	System.out.println("move +" +  table.indexOf(tempMeld));
@@ -189,11 +189,11 @@ public class StrategyThree implements AIStrategy, Observer {
 						returnString += " " + table.indexOf(tempMeld);
 						returnString += " 1 to ";
 						returnString +=  table.size()-1;
-						System.out.println(returnString);
+						//System.out.println(returnString);
 						return returnString;
 				}	
 				
-				System.out.println("could play but has not tile to play, tried reuse table");
+				System.out.println("p3 could play but has not tile to play");
 				return "END";
 			}else {
 				if(myHand.canPlayAll(table)) {	//if can play all, request use of table
@@ -229,7 +229,7 @@ public class StrategyThree implements AIStrategy, Observer {
 									return returnString;
 								}
 							}else {
-								System.out.println("Something might went wrong");
+								//System.out.println("Something might went wrong");
 								return "END";
 							}
 						}
@@ -238,7 +238,7 @@ public class StrategyThree implements AIStrategy, Observer {
 					return "END";
 				}			
 			}
-			System.out.println("Something might went wrong");
+			//System.out.println("Something might went wrong");
 			return "END";
 		}
 	}
