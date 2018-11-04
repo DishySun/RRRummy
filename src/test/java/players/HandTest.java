@@ -578,12 +578,8 @@ public class HandTest {
 		hand.add(bJoker);
 		hand.add(aJoker);
 		tileArray = hand.findGroup();
-		assertEquals(Tile.Color.GREEN, tileArray.get(0).getColor());
-		assertEquals(Tile.Color.RED, tileArray.get(1).getColor());
-		assertEquals(Tile.Color.JOKER, tileArray.get(2).getColor());
-		assertEquals(1, tileArray.get(0).getNumber());
-		assertEquals(1, tileArray.get(1).getNumber());
-		assertEquals(0, tileArray.get(2).getNumber());
+		//System.out.println(tileArray);
+		assertEquals("[G1, R1, JK]", tileArray.toString());
 	}
 	
 	@Test
@@ -994,7 +990,7 @@ public class HandTest {
 			atile8 = new Tile("R4");
 			atile9 = new Tile("G10");
 			atile10 = new Tile("B4");
-			atile11 = new Tile("O11");
+			atile11 = new Tile("R6");
 			atile12 = new Tile("B5");
 			atile13 = new Tile("R5");
 			aJoker = new Tile("J");
@@ -1015,7 +1011,7 @@ public class HandTest {
 		meldb.add(atile8);
 		meldb.addTail(aJoker);
 		meldList.add(melda);
-		meldList.add(meldb);
+		meldList.add(meldb);		
 		assertEquals(2, meldList.size());
 //[[R1, R2, R3, R4], [G4, R4, JK]]
 		hand.add(atile6);	//r6
@@ -1024,19 +1020,26 @@ public class HandTest {
 		hand.add(atile10);//b6
 //[R1, R2, R3, R4]
 //B4, B5, R5, R6
+		//System.out.println(meldb);
 		tile2play = hand.findRunMove(melda);
-		assertEquals("{[R5, R6]=3}", tile2play.toString());
+		assertEquals("{[R5, R6]=3}", tile2play.toString());	//move 0 3
 //[JK, G4, R4,]
-//B4, B5, R5, R6		
+//B4, B5, R5, R6	
+		//System.out.println(meldb);
 		tile2play = hand.findRunMove(meldb);
-		assertEquals(null, tile2play);
+		//assertEquals(null, tile2play);
+		//System.out.println(meldb);
 		meldb.addTail(atile10);//b4
 //[JK, G4, R4, B4]
 //B4, B5, R5, R6
+		hand.remove(3);
+		hand.remove(2);
 		tile2play = hand.findRunMove(meldb);
-		assertEquals("{[B4, B5]=0}", tile2play.toString());
+		assertEquals(null, tile2play);
+		
+		
 	}
-	
+
 	@Test
 	public void test_findMoveSet() throws AbleToAddBothSideException {
 		//test find, and play
@@ -1082,15 +1085,70 @@ public class HandTest {
 //O1,B1
 		tile2play = hand.findSetMove(melda);
 //[[G1, O1, B1, R1], [R1, O1, JK]]
-		assertEquals("{[O1, B1]=3}", tile2play.toString());
+		assertEquals("{[O1, B1]=0}", tile2play.toString());
 //[JK, G4, R4,]
 //B4, B5, R5, R6		
 		tile2play = hand.findSetMove(meldb);
 		assertEquals(null, tile2play);
 		meldb.addTail(atile4);//b4
-//[JK, G4, R4, B4]
+//[R1, O1, JK, G1]
 //B4, B5, R5, R6
 		tile2play = hand.findSetMove(meldb);
 		assertEquals("{[O1, B1]=3}", tile2play.toString());
+		hand.remove(0);
+		hand.remove(0);
+		hand.add(atile6);	//o1
+		hand.add(atile4);//G1
+		tile2play = hand.findSetMove(meldb);
+		assertEquals("{[O1, G1]=0}", tile2play.toString());
+
+		try {
+			atile1 = new Tile("G4");
+			atile2 = new Tile("G5");
+			atile3 = new Tile("G6");
+			atile4 = new Tile("G7");
+			atile5 = new Tile("O4");
+			atile6 = new Tile("R4");
+		}catch(InvalidTileException e) {
+			fail();
+		}
+		Meld meldc = new Meld();
+		meldc.add(atile1);
+		meldc.add(atile2);
+		meldc.add(atile3);
+		meldc.add(atile4);
+		hand.remove(0);
+		hand.remove(0);
+		hand.add(atile5);
+		hand.add(atile6);
+		//System.out.println(hand);
+		//System.out.println(meldc);
+		tile2play = hand.findSetMove(meldc);
+		assertEquals("{[O4, R4]=0}", tile2play.toString());
+		
+		try {
+			atile1 = new Tile("O2");
+			atile2 = new Tile("G2");
+			atile3 = new Tile("R2");
+			atile4 = new Tile("B2");
+			atile5 = new Tile("G2");
+			atile6 = new Tile("B2");
+		}catch(InvalidTileException e) {
+			fail();
+		}
+		meldc = new Meld();
+		meldc.add(atile1);
+		meldc.add(atile2);
+		meldc.add(atile3);
+		meldc.addTail(atile4);
+		hand.remove(0);
+		hand.remove(0);
+		hand.add(atile5);
+		hand.add(atile6);
+		System.out.println("hand:" +hand);
+		System.out.println("meld;" +meldc);
+		tile2play = hand.findSetMove(meldc);
+		assertEquals("{[G2, B2]=0}", tile2play.toString());
+
 	}
 }

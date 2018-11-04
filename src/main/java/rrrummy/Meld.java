@@ -48,7 +48,7 @@ public class Meld {
 	}
 	
 	public int size() {return meld.size();}
-	protected boolean isRun() {
+	public boolean isRun() {
 		//in case of [jk R1] or [jk jk R2]
 		for(int i = 0; i < size(); i ++) {
 			if(meld.get(i).isJoker()) continue; // Iterate to first non-joker Tile
@@ -93,7 +93,7 @@ public class Meld {
 		return true;
 	}
 	
-	protected boolean isSet() {
+	public boolean isSet() {
 		if (tileNumber <= 1) return true;
 		if(size() > 4) return false;
 		int n = 0;//meld.get(0).getNumber();
