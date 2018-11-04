@@ -21,6 +21,7 @@ public class GameTest extends TestCase{
 	
 	private Tile g5;
 	private Tile o5;
+	private Tile g7, o7;
 	
 	private Tile jk;
 	
@@ -41,6 +42,8 @@ public class GameTest extends TestCase{
 			r7 = new Tile("R7");
 			g5 = new Tile("G5");
 			o5 = new Tile("O5");
+			g7 = new Tile("G7");
+			o7 = new Tile("O7");
 		}catch (InvalidTileException e) {
 			fail("Tile init error");
 		}
@@ -55,6 +58,8 @@ public class GameTest extends TestCase{
 		testHand.add(jk);
 		player.initHand(testHand);
 		ArrayList<Tile> testStock = new ArrayList<Tile>();
+		testStock.add(g7);
+		testStock.add(o7);
 		testStock.add(r1);
 		testStock.add(r2);
 		testStock.add(r3);
@@ -63,7 +68,9 @@ public class GameTest extends TestCase{
 	
 	public void test_playerDraw() {
 		assertEquals(8, player.handSize());
-		assertEquals(3, game.stockSize());
+		assertEquals(5, game.stockSize());
+		assertTrue(game.playerDraw());
+		assertTrue(game.playerDraw());
 		assertTrue(game.playerDraw());
 		assertTrue(game.playerDraw());
 		assertTrue(game.playerDraw());
@@ -285,5 +292,41 @@ public class GameTest extends TestCase{
 		assertTrue(game.playerPlays(arr));
 		game.endTurn();
 		assertEquals(player, game.getWinner());
+	}
+	
+	public void test_playSeveralRunAndSet() {
+		game.playerDraw();
+		game.playerDraw();
+		game.playerDraw();
+		game.playerDraw();
+		game.playerDraw();
+		System.out.println("here!");
+		player.printHand();
+		//B5, R1, R2, R3, R4, R5, R6, R7, G5, G7, O5, O7, JK
+		ArrayList<Integer> arr = new ArrayList<Integer>();
+		arr.add(1);
+		arr.add(2);
+		arr.add(3);
+		assertTrue(game.playerPlays(arr));
+		//B5, R4, R5, R6, R7, G5, G7, O5, O7, JK
+		//playing 2nd run in the same turn
+		arr.clear();
+		arr.add(1);
+		arr.add(9);
+		arr.add(3);
+		assertTrue(game.playerPlays(arr));
+		//B5, R5, R7, G5, G7, O5, O7
+		arr.clear();
+		arr.add(0);
+		arr.add(1);
+		arr.add(5);
+		assertTrue(game.playerPlays(arr));
+		// R7, G5, G7, O7
+		//playing 2nd set in the same turn
+		arr.clear();
+		arr.add(0);
+		arr.add(2);
+		arr.add(3);
+		assertTrue(game.playerPlays(arr));
 	}
 }
