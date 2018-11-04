@@ -20,4 +20,47 @@ public class View {
 			if(str.equalsIgnoreCase("head") || str.equalsIgnoreCase("tail")) return str;	
 		}
 	}
+	public int getAiDifficulty(int num) {
+		System.out.print("How difficult would you want Computer "+ num+ " to be: ");
+		while (true) {
+			String str = in.nextLine();
+			try {
+				int diff = Integer.valueOf(str);
+				return diff;
+			}catch (Exception e) {
+				System.out.print("err: An integer input is expected: ");
+			}
+		}
+	}
+	
+	public int getAINumber() {
+		System.out.print("How many AI players would you like to have: ");
+		while (true) {
+			String str = in.nextLine();
+			try {
+				int aiNumber = Integer.valueOf(str);
+				return aiNumber;
+			}catch (Exception e) {
+				System.out.print("err: An integer input is expected: ");
+			}
+		}
+	}
+	public String getPlayerName() {
+		System.out.print("Welcome to COMP 3004 RRRummy.\nHow may I call you: ");
+		String name = in.nextLine();
+		System.out.println("Nice to meet you, " + name +"!");
+		return name;
+	}
+	public void startGameAnnounce(String name) {
+		System.out.println("The game starts!");
+		System.out.println(name +", you are the first player. Now it is your turn!");
+	}
+	public void endTurnAlert(String name) {
+		System.out.println(name+" choose to end his turn.");
+		System.out.println("\n==============================");
+	}
+	public void startTurnAlert(String name) {
+		System.out.println("\n"+ name +" , you are the next.");
+	}
+	
 }

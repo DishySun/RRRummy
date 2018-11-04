@@ -7,14 +7,17 @@ import observer.Subject;
 public class Table implements Subject{
 	private ArrayList<Meld> table;
 	private ArrayList<Observer> observers;
+	private int lastModifiedMeld;
 	public Table() {
 		table = new ArrayList<Meld>();
 		observers = new ArrayList<Observer>();
 	}
 	
 	public int size() {return table.size();}
+	
 	public void add(Tile t) {
 			table.add(new Meld(t));
+			lastModifiedMeld = table.size() - 1;
 			notifyObserver();
 	}
 	public boolean add(ArrayList<Tile> arr) {
@@ -22,25 +25,35 @@ public class Table implements Subject{
 		if (m == null) return false;
 		table.add(m);
 		notifyObserver();
+		lastModifiedMeld = table.size() - 1;
 		return true;
 	}
 	public boolean add(Tile t, int i) throws AbleToAddBothSideException{
 		if (i >= this.size()) return false;
 		boolean b = table.get(i).add(t);
-		if(b) notifyObserver();
+		if(b) {
+			lastModifiedMeld = i;
+			notifyObserver();
+		}
 		return b;
 	}
 	
 	public boolean addHead(Tile t, int i) {
 		if (i >= this.size()) return false;
 		boolean b = table.get(i).addHead(t);
-		if(b) notifyObserver();
+		if(b) {
+			lastModifiedMeld = i;
+			notifyObserver();
+		}
 		return b;
 	}
 	public boolean addTail(Tile t, int i) {
 		if (i >= this.size()) return false;
 		boolean b = table.get(i).addTail(t);
-		if(b) notifyObserver();
+		if(b) {
+			lastModifiedMeld = i;
+			notifyObserver();
+		}
 		return b;
 	}
 	public boolean move (int fromMeld, boolean removeHeadOrTail, int toMeld) throws AbleToAddBothSideException{
@@ -62,6 +75,7 @@ public class Table implements Subject{
 			return false;
 		}
 		if(table.get(fromMeld).size() == 0) table.remove(fromMeld);
+		lastModifiedMeld = toMeld;
 		return true;
 	}
 	
@@ -78,11 +92,11 @@ public class Table implements Subject{
 			else addTail(t, fromMeld);
 			return false;
 		}
+		lastModifiedMeld = toMeld;
 		if(table.get(fromMeld).size() == 0) table.remove(fromMeld);
 		return b;
 	}
 	public Tile removeHead(int i) {
-		
 		Tile t = table.get(i).removeHead();
 		if (table.get(i).size() == 0) table.remove(i);
 		if (t != null) notifyObserver();
@@ -106,6 +120,7 @@ public class Table implements Subject{
 		Meld m = table.get(meldIndex).cut(tileIndex);
 		if (m == null) return false;
 		table.add(m);
+		lastModifiedMeld = table.size() - 1;
 		notifyObserver();
 		return true;
 	}
@@ -113,7 +128,9 @@ public class Table implements Subject{
 	public String toString() {
 		String result = "Table:\n";
 		for (int i = 0; i < table.size(); i++) {
-			result += i +". "+ table.get(i).toString();
+			result += i +". ";
+			if(lastModifiedMeld == i) result += table.get(i).lastModifiedString();
+			else result += table.get(i).toString();
 			if (i < size() - 1) result+="\n";
 		}
 		return result;

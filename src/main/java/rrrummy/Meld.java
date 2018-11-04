@@ -7,20 +7,24 @@ import rrrummy.Tile.Color;
 import java.util.HashMap;
 
 public class Meld {
-	private int tileNumber; // 鏈夋晥鐗屾暟锛堥櫎浜咼oker鐨凾ile寮犳暟锛夋敞锛氬彧鏈夊綋鏈夋晥鐗屾暟>=2鏃讹紝鎵嶈兘鍒ゆ柇鍏蜂綋鏄痳un鎴栬�卻et
+	private int tileNumber; 
 	private ArrayList<Tile> meld;
 	private HashMap<String, Integer> tileMap;
+	private int lastModifiedTile;
+	private boolean lastMeld;
 	
 	public Meld() {
 		meld = new ArrayList<Tile>();
 		tileNumber = 0;
 		tileMap = null;
+		lastMeld = true;
 	}
 	public Meld(Tile t) {
 		meld = new ArrayList<Tile>();
 		tileNumber = 0;
 		tileMap = null;
 		this.addHead(t);
+		lastMeld = false;
 	}
 	public Meld(ArrayList<Tile> m) {
 		meld = new ArrayList<Tile>();
@@ -40,6 +44,7 @@ public class Meld {
 				}
 			}
 		}
+		this.lastMeld = true;
 	}
 	
 	public int size() {return meld.size();}
@@ -182,7 +187,6 @@ public class Meld {
 		}
 		if(size()>=4)return;
 		
-		//鏈夋晥棰滆壊
 		if(isSet()) {
 			tileMap.put("JK", 3);
 			HashSet<Color> colorSet = new HashSet<Tile.Color>();
@@ -218,6 +222,7 @@ public class Meld {
 			meld.add(t);
 			if(!t.isJoker()) tileNumber++;
 			this.generateMap();
+			this.lastModifiedTile = 0;
 			return true;
 		}
 		if(tileMap == null) {
@@ -227,11 +232,13 @@ public class Meld {
 			}
 			if(t.getNumber() <= jkNum) {
 				meld.add(0,t);
+				this.lastModifiedTile = 0;
 				if(!t.isJoker()) tileNumber++;
 				this.generateMap();
 				return true;
 			}else if (t.getNumber() >= 13 - jkNum) {
 				meld.add(t);
+				this.lastModifiedTile = size()-1;
 				if(!t.isJoker()) tileNumber++;
 				this.generateMap();
 				return true;
@@ -240,16 +247,19 @@ public class Meld {
 		if(!tileMap.containsKey(t.toString())) return false;
 		switch (tileMap.get(t.toString())) {
 		case 1:	meld.add(0, t);
+				this.lastModifiedTile = 0;
 				if(!t.isJoker()) tileNumber++;
 				this.generateMap();
 				return true;
 		case 2: meld.add(t);
+				this.lastModifiedTile = size() - 1;
 				if(!t.isJoker()) tileNumber++;
 				this.generateMap();
 				return true;
 		case 3: if (isSet()) {
 					if(t.isJoker()&&isRun())throw new AbleToAddBothSideException(this.toString(), t.toString());
 					meld.add(t);
+					this.lastModifiedTile = size() - 1;
 					if(!t.isJoker()) tileNumber++;
 					this.generateMap();
 					return true;
@@ -262,6 +272,7 @@ public class Meld {
 			return add(t);
 		}catch (AbleToAddBothSideException e) {
 			meld.add(0,t);
+			this.lastModifiedTile = 0;
 			if(!t.isJoker()) tileNumber++;
 			this.generateMap();
 			return true;
@@ -272,6 +283,7 @@ public class Meld {
 			return add(t);
 		}catch (AbleToAddBothSideException e) {
 			meld.add(t);
+			this.lastModifiedTile = size() - 1;
 			if(!t.isJoker()) tileNumber++;
 			this.generateMap();
 			return true;
@@ -282,6 +294,7 @@ public class Meld {
 		Tile t = meld.remove(0);
 		if (!t.isJoker()) tileNumber--;
 		this.generateMap();
+		this.lastModifiedTile = -1;
 		return t;
 	}
 	public Tile removeTail() {
@@ -289,6 +302,7 @@ public class Meld {
 		Tile t = meld.remove(size()-1);
 		if (!t.isJoker()) tileNumber--;
 		this.generateMap();
+		this.lastModifiedTile = -1;
 		return t;
 	}
 	public Meld cut(int i){
@@ -352,13 +366,32 @@ public class Meld {
 	}
 	
 	public String toString() {
-		String str = "[";
+		String str = "";
+		str += "[";
 		for (int i = 0; i < size(); i++) {
 			str += meld.get(i).toString();
 			if (i == size() - 1) break;
 			str += ", ";
 		}
-		return str+"]";
+		str += "]";
+		return str;
+	}
+	public String lastModifiedString() {
+		String str = "";
+		if (lastMeld) str += "*[";
+		else str += "[";
+		for (int i = 0; i < size(); i++) {
+			if (i == lastModifiedTile && !lastMeld) str += ("*"+meld.get(i).toString()+"*");
+			else str += meld.get(i).toString();
+			if (i == size() - 1) break;
+			str += ", ";
+		}
+		if (lastMeld) {
+			str += "]*";
+			lastMeld = false;
+		}
+		else  str += "]";
+		return str;
 	}
 	public HashMap<String, Integer> getMap(){return tileMap;}
 	public static Meld newMeld(ArrayList<Tile> arr) {

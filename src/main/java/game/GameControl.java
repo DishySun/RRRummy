@@ -11,23 +11,16 @@ public class GameControl {
 	private View view;
 	
 	
-	public GameControl(int aiNumber) {
+	public GameControl() {
 		players = new ArrayList<Player>();
 		view = new View();
 		players = new ArrayList<Player>();
-		players.add(new Player("Bill"));
-		while (aiNumber >0) {
-			if(aiNumber == 3)
-				players.add(new AI(new StrategyThree()));
-			else if(aiNumber == 2)
-				players.add(new AI(new StrategyTwo()));
-			else if(aiNumber == 1)
-				players.add(new AI(new StrategyZero()));
-			aiNumber--;
-		}
+		String playerName = view.getPlayerName();
+		players.add(new Player(playerName));
+		initAiPlayers();
 	}
 	
-	public void launch() {
+	private void launch() {
 		newGame();
 	}
 	
@@ -38,15 +31,29 @@ public class GameControl {
 		game.startGame();
 	}
 	
-	
-	/*public boolean playerPlays(int playNumber, int handIndex, int toMeld) {
-		
-	}*/
+	private void initAiPlayers() {
+		int aiNumber = view.getAINumber();
+		for (int i = 1; i <= aiNumber; i++) {
+			int difficulityLevel = view.getAiDifficulty(i);
+			switch(difficulityLevel) {
+			case 1:
+				players.add(new AI(new StrategyZero()));
+				break;
+			case 2:
+				players.add(new AI(new StrategyTwo()));
+				break;
+			case 3:
+				players.add(new AI(new StrategyThree()));
+			default:
+				players.add(new AI(new StrategyThree()));
+			}
+		}
+	}
 	
 	
 	
 	public static void main(String[] arg) {
-		GameControl gc = new GameControl(3);
+		GameControl gc = new GameControl();
 		gc.launch();
 	}
 	

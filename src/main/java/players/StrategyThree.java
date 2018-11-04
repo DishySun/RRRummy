@@ -39,7 +39,6 @@ public class StrategyThree implements AIStrategy, Observer {
 	
 	@Override
 	public String generateCommand() {
-		//System.out.println(playerHandSizes);
 		returnString = "";
 		run = new ArrayList<Tile>();
 		group = new ArrayList<Tile>();
