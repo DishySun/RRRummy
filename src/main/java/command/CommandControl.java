@@ -10,18 +10,26 @@ import java.lang.IndexOutOfBoundsException;
 
 public class CommandControl {
 	private ArrayList<Command> commandHistory;
-	private ArrayList<String> commandList;
+	private ArrayList<String> commandStringList;
 	private View view;
+	private Game game;
 
-	public CommandControl(View v) {
+	public CommandControl(View v, Game game) {
 		commandHistory = new ArrayList<Command>();
-		commandList = new ArrayList<String>();
+		commandStringList = new ArrayList<String>();
 		view = v;
+		this.game = game;
 	}
 
-	public int newCommand(Game game, String command) {
+	public int newCommand(String command) {
+		commandStringList.add(command);
+		int i = createCommand(command);
+		if (i < 1)commandStringList.remove(commandStringList.size() - 1);
+		return i;
+	}
+	
+	private int createCommand(String command) {
 		// return -1 if command is not valid, 0 for execute fail, 1 for success
-		commandList.add(command);
 		command = command.toLowerCase();
 		ArrayList<String> commandList = new ArrayList<String>(Arrays.asList(command.split("\\s+")));
 		System.out.println("command ---" + commandList);
@@ -125,7 +133,7 @@ public class CommandControl {
 				c = new MoveCommand(fromMeldIndex, fromMeldHoT, toMeldIndex, game, view);
 			}
 			//4 parameters
-			c = new MoveCommand(fromMeldIndex, fromMeldHoT, toMeldIndex, toMeldHot ,game);
+			c = new MoveCommand(fromMeldIndex, fromMeldHoT, toMeldIndex, toMeldHot ,game, view);
 			break;
 		case "cut":
 			int cutFrom = -1;
@@ -202,15 +210,14 @@ public class CommandControl {
 			commandHistory.add(c);
 			return 1;
 		}
-		commandList.remove(commandList.size() - 1);
 		return 0;
 	}
 	
 	public String toString() {
 		String result = "";
-		for(int i = 0; i < commandList.size(); i++) {
-			result += commandList.get(i);
-			if (i < commandList.size() - 1) result+="\n";
+		for(int i = 0; i < commandStringList.size(); i++) {
+			result += commandStringList.get(i);
+			if (i < commandStringList.size() - 1) result+="\n";
 		}
 		return result;
 	}

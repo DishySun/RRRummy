@@ -57,9 +57,9 @@ public class View {
 	}
 	public void endTurnAlert(String name) {
 		System.out.println(name+" choose to end his turn.");
-		System.out.println("\n==============================");
 	}
 	public void startTurnAlert(String name) {
+		System.out.println("\n==============================");
 		System.out.println("\n"+ name +" , you are the next.");
 	}
 	public void announceWinner(String name) {
@@ -71,6 +71,16 @@ public class View {
 			String str = in.nextLine().toLowerCase();
 			if (str.equals("yes")|| str.equals("y")) return true;
 			if (str.equals("no") || str.equals("n")) return false;
+		}
+	}
+	public int getGameOrReplay() {
+		System.out.print ("Do you want to Play a new game(1) or Watch the replay(2) of pervious game? ");
+		String str = null;
+		while (true) {
+			str = in.nextLine();
+			if (str.equals("1") || str.equalsIgnoreCase("p")) return 1;
+			else if (str.equals("2") || str.equalsIgnoreCase("w")) return 2;
+			System.out.print("enter again: ");
 		}
 	}
 	
