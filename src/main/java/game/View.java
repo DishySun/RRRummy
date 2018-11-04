@@ -21,7 +21,7 @@ public class View {
 		}
 	}
 	public int getAiDifficulty(int num) {
-		System.out.print("How difficult would you want Computer "+ num+ " to be: ");
+		System.out.print("How difficult would you want Computer "+ num+ " to be (1-3): ");
 		while (true) {
 			String str = in.nextLine();
 			try {
@@ -34,7 +34,7 @@ public class View {
 	}
 	
 	public int getAINumber() {
-		System.out.print("How many AI players would you like to have: ");
+		System.out.print("How many AI players would you like to have (1-3): ");
 		while (true) {
 			String str = in.nextLine();
 			try {
@@ -61,6 +61,9 @@ public class View {
 	}
 	public void startTurnAlert(String name) {
 		System.out.println("\n"+ name +" , you are the next.");
+	}
+	public void announceWinner(String name) {
+		System.out.println("The winner is "+ name+"!");
 	}
 	
 }

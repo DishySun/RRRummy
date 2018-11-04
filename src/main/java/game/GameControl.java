@@ -33,6 +33,7 @@ public class GameControl {
 	
 	private void initAiPlayers() {
 		int aiNumber = view.getAINumber();
+		if (aiNumber > 3 || aiNumber < 1) aiNumber = 3;
 		for (int i = 1; i <= aiNumber; i++) {
 			int difficulityLevel = view.getAiDifficulty(i);
 			switch(difficulityLevel) {

@@ -212,8 +212,9 @@ public class Game {
 			String str = players.get(currentPlayer).getCommandString(view);
 			commandControl.newCommand(this, str);
 			winner = determineWinner();
+			System.out.println();
 		}
-		System.out.println("The winner is: "+ winner.getName());
+		view.announceWinner(winner.getName());
 		return winner;
 	}
 	
