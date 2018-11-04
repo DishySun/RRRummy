@@ -178,9 +178,11 @@ public class Game {
 		return true;
 	}
 	public void endTurn() {
+		view.endTurnAlert(players.get(currentPlayer).getName());
 		if(hasPlayed == 0) this.playerDraw();
 		currentPlayer = (currentPlayer + 1) % players.size();
 		hasPlayed = 0;
+		view.startTurnAlert(players.get(currentPlayer).getName());
 	}
 	
 	private Player determineWinner() {
@@ -201,11 +203,12 @@ public class Game {
 		initPlayersHand();
 		currentPlayer = 0; 
 		hasPlayed = 0;
+		view.startGameAnnounce(players.get(currentPlayer).getName());
 		Player winner = null;
 		while (winner == null) {
-			players.get(currentPlayer).printHand();
 			System.out.println(table);
 			System.out.println("Stock Left: "+stock.size());
+			players.get(currentPlayer).printHand();
 			String str = players.get(currentPlayer).getCommandString(view);
 			commandControl.newCommand(this, str);
 			winner = determineWinner();
