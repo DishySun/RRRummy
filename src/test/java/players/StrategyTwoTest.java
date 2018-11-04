@@ -433,7 +433,7 @@ public class StrategyTwoTest {
 		table.get(0).removeTail();
 		meld3.addTail(atile4);
 		command = testAI.getStrategy().generateCommand();
-		assertEquals("Play 0 1", command);
+		assertEquals("Play 1 0", command);
 		Meld meld4 = new Meld(melds);
 		hand2.remove(hand.indexOf(atile9));
 		hand2.remove(hand.indexOf(atile10));
