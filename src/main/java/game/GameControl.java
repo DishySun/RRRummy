@@ -15,9 +15,6 @@ public class GameControl {
 		players = new ArrayList<Player>();
 		view = new View();
 		players = new ArrayList<Player>();
-		String playerName = view.getPlayerName();
-		players.add(new Player(playerName));
-		initAiPlayers();
 	}
 	
 	private void launch() {
@@ -27,11 +24,14 @@ public class GameControl {
 	
 	
 	private void newGame() {
+		initAiPlayers();
 		game = new Game(players, view);
 		game.startGame();
 	}
 	
 	private void initAiPlayers() {
+		String playerName = view.getPlayerName();
+		players.add(new Player(playerName));
 		int aiNumber = view.getAINumber();
 		if (aiNumber > 3 || aiNumber < 1) aiNumber = 3;
 		for (int i = 1; i <= aiNumber; i++) {
