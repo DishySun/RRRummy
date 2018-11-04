@@ -135,6 +135,10 @@ public class Table implements Subject{
 		}
 		return result;
 	}
+	
+	public int lastMeldScore() {
+		return table.get(size() - 1).getMeldScore();
+	}
 
 	@Override
 	public void register(Observer o) {

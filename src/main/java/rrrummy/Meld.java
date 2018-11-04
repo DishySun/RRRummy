@@ -401,6 +401,30 @@ public class Meld {
 		}
 		return m;
 	}
+	public int getMeldScore() {
+		if (tileNumber == 0) return 0;
+		int jkNm = 0;
+		for (Tile t: meld) {
+			if (t.isJoker()) jkNm++;
+		}
+		int score = 0;
+		for (int i = 0; i < meld.size(); i++) {
+			Tile t = meld.get(i); 
+			if (!t.isJoker()) score += t.getNumber();
+			else {
+				if(isRun() && isSet()) {
+					if (i == 0) score += this.getFirstNumber();
+					else score += this.getLastNumber()+jkNm;
+				}else if (isSet()) score += this.getFirstNumber();
+				else if (isRun()) {
+					if (i == 0) score += this.getFirstNumber()-jkNm;
+					else score += this.getLastNumber()+jkNm;
+				}
+			}
+			
+		}
+		return score;
+	}
 	
 	public Tile getTile(int i) {return meld.get(i);}
 }

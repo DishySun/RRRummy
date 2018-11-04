@@ -12,6 +12,7 @@ public class Player implements Subject{
 	protected Hand hand;
 	private int playerId;
 	protected static int idTracker = 0;
+	private int playedScore;
 	
 	public Player(String name) {
 		this.name = name;
@@ -23,6 +24,7 @@ public class Player implements Subject{
 	public int getId() {return playerId;}
 	
 	public void initHand(ArrayList<Tile> arr) {
+		this.playedScore = 0;
 		hand = new Hand(arr);
 		hand.sort();
 		notifyObserver();
@@ -63,6 +65,8 @@ public class Player implements Subject{
 		return view.getHeadOrTail(string);
 	}
 	public AIStrategy getStrategy() {return null;}
+	public void caluPlayedScore(int i) {playedScore += i;}
+	public int getPlayerdSocre() {return playedScore;}
 
 	@Override
 	public void register(Observer o) {

@@ -115,6 +115,7 @@ public class Game {
 			players.get(currentPlayer).play(i);
 		}
 		System.out.println(players.get(currentPlayer).getName() +" has played "+arr.toString()+" as a new meld.");
+		players.get(currentPlayer).caluPlayedScore(table.lastMeldScore());
 		hasPlayed++;
 		return true;
 		
@@ -179,6 +180,10 @@ public class Game {
 	}
 	
 	public void endTurn() {
+		if (players.get(currentPlayer).getPlayerdSocre() < 30 && players.get(currentPlayer).getPlayerdSocre() > 0) {
+			System.out.println("The total score of melds you have played for first turn is less than 30. You can not end you turn.");
+			return;
+		}
 		view.endTurnAlert(players.get(currentPlayer).getName());
 		if(hasPlayed == 0) this.playerDraw();
 		currentPlayer = (currentPlayer + 1) % players.size();
