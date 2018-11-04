@@ -10,15 +10,18 @@ import java.lang.IndexOutOfBoundsException;
 
 public class CommandControl {
 	private ArrayList<Command> commandHistory;
+	private ArrayList<String> commandList;
 	private View view;
 
 	public CommandControl(View v) {
 		commandHistory = new ArrayList<Command>();
+		commandList = new ArrayList<String>();
 		view = v;
 	}
 
 	public int newCommand(Game game, String command) {
-		// return -1 if command is not valid, 0 for excute fail, 1 for success
+		// return -1 if command is not valid, 0 for execute fail, 1 for success
+		commandList.add(command);
 		command = command.toLowerCase();
 		ArrayList<String> commandList = new ArrayList<String>(Arrays.asList(command.split("\\s+")));
 		System.out.println("command ---" + commandList);
@@ -199,6 +202,16 @@ public class CommandControl {
 			commandHistory.add(c);
 			return 1;
 		}
+		commandList.remove(commandList.size() - 1);
 		return 0;
+	}
+	
+	public String toString() {
+		String result = "";
+		for(int i = 0; i < commandList.size(); i++) {
+			result += commandList.get(i);
+			if (i < commandList.size() - 1) result+="\n";
+		}
+		return result;
 	}
 }

@@ -65,5 +65,13 @@ public class View {
 	public void announceWinner(String name) {
 		System.out.println("The winner is "+ name+"!");
 	}
+	public boolean saveReplay() {
+		System.out.print ("Do you want to save the replay for this game? (yes/no)");
+		while(true) {
+			String str = in.nextLine().toLowerCase();
+			if (str.equals("yes")|| str.equals("y")) return true;
+			if (str.equals("no") || str.equals("n")) return false;
+		}
+	}
 	
 }

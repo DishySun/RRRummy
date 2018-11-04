@@ -36,6 +36,12 @@ public class Stock {
 		stock.push(new Tile());
 		Collections.shuffle(stock);
 	}
-	//for cheating
-	public Tile peek() {return stock.peek();}
+	public String replay() {
+		String str = "";
+		for (Tile t: stock) {
+			str += t.toString();
+			str += " ";
+		}
+		return str;
+	}
 }
