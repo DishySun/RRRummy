@@ -27,7 +27,6 @@ public class TileTest extends TestCase{
 			invalidTile = new Tile("K2");
 			fail("'K' should not be a valid color");
 		}catch(InvalidTileException e) {
-			System.out.println(e.getErrMsg());
 			//e.printStackTrace();
 		}
 		
@@ -35,7 +34,6 @@ public class TileTest extends TestCase{
 			invalidTile = new Tile("B17");
 			fail("'17' should not be a valid number");
 		}catch(InvalidTileException e) {
-			System.out.println(e.getErrMsg());
 			//e.printStackTrace();
 		}
 		
@@ -43,7 +41,6 @@ public class TileTest extends TestCase{
 			invalidTile = new Tile("QP");
 			fail("'Q' should not be a valid color and 'P' should not be a valid number");
 		}catch(InvalidTileException e) {
-			System.out.println(e.getErrMsg());
 			//e.printStackTrace();
 		}
 		
@@ -52,7 +49,6 @@ public class TileTest extends TestCase{
 			invalidTile = new Tile("JAOBAOUOSJ");
 			assertEquals(Tile.Color.JOKER, invalidTile.getColor());
 		}catch(InvalidTileException e) {
-			System.out.println(e.getErrMsg());
 			fail("String strats with 'J' should be instancted to a joker tile");
 		}
 	}

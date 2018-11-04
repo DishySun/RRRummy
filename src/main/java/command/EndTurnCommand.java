@@ -1,16 +1,16 @@
 package command;
-
-import game.GameControl;
+import rrrummy.Game;
 
 public class EndTurnCommand implements Command{
 
-	private GameControl gameControl;
-	public EndTurnCommand(GameControl gc) {
-		gameControl = gc;
+	private Game game;
+	public EndTurnCommand(Game game) {
+		this.game = game;
 	}
 	@Override
-	public void excute() {
-		gameControl.playerEndTurn();
+	public boolean excute() {
+		game.endTurn();
+		return true;
 	}
 
 }

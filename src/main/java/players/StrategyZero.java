@@ -2,34 +2,26 @@ package players;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import observer.GameData;
-import observer.Observer;
-import observer.Subject;
 import rrrummy.Meld;
 import rrrummy.Tile;
 
-public class StrategyZero implements AIStrategy, Observer{
+public class StrategyZero implements AIStrategy{
 	private Hand myHand;
+	private int myId;
 	private ArrayList<Meld> table;
 	private HashMap<Integer, Integer> playerHandSizes;
 	private ArrayList<Tile> run;
 	private ArrayList<Tile> group;
 	private int countInitial;
-	private boolean hasPlayInit;
-	private boolean hasPlayRest;
-
+	private String returnString;
 	
-	public StrategyZero(Subject data) {
-		data.register(this);
-		hasPlayInit = false;
-		hasPlayRest = false;
-		countInitial = 0;
+	public StrategyZero(){
+		playerHandSizes = new HashMap<Integer, Integer>();
 	}
 	
 	@Override
 	public String generateCommand() {
-		hasPlayRest = false;
+		returnString = "";
 		run = new ArrayList<Tile>();
 		group = new ArrayList<Tile>();
 		if(countInitial < 30) {	//play initial
@@ -37,60 +29,76 @@ public class StrategyZero implements AIStrategy, Observer{
 				run = myHand.findRun();
 				if(run != null) {
 					countInitial += myHand.checkSum(run);
-					hasPlayInit = true;
-					return "Play" + run;
+					myHand.sort();
+					returnString = "Play";
+					for(int i=0; i<run.size();i++) {
+						returnString += " " + myHand.handIndexOf(run.get(i)); 
+					}
+					return returnString;
 				}
 				else {
 					group = myHand.findGroup();
+					myHand.sort();
 					if(group != null) {
 						countInitial += myHand.checkSum(group);
-						hasPlayInit = true;
-						return "Play" + group;
+						myHand.sort();
+						returnString = "Play";
+						for(int i=0; i<group.size();i++) {
+							returnString += " " + myHand.handIndexOf(group.get(i)); 
+						}
+						return returnString;
 					}	
 					else
 						return "Something wrong";
 				}
 			}	else
-					return "DRAW";
+				return "END";
 		}else {
 			run = myHand.findRun();
 			if(run != null)	{
-				hasPlayRest = true;
-				return "Play" + run;
+				myHand.sort();
+				returnString = "Play";
+				for(int i=0; i<run.size();i++) {
+					returnString += " " + myHand.handIndexOf(run.get(i)); 
+				}
+				return returnString;
 			} else {
 				group  = myHand.findGroup();
+				myHand.sort();
 				if(group != null) {
-					hasPlayRest = true;
-					return "Play" + group;
+					myHand.sort();
+					returnString = "Play";
+					for(int i=0; i<group.size();i++) {
+						returnString += " " + myHand.handIndexOf(group.get(i)); 
+					}
+					return returnString;
 				}
-			}
-			if(hasPlayInit) {
-				hasPlayInit  = false;
 				return "END";
-			} else {
-				if(hasPlayRest)
-					return "End";
-				else
-					return "DRAW";
 			}	
 		}
 	}
-
+	
+	public void setMyId(int id) { myId = id;}
+	
+	
 	@Override
-	public String name() {
-		return "Computer (Very Easy)";
+	public String getDifficulty() {
+		return "Retard";
 	}
 	@Override
 	public void update(ArrayList<Meld> table) {
 		this.table = table;
 	}
 	@Override
-	public void update(HashMap<Integer, Integer> handSizes) {
-		this.playerHandSizes = handSizes;
-		
-	}
-	@Override
 	public void setHand(Hand hand) {
 		myHand = hand;
 	}
+
+
+	@Override
+	public void update(int playerId, int handSize) {
+		// do nothing coz this Strategy doesn't need to know other player's hand size
+		playerHandSizes.put(playerId, handSize);
+	}
+	
 }

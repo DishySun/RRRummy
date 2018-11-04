@@ -7,7 +7,7 @@ import rrrummy.Tile.Color;
 import java.util.HashMap;
 
 public class Meld {
-	private int tileNumber; // 有效牌数（除了Joker的Tile张数）注：只有当有效牌数>=2时，才能判断具体是run或者set
+	private int tileNumber; // 鏈夋晥鐗屾暟锛堥櫎浜咼oker鐨凾ile寮犳暟锛夋敞锛氬彧鏈夊綋鏈夋晥鐗屾暟>=2鏃讹紝鎵嶈兘鍒ゆ柇鍏蜂綋鏄痳un鎴栬�卻et
 	private ArrayList<Tile> meld;
 	private HashMap<String, Integer> tileMap;
 	
@@ -182,7 +182,7 @@ public class Meld {
 		}
 		if(size()>=4)return;
 		
-		//有效颜色
+		//鏈夋晥棰滆壊
 		if(isSet()) {
 			tileMap.put("JK", 3);
 			HashSet<Color> colorSet = new HashSet<Tile.Color>();
@@ -247,7 +247,8 @@ public class Meld {
 				if(!t.isJoker()) tileNumber++;
 				this.generateMap();
 				return true;
-		case 3: if ((isSet() && !t.isJoker())) {
+		case 3: if (isSet()) {
+					if(t.isJoker()&&isRun())throw new AbleToAddBothSideException(this.toString(), t.toString());
 					meld.add(t);
 					if(!t.isJoker()) tileNumber++;
 					this.generateMap();
@@ -291,7 +292,7 @@ public class Meld {
 		return t;
 	}
 	public Meld cut(int i){
-		if (i >= size() || i <= 0) return null;
+		if (i >= size() || i < 0 || size() == 1) return null;
 		if (i == size()-1) return new Meld(meld.remove(size() - 1));
 		ArrayList<Tile> returnArr = new ArrayList<Tile>();
 		while (i >= 0) {
@@ -321,7 +322,6 @@ public class Meld {
 		return 0;
 	}
 	public Tile replace(Tile t, int index) {
-		//TODO: require implementation
 		//return the Tile that has been replaced, or return null if nothing to replace
 		if (!meld.get(index).isJoker()) return null;
 		if (t.isJoker()) return null;
@@ -361,5 +361,13 @@ public class Meld {
 		return str+"]";
 	}
 	public HashMap<String, Integer> getMap(){return tileMap;}
-	//Methods for test case:
+	public static Meld newMeld(ArrayList<Tile> arr) {
+		Meld m = new Meld();
+		for (int i = 0; i < arr.size(); i++) {
+			if (!m.addTail(arr.get(i))) return null;
+		}
+		return m;
+	}
+	
+	public Tile getTile(int i) {return meld.get(i);}
 }
