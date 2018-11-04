@@ -1,6 +1,8 @@
 package rrrummy;
 import java.util.ArrayList;
 
+import game.View;
+
 import  junit.framework.TestCase;
 import players.Player;
 
@@ -56,7 +58,7 @@ public class GameTest extends TestCase{
 		testStock.add(r1);
 		testStock.add(r2);
 		testStock.add(r3);
-		game = new Game(players, testStock, null);
+		game = new Game(players, testStock, new View());
 	}
 	
 	public void test_playerDraw() {
@@ -265,5 +267,23 @@ public class GameTest extends TestCase{
 		assertEquals(5, player.handSize());
 		assertTrue(game.playerPlays(4, 1 , false));
 		assertTrue(game.replace(0, 1, 2));
+	}
+	
+	public void test_playAllAndWin() {
+		//hand order B5, R4, R5, R6, R7, G5, O5, JK
+		ArrayList<Integer> arr = new ArrayList<Integer>();
+		arr.add(1);
+		arr.add(2);
+		arr.add(3);
+		arr.add(4);
+		arr.add(7);
+		assertTrue(game.playerPlays(arr));
+		player.printHand();
+		arr.remove(arr.size() -1);
+		arr.remove(arr.size() -1);
+		arr.set(arr.size()-1, 0);
+		assertTrue(game.playerPlays(arr));
+		game.endTurn();
+		assertEquals(player, game.getWinner());
 	}
 }

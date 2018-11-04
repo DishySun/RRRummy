@@ -198,8 +198,13 @@ public class Game {
 	private void determineWinner() {
 		winner = players.get(currentPlayer);
 		int i = (currentPlayer+1) % players.size();
+		if (players.get(currentPlayer).handSize() == 0) {
+			winner = players.get(currentPlayer);
+			return;
+		}
 		while (i != currentPlayer) {
 			if (players.get(i).handSize() == 0) {
+				
 				winner = players.get(i);
 				return;
 			}
@@ -325,6 +330,8 @@ public class Game {
 			}
 		}
 	}
+	
+	public Player getWinner() {return winner;}
 	
 	public void printTable() {
 		System.out.println(table);
