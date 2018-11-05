@@ -14,10 +14,11 @@ public class View {
 		return str;
 	}
 	public String getHeadOrTail(String string) {
-		System.out.println("Do you want to "+ string + " it to head or tail:");
+		System.out.print("Do you want to "+ string + " it to head or tail:");
 		while(true) {
 			String str = in.nextLine();
 			if(str.equalsIgnoreCase("head") || str.equalsIgnoreCase("tail")) return str;	
+			System.out.print("Plaese enter either 'head' or 'tail: '");
 		}
 	}
 	public int getAiDifficulty(int num) {
@@ -60,7 +61,7 @@ public class View {
 	}
 	public void startTurnAlert(String name) {
 		System.out.println("\n==============================");
-		System.out.println("\n"+ name +" , you are the next.");
+		System.out.println("\n"+ name +", you are the next.");
 	}
 	public void announceWinner(String name) {
 		System.out.println("The winner is "+ name+"!");
@@ -82,6 +83,22 @@ public class View {
 			else if (str.equals("2") || str.equalsIgnoreCase("w")) return 2;
 			System.out.print("enter again: ");
 		}
+	}
+	public void stateCommandResult(int newCommand) {
+		switch (newCommand) {
+		case -1: 
+			System.out.print("Invalid Command entered.");
+			break;
+		case 0: 
+			System.out.print("Fail to execute.");
+			break;
+		case 1:
+			System.out.print("Successfully executed.");
+			break;
+		default:
+			System.out.print("error happened.");
+		}
+		
 	}
 	
 }

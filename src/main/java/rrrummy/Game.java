@@ -227,7 +227,7 @@ public class Game {
 			System.out.println("Stock Left: "+stock.size());
 			players.get(currentPlayer).printHand();
 			String str = players.get(currentPlayer).getCommandString(view);
-			commandControl.newCommand(str);
+			view.stateCommandResult(commandControl.newCommand(str));
 			System.out.println();
 		}
 		view.announceWinner(winner.getName());

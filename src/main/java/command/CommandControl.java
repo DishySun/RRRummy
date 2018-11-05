@@ -34,6 +34,7 @@ public class CommandControl {
 		ArrayList<String> commandList = new ArrayList<String>(Arrays.asList(command.split("\\s+")));
 		System.out.println("command ---" + commandList);
 		commandList.remove("");
+		if (commandList.size() == 0) return -1;
 		Command c = null;
 		switch (commandList.remove(0)) {
 		case "play":
@@ -125,8 +126,10 @@ public class CommandControl {
 				temp = commandList.remove(0);
 				if (temp.equalsIgnoreCase("head")) toMeldHot = 0;
 				else if (temp.equalsIgnoreCase("tail"))toMeldHot = 1;
-				else System.out.println("'Head'/'Tail' is expected for 6rd string");
-				return -1;
+				else {
+					System.out.println("'Head'/'Tail' is expected for 6rd string");
+					return -1;
+				}
 				
 			}catch(IndexOutOfBoundsException e) {
 				// 3 parameters

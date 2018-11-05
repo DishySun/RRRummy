@@ -147,7 +147,7 @@ public class Meld {
 		/*Map
 		 *Key: String  --Tile in String
 		 *Value: int   --where to add 3 for Head & Tail; 2 for Tail only; 1 for Head only*/
-		if(tileNumber == 0) {
+		if(tileNumber == 0 || meld.size() == 0) {
 			tileMap = null;
 			return;
 		}
@@ -225,7 +225,7 @@ public class Meld {
 			this.lastModifiedTile = 0;
 			return true;
 		}
-		if(tileMap == null) {
+		if(tileMap == null||tileNumber == 0) {
 			int jkNum = 0;
 			for (Tile tt : meld) {
 				if (tt.isJoker()) jkNum++;
@@ -340,9 +340,9 @@ public class Meld {
 		if (!meld.get(index).isJoker()) return null;
 		if (t.isJoker()) return null;
 		if (tileNumber == 0) {
-			meld.add(index, t);
+			meld.add(0, t);
 			tileNumber++;
-			return meld.remove(index+1);
+			return meld.remove(1);
 		}
 		if(isRun()) {
 			if(t.getColor() == getRunColor() && t.getNumber() == this.getRunNumberAt(index)) {
@@ -427,4 +427,6 @@ public class Meld {
 	}
 	
 	public Tile getTile(int i) {return meld.get(i);}
+	public Tile getHead() {return meld.get(0);}
+	public Tile getTail() {return meld.get(meld.size() -1);}
 }
