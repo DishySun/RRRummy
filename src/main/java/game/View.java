@@ -101,4 +101,16 @@ public class View {
 		
 	}
 	
+	public String getStockFile() {
+		System.out.println("Please enter stock file name");
+		String stockFile = in.nextLine();
+		return stockFile;
+	}
+	
+	public String getCommandFile() {
+		System.out.println("Please enter command file name");
+		String commandFile = in.nextLine();
+		return commandFile;
+	}
+	
 }

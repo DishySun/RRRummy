@@ -257,9 +257,7 @@ public class Game {
 	
 	private void playReplay() {
 		String stockString = null;
-		System.out.println("Please enter stock file name");
-		Scanner s = new Scanner(System.in);
-		String stockFile = s.nextLine();
+		String stockFile = view.getStockFile();
 		try {
 			FileReader fileReader = new FileReader(ROOT_PATH+stockFile);
 			BufferedReader bufferedReader = new BufferedReader(fileReader);
@@ -286,9 +284,7 @@ public class Game {
 			}
 		}
 		stock = new Stock(tiles);
-		System.out.println("Please enter command file name");
-		Scanner c = new Scanner(System.in);
-		String commandFile = c.nextLine();
+		String commandFile = view.getCommandFile();
 		ArrayList<String> commandStringArrar = new ArrayList<String>();
 		int playerNumber = -1;
 		try {
