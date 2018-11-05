@@ -202,6 +202,7 @@ public class StrategyThree implements AIStrategy, Observer {
 				return "END";
 			}else {	// no less 3
 				if(myHand.canPlayAll(table)) {	//if can play all, request use of table
+					
 					run = myHand.findRun();
 					if(run != null) {
 						myHand.sort();

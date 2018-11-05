@@ -229,7 +229,7 @@ public class StrategyTwoTest {
 	}
 
 	@Test
-	public void test_generateCommand4() {
+	public void test_generateCommand4() {	//17
 		//play init,play rest
 		try {
 			atile1 = new Tile("R1");
@@ -313,7 +313,7 @@ public class StrategyTwoTest {
 	}
 	
 	@Test
-	public void test_generateCommand6() {
+	public void test_generateCommand6() { //16
 		//play init,play rest,play all
 		try {
 			atile1 = new Tile("R1");
@@ -386,6 +386,7 @@ public class StrategyTwoTest {
 		command = testAI.getStrategy().generateCommand();
 		//can not play all tile
 		assertEquals("END", command);
+		
 		ArrayList<Tile> melds = new ArrayList<Tile>();
 		melds.add(atile1);
 		melds.add(atile2);
@@ -482,6 +483,56 @@ public class StrategyTwoTest {
 		command = testAI.getStrategy().generateCommand();
 		System.out.println(command);
 		assertEquals("Move 0 head to 1", command);
+		
+	}
+	
+	@Test
+	public void test_generateCommand7() {
+		//play init,play rest,play all
+		//B6, B8, B8, R9, G1, G2, G3, G11, G13, O2, O9, O12, O13, JK
+		try {
+			atile1 = new Tile("B6");
+			atile2 = new Tile("B8");
+			atile3 = new Tile("B8");
+			atile4 = new Tile("R9");
+			atile5 = new Tile("G1");
+			atile6 = new Tile("G2");
+			atile7 = new Tile("G3");
+			atile8 = new Tile("G11");
+			atile9 = new Tile("G13");
+			atile10 = new Tile("O2");
+			atile11 = new Tile("O9");
+			atile12 = new Tile("O12");
+			atile13 = new Tile("O13");
+			aJoker = new Tile("JK");
+		}catch(InvalidTileException e) {
+			fail();
+		}
+		hand.add(atile1);
+		hand.add(atile1);
+		hand.add(atile1);
+		hand.add(atile1);
+		hand.add(atile1);
+		hand.add(atile1);
+		hand.add(atile1);
+		hand.add(atile1);
+		hand.add(atile1);
+		hand.add(atile1);
+		hand.add(atile1);
+		hand.add(atile1);
+		hand.add(atile1);
+		hand.add(atile1);
+		Hand hand2 = new Hand(hand);
+//B6, B11, R1, R2, R3, R3, R4, R4, G5, G10, O7, O11, JK, JK
+		testAI.getStrategy().setHand(hand2);
+		ArrayList<Meld> table2 = new ArrayList<Meld>();
+		testAI.getStrategy().update(table2);
+		testAI.getStrategy().update(1, 10);
+		testAI.getStrategy().update(2, 14);
+		String command = testAI.getStrategy().generateCommand();
+		command = testAI.getStrategy().generateCommand();
+		System.out.println(command);
+		assertEquals("END", command);
 		
 	}
 }
