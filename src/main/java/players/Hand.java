@@ -175,6 +175,7 @@ public class Hand {
 		int jokerorg = 0;	// joker number (final)
 		boolean hasJoker = false;
 		sort();		//sort
+		//System.out.println("-----" + hand) ;
 		//check if has joker
 		for(int i = 0; i<size();i++) {			//count size of joker;
 			if(hand.get(i).getColor() == Tile.Color.JOKER) {
@@ -193,10 +194,15 @@ public class Hand {
 				tile4Run.add(hand.get(i));
 				playIndex++;
 			} else {
-				if(tile4Run.size() < 3) {
-					tile4Run = new ArrayList<Tile>();
-					tile4Run.add(hand.get(i));
-					playIndex = 0;
+				if(tile4Run.get(playIndex).getColor() == hand.get(i).getColor() 
+						&& hand.get(i).getNumber() == tile4Run.get(playIndex).getNumber()) {//R1 R1 R2 R2
+					continue;
+				}else {
+					if(tile4Run.size() < 3) {
+						tile4Run = new ArrayList<Tile>();
+						tile4Run.add(hand.get(i));
+						playIndex = 0;
+					}
 				}
 			}
 		}
@@ -499,6 +505,7 @@ public class Hand {
 								if(tile4Set.size() >= 3 && checkSum(tile4Set) >= checkSum(LargestSet)) {
 									LargestSet =  tile4Set;
 								}
+								
 							} else {
 								if(tile4Set.size() < 3) {
 									for(int i = 0; i<tile4Set.size();i++) {
@@ -601,6 +608,7 @@ public class Hand {
 						break;
 			}
 		}
+
 		return count;
 	}
 	
@@ -724,6 +732,7 @@ public class Hand {
 		//System.out.println());
 		///System.out.println(size());
 		//System.out.println(count);
+		//System.out.println("can play all " + count);
 		return count == size();
 	}
 	
