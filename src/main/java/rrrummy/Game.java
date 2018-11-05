@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Scanner;
 
 import command.CommandControl;
 import game.View;
@@ -256,8 +257,11 @@ public class Game {
 	
 	private void playReplay() {
 		String stockString = null;
+		System.out.println("Please enter stock file name");
+		Scanner s = new Scanner(System.in);
+		String stockFile = s.nextLine();
 		try {
-			FileReader fileReader = new FileReader(ROOT_PATH+"stock.txt");
+			FileReader fileReader = new FileReader(ROOT_PATH+stockFile);
 			BufferedReader bufferedReader = new BufferedReader(fileReader);
 			stockString = bufferedReader.readLine();
 			bufferedReader.close();
@@ -282,10 +286,13 @@ public class Game {
 			}
 		}
 		stock = new Stock(tiles);
+		System.out.println("Please enter command file name");
+		Scanner c = new Scanner(System.in);
+		String commandFile = c.nextLine();
 		ArrayList<String> commandStringArrar = new ArrayList<String>();
 		int playerNumber = -1;
 		try {
-			FileReader fileReader = new FileReader(ROOT_PATH+"command.txt");
+			FileReader fileReader = new FileReader(ROOT_PATH+commandFile);
 			BufferedReader bufferedReader = new BufferedReader(fileReader);
 			playerNumber = Integer.valueOf(bufferedReader.readLine());
 			if (playerNumber < 2 || playerNumber > 4) {
