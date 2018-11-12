@@ -1151,4 +1151,43 @@ public class HandTest {
 		assertEquals("{[G2, B2]=0}", tile2play.toString());
 
 	}
+	public void testRoundScore1() {
+		try {
+			Hand testHand = new Hand(new ArrayList<Tile>());
+			testHand.add(new Tile("R5"));
+			testHand.add(new Tile("B3"));
+			testHand.add(new Tile("O6"));
+			testHand.add(new Tile("J"));
+			testHand.add(new Tile("B7"));
+			testHand.add(new Tile("R11"));
+			testHand.add(new Tile("G1"));
+			testHand.add(new Tile("G10"));
+			testHand.getRoundScore();
+			assertEquals(73, testHand.totalHandScore);
+		} catch (InvalidTileException e) {
+			fail(e.getErrMsg());
+		}
+
+	}
+
+	public void testRoundScore2() {
+		try {
+			Hand testHand = new Hand(new ArrayList<Tile>());
+			testHand.add(new Tile("R5"));
+			testHand.add(new Tile("B3"));
+			testHand.add(new Tile("O6"));
+			testHand.add(new Tile("J"));
+			testHand.add(new Tile("B7"));
+			testHand.add(new Tile("R11"));
+			testHand.add(new Tile("G1"));
+			testHand.add(new Tile("G10"));
+			testHand.remove(3);
+			testHand.remove(0);
+			testHand.getRoundScore();
+			assertEquals(38, testHand.totalHandScore);
+		} catch (InvalidTileException e) {
+			fail(e.getErrMsg());
+		}
+
+	}
 }
