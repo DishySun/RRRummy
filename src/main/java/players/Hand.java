@@ -12,10 +12,13 @@ import rrrummy.Tile;
 
 public class Hand {
 	private ArrayList<Tile> hand;
+	int totalHandScore;
 	
 	public Hand(ArrayList<Tile> initHand) {
 		hand = initHand;
 		this.sort();
+		totalHandScore =0;
+		
 	}
 	
 	public Tile getTile(int i){return hand.get(i);}
@@ -1062,5 +1065,16 @@ public class Hand {
 			meld.addTail(remove);
 		}
 		return null;
+	}
+	public void getRoundScore() {
+		int tempScore = 0;
+		int jokers = 0;
+		for(int i = 0; i < hand.size();i++) {
+			tempScore += getTile(i).getNumber();	
+			if (getTile(i).getNumber() == 0) {
+				jokers++;
+			}
+		}
+		totalHandScore = tempScore + jokers*30;
 	}
 }
