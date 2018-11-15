@@ -77,7 +77,7 @@ public class StrategyTwoTest {
 		//someone have play initial, thu END
 		command = testAI.getStrategy().generateCommand();
 		//first play run
-		assertEquals("Play 2 3 4 7", command);
+		assertEquals("Play 2 3 5 6", command);
 		//remove hand R1 R2 R3 R4
 		hand2.remove(hand.indexOf(atile2));
 		hand2.remove(hand.indexOf(atile3));
@@ -87,7 +87,7 @@ public class StrategyTwoTest {
 //B6, B11, R3, R4, G5, G10, O7, O11, JK, JK
 		command = testAI.getStrategy().generateCommand();
 		//play second run
-		assertEquals("Play 2 3 9", command);
+		assertEquals("Play 2 3 8", command);
 		hand2.remove(hand.indexOf(atile5));
 		hand2.remove(hand.indexOf(atile8));
 		hand2.remove(hand.indexOf(aJoker));
@@ -200,7 +200,7 @@ public class StrategyTwoTest {
 		testAI.getStrategy().setHand(hand2);
 		String command = testAI.getStrategy().generateCommand();
 		//first play run
-		assertEquals("Play 2 3 4 7", command);
+		assertEquals("Play 2 3 5 6", command);
 		//remove hand R1 R2 R3 R4
 		hand2.remove(hand.indexOf(atile2));
 		hand2.remove(hand.indexOf(atile3));
@@ -210,14 +210,14 @@ public class StrategyTwoTest {
 //B6, B11, R3, R4, G5, G10, O7, O11, JK, JK
 		command = testAI.getStrategy().generateCommand();
 		//play second run
-		assertEquals("Play 2 3 9", command);
+		assertEquals("Play 2 3 8", command);
 		hand2.remove(hand.indexOf(atile5));
 		hand2.remove(hand.indexOf(atile8));
 		hand2.remove(hand.indexOf(aJoker));
 //B6, B11, G5, G10, O7, O11, JK
 		command = testAI.getStrategy().generateCommand();
 		//no run to play , play first group
-		assertEquals("Play 4 2 0", command);
+		assertEquals("Play 5 1 6", command);
 		hand2.remove(hand.indexOf(atile6));
 		hand2.remove(hand.indexOf(atile7));
 		hand2.remove(hand.indexOf(atile12));
@@ -275,7 +275,7 @@ public class StrategyTwoTest {
 		testAI.getStrategy().setHand(hand2);
 		String command = testAI.getStrategy().generateCommand();
 		//first play run
-		assertEquals("Play 2 3 4 7", command);
+		assertEquals("Play 2 3 5 6", command);
 		//remove hand R1 R2 R3 R4
 		hand2.remove(hand.indexOf(atile2));
 		hand2.remove(hand.indexOf(atile3));
@@ -285,14 +285,14 @@ public class StrategyTwoTest {
 //B6, B11, R3, R4, G5, G10, O7, O11, JK, JK
 		command = testAI.getStrategy().generateCommand();		
 		//play second run
-		assertEquals("Play 2 3 9", command);
+		assertEquals("Play 2 3 8", command);
 		hand2.remove(hand.indexOf(atile5));
 		hand2.remove(hand.indexOf(atile8));
 		hand2.remove(hand.indexOf(aJoker));
 //B6, B11, G5, G10, O7, O11, JK
 		command = testAI.getStrategy().generateCommand();		
 		//no run to play , play first group
-		assertEquals("Play 4 2 0", command);
+		assertEquals("Play 5 1 6", command);
 		hand2.remove(hand.indexOf(atile6));
 		hand2.remove(hand.indexOf(atile7));
 		hand2.remove(hand.indexOf(atile12));
@@ -359,7 +359,7 @@ public class StrategyTwoTest {
 		testAI.getStrategy().setHand(hand2);
 		String command = testAI.getStrategy().generateCommand();
 		//first play run
-		assertEquals("Play 2 3 4 7", command);
+		assertEquals("Play 2 3 5 6", command);
 		//remove hand R1 R2 R3 R4
 		hand2.remove(hand.indexOf(atile2));
 		hand2.remove(hand.indexOf(atile3));
@@ -369,14 +369,15 @@ public class StrategyTwoTest {
 //B6, B11, R3, R4, G5, G10, O7, O11, JK, JK
 		command = testAI.getStrategy().generateCommand();
 		//play second run
-		assertEquals("Play 2 3 9", command);
+		assertEquals("Play 2 3 8", command);
 		hand2.remove(hand.indexOf(atile5));
 		hand2.remove(hand.indexOf(atile8));
 		hand2.remove(hand.indexOf(aJoker));
-//B6, B11, G5, G10, O7, O11, JK
+//B5, B11, G5, G11, O5, O11, JK
 		command = testAI.getStrategy().generateCommand();
 		//no run to play , play first group
-		assertEquals("Play 4 2 0", command);
+
+		assertEquals("Play 5 3 1 6", command);
 		hand2.remove(hand.indexOf(atile6));
 		hand2.remove(hand.indexOf(atile7));
 		hand2.remove(hand.indexOf(atile12));
@@ -434,7 +435,8 @@ public class StrategyTwoTest {
 		table.get(0).removeTail();
 		meld3.addTail(atile4);
 		command = testAI.getStrategy().generateCommand();
-		assertEquals("Play 1 0", command);
+		System.out.println("hand2:" +hand2);
+		assertEquals("Play 0 1", command);
 		Meld meld4 = new Meld(melds);
 		hand2.remove(hand.indexOf(atile9));
 		hand2.remove(hand.indexOf(atile10));
@@ -509,26 +511,29 @@ public class StrategyTwoTest {
 			fail();
 		}
 		hand.add(atile1);
-		hand.add(atile1);
-		hand.add(atile1);
-		hand.add(atile1);
-		hand.add(atile1);
-		hand.add(atile1);
-		hand.add(atile1);
-		hand.add(atile1);
-		hand.add(atile1);
-		hand.add(atile1);
-		hand.add(atile1);
-		hand.add(atile1);
-		hand.add(atile1);
-		hand.add(atile1);
+		hand.add(atile2);
+		hand.add(atile3);
+		hand.add(atile4);
+		hand.add(atile5);
+		hand.add(atile6);
+		hand.add(atile7);
+		hand.add(atile8);
+		hand.add(atile9);
+		hand.add(atile10);
+		hand.add(atile11);
+		hand.add(atile12);
+		hand.add(atile13);
+		hand.add(aJoker);
 		Hand hand2 = new Hand(hand);
+		
 //B6, B11, R1, R2, R3, R3, R4, R4, G5, G10, O7, O11, JK, JK
 		testAI.getStrategy().setHand(hand2);
+		
 		ArrayList<Meld> table2 = new ArrayList<Meld>();
 		testAI.getStrategy().update(table2);
 		testAI.getStrategy().update(1, 10);
 		testAI.getStrategy().update(2, 14);
+		
 		String command = testAI.getStrategy().generateCommand();
 		command = testAI.getStrategy().generateCommand();
 		System.out.println(command);
