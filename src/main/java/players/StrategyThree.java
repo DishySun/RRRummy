@@ -26,8 +26,10 @@ public class StrategyThree implements AIStrategy, Observer {
 	boolean moveGroup2Table;
 	private int countInitial;
 	private String returnString;
+	private AILogic logic;
 	
 	public StrategyThree () {
+		logic = new AILogic(myHand,table);
 		countInitial = 0;
 		moveRunIndex = 0;
 		moveSetIndex = 0;
@@ -39,6 +41,7 @@ public class StrategyThree implements AIStrategy, Observer {
 	
 	@Override
 	public String generateCommand() {
+		logic = new AILogic(myHand,table);
 		returnString = "";
 		run = new ArrayList<Tile>();
 		group = new ArrayList<Tile>();
@@ -47,10 +50,11 @@ public class StrategyThree implements AIStrategy, Observer {
 		boolean hasLess = false;
 		
 		if(countInitial < 30) {	//play initial
-			if(myHand.checkInitialSum() >= 30-countInitial) {
-				run = myHand.findRun();
+			if(logic.checkInitialSum() >= 30-countInitial) {
+				run = logic.findRun();
+				//System.out.println(logic.findRun());
 				if(run != null) {
-					countInitial += myHand.checkSum(run);
+					countInitial += logic.checkSum(run);
 					myHand.sort();
 					returnString = "Play";
 					for(int i=0; i<run.size();i++) {
@@ -59,10 +63,10 @@ public class StrategyThree implements AIStrategy, Observer {
 					return returnString;
 				}
 				else {
-					group = myHand.findGroup4Initial();
+					group = logic.findSet();
 					myHand.sort();
 					if(group != null) {
-						countInitial += myHand.checkSum(group);
+						countInitial += logic.checkSum(group);
 						myHand.sort();
 						returnString = "Play";
 						for(int i=0; i<group.size();i++) {
@@ -88,7 +92,7 @@ public class StrategyThree implements AIStrategy, Observer {
 			}
 			if(hasLess || moveRun2Table || moveSet2Table) {		//has 3 fewer tiles than p3, play all request use of table
 				//System.out.println("Some one has 3 fewer tiles than this AI");
-				run = myHand.findRun();
+				run = logic.findRun();
 				if(run != null) {
 					myHand.sort();
 					returnString = "Play";
@@ -97,7 +101,7 @@ public class StrategyThree implements AIStrategy, Observer {
 					}
 					return returnString;
 				}
-				group = myHand.findGroup();
+				group = logic.findSet();
 				myHand.sort();
 				if(group != null) {
 					myHand.sort();
@@ -107,7 +111,7 @@ public class StrategyThree implements AIStrategy, Observer {
 					}
 					return returnString;
 				}	
-				meldOnTable = myHand.findMeldsOnTable(table);
+				meldOnTable = logic.findMeldsOnTable();
 				myHand.sort();
 				if(meldOnTable != null) {
 					for(Entry<Tile, Integer>Entry : meldOnTable.entrySet()) {
@@ -126,7 +130,7 @@ public class StrategyThree implements AIStrategy, Observer {
 						//System.out.println("--"+myHand +  " " +moveRun2Table);
 				if(!moveRun2Table) {		//if not in move run progress
 					for(Meld m : table) {
-						moveRunToTable = myHand.findRunMove(m);
+						moveRunToTable = logic.findRunMove(m);
 						if(moveRunToTable != null) {
 							moveRun2Table = true;
 							tempMeld = m;
@@ -163,7 +167,7 @@ public class StrategyThree implements AIStrategy, Observer {
 				
 				if(!moveSet2Table) {		//if not in move set progress
 					for(Meld m : table) {
-						moveGroupToTable = myHand.findSetMove(m);
+						moveGroupToTable = logic.findSetMove(m);
 						myHand.sort();
 						if(moveGroupToTable != null) {
 							moveSet2Table = true;
@@ -201,9 +205,9 @@ public class StrategyThree implements AIStrategy, Observer {
 				System.out.println("p3 could play but has not tile to play");
 				return "END";
 			}else {	// no less 3
-				if(myHand.canPlayAll(table)) {	//if can play all, request use of table
+				if(logic.canPlayAll()) {	//if can play all, request use of table
 					
-					run = myHand.findRun();
+					run = logic.findRun();
 					if(run != null) {
 						myHand.sort();
 						returnString = "Play";
@@ -212,7 +216,7 @@ public class StrategyThree implements AIStrategy, Observer {
 						}
 						return returnString;
 					} else {
-						group = myHand.findGroup();
+						group = logic.findSet();
 						myHand.sort();
 						if(group != null) {
 							myHand.sort();
@@ -222,7 +226,7 @@ public class StrategyThree implements AIStrategy, Observer {
 							}
 							return returnString;
 						}	else {
-							meldOnTable = myHand.findMeldsOnTable(table);
+							meldOnTable = logic.findMeldsOnTable();
 							if(meldOnTable != null) {
 								for(Entry<Tile, Integer>Entry : meldOnTable.entrySet()) {
 									Tile tile = Entry.getKey();
@@ -242,7 +246,7 @@ public class StrategyThree implements AIStrategy, Observer {
 					}
 				}else {
 					// can not win in this turn, no player has 3 less tile, play tile that match meld on table
-						meldOnTable = myHand.findMeldsOnTable(table);
+						meldOnTable = logic.findMeldsOnTable();
 						if(meldOnTable != null) {
 							for(Entry<Tile, Integer>Entry : meldOnTable.entrySet()) {
 								Tile tile = Entry.getKey();
@@ -258,7 +262,7 @@ public class StrategyThree implements AIStrategy, Observer {
 						
 						if(!moveRun2Table) {		//if not in move run progress
 							for(Meld m : table) {
-								moveRunToTable = myHand.findRunMove(m);
+								moveRunToTable = logic.findRunMove(m);
 								myHand.sort();
 								if(moveRunToTable != null) {
 									moveRun2Table = true;
@@ -291,7 +295,7 @@ public class StrategyThree implements AIStrategy, Observer {
 						
 						if(!moveSet2Table) {		//if not in move set progress
 							for(Meld m : table) {
-								moveGroupToTable = myHand.findSetMove(m);
+								moveGroupToTable = logic.findSetMove(m);
 								myHand.sort();
 								if(moveGroupToTable != null) {
 									moveSet2Table = true;

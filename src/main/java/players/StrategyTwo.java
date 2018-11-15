@@ -25,9 +25,11 @@ public class StrategyTwo implements AIStrategy, Observer{
 	private Meld tempMeld;
 	private int countInitial;
 	private String returnString;
+	private AILogic logic;
 	
 	public StrategyTwo () {
 		playerHandSizes = new HashMap<Integer, Integer>();
+		logic = new AILogic(myHand,table);
 		countInitial = 0;
 		moveRunIndex = 0;
 		moveSetIndex = 0;
@@ -38,6 +40,7 @@ public class StrategyTwo implements AIStrategy, Observer{
 	
 	@Override
 	public String generateCommand() {
+		logic = new AILogic(myHand,table);
 		returnString = "";
 		run = new ArrayList<Tile>();
 		group = new ArrayList<Tile>();
@@ -54,10 +57,10 @@ public class StrategyTwo implements AIStrategy, Observer{
 				} 
 			}
 			if(hasInitial) {
-				if(myHand.checkInitialSum() >= 30-countInitial) {
-					run = myHand.findRun();
+				if(logic.checkInitialSum() >= 30-countInitial) {
+					run = logic.findRun();
 					if(run != null) {
-						countInitial += myHand.checkSum(run);
+						countInitial += logic.checkSum(run);
 						myHand.sort();
 						returnString = "Play";
 						for(int i=0; i<run.size();i++) {
@@ -66,10 +69,10 @@ public class StrategyTwo implements AIStrategy, Observer{
 						return returnString;
 					}
 					else {
-						group = myHand.findGroup4Initial();
+						group = logic.findSet();
 						myHand.sort();
 						if(group != null) {
-							countInitial += myHand.checkSum(group);
+							countInitial += logic.checkSum(group);
 							myHand.sort();
 							returnString = "Play";
 							for(int i=0; i<group.size();i++) {
@@ -89,8 +92,8 @@ public class StrategyTwo implements AIStrategy, Observer{
 			} else {
 				return "END";}
 		}else {
-			if(myHand.canPlayAll(table)) {	//if can play all, request use of table
-				run = myHand.findRun();
+			if(logic.canPlayAll()) {	//if can play all, request use of table
+				run = logic.findRun();
 				if(run != null) {
 					myHand.sort();
 					returnString = "Play";
@@ -99,7 +102,7 @@ public class StrategyTwo implements AIStrategy, Observer{
 					}
 					return returnString;
 				} else {
-					group = myHand.findGroup();
+					group = logic.findSet();
 					myHand.sort();
 					if(group != null) {
 						myHand.sort();
@@ -109,7 +112,7 @@ public class StrategyTwo implements AIStrategy, Observer{
 						}
 						return returnString;
 					}	else {
-						meldOnTable = myHand.findMeldsOnTable(table);
+						meldOnTable = logic.findMeldsOnTable();
 						if(meldOnTable != null) {
 							for(Entry<Tile, Integer>Entry : meldOnTable.entrySet()) {
 								Tile tile = Entry.getKey();
@@ -127,7 +130,7 @@ public class StrategyTwo implements AIStrategy, Observer{
 					}
 				}
 			}else {		// can not win, play tile that match meld on table
-				meldOnTable = myHand.findMeldsOnTable(table);
+				meldOnTable = logic.findMeldsOnTable();
 				if(meldOnTable != null) {
 					for(Entry<Tile, Integer>Entry : meldOnTable.entrySet()) {
 						Tile tile = Entry.getKey();
@@ -141,7 +144,7 @@ public class StrategyTwo implements AIStrategy, Observer{
 					}
 				}
 	
-				meldOnTable = myHand.findMeldsOnTable(table);
+				meldOnTable = logic.findMeldsOnTable();
 				myHand.sort();
 				if(meldOnTable != null) {
 					for(Entry<Tile, Integer>Entry : meldOnTable.entrySet()) {
@@ -157,7 +160,7 @@ public class StrategyTwo implements AIStrategy, Observer{
 				} else{
 					if(!moveRun2Table) {		//if not in move run progress
 						for(Meld m : table) {
-							moveRunToTable = myHand.findRunMove(m);
+							moveRunToTable = logic.findRunMove(m);
 							myHand.sort();
 							if(moveRunToTable != null) {
 								moveRun2Table = true;
@@ -190,7 +193,7 @@ public class StrategyTwo implements AIStrategy, Observer{
 					
 					if(!moveSet2Table) {		//if not in move set progress
 						for(Meld m : table) {
-							moveGroupToTable = myHand.findSetMove(m);
+							moveGroupToTable = logic.findSetMove(m);
 							myHand.sort();
 							if(moveGroupToTable != null) {
 								moveSet2Table = true;
