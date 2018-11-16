@@ -17,7 +17,7 @@ public class AILogic {
 	public int checkSum(ArrayList<Tile> tileArray) {
 		// TODO Auto-generated method stub
 		boolean isRun = true;
-		if(tileArray == null) return 0;
+		if(tileArray == null || tileArray.size() < 3) return 0;
 		int count = 0;
 		int tilePosition = 0;
 		for(int i=0; i<tileArray.size();i++) {
@@ -94,11 +94,9 @@ public class AILogic {
 			if(hand.getTile(i).getColor() == Tile.Color.JOKER) {
 				jokerNum++;
 				jokerorg++;
+				hasJoker = true;
 			}
-				
-			hasJoker = true;
 		}
-		
 		
 		tile4Run.add(hand.getTile(0));
 		for(int i=1; i<hand.size()-jokerNum;i++) {
@@ -128,7 +126,8 @@ public class AILogic {
 				}
 			}
 		}
-
+		if(checkSum(tile4Run) >= checkSum(LargestRun) && tile4Run.size() >= 3)
+			LargestRun = tile4Run;
 		//if not return above, check if has joker, if has,run, else return null
 		tile4Run = new ArrayList<Tile>();
 		playIndex = 0;
@@ -272,8 +271,8 @@ public class AILogic {
 			if(hand.getTile(i).getColor() == Tile.Color.JOKER) {
 				jokerNum++;
 				jokerorg++;
+				hasJoker = true;
 			}
-			hasJoker = true;
 		}
 		
 		tile4Set.add(hand.getTile(0));
@@ -298,6 +297,9 @@ public class AILogic {
 				}
 			}
 		}
+
+		if( checkSum(tile4Set) >= checkSum(LargestSet) && tile4Set.size() >= 3)
+			LargestSet = tile4Set;
 		//if not return above, check if has joker, if has,run, else return null
 		if(hand.size() == 0)
 			return null;
@@ -405,10 +407,17 @@ public class AILogic {
 		int count = 0;
 		while(true) {
 			run = findRun();	
+			//System.out.println("RUN: " + run);
 			if(run != null) {
 				count += checkSum(run);
-				for(Tile tile : run) {
-					temphand.remove(temphand.indexOf(tile));
+				for(int i = run.size()-1; i>=0;i--) {		//remove joker fisrt, beacuse of the order
+					if(run.get(i).isJoker()) {
+						temphand.remove(temphand.size()-1);
+						run.remove(i);
+					}
+				}
+				for(int i = run.size()-1; i>=0;i--) {
+						temphand.remove(temphand.indexOf(run.get(i)));
 				}
 			}	else
 					break;
@@ -422,8 +431,15 @@ public class AILogic {
 				Set = findSet();
 				if(Set != null) {
 					count += checkSum(Set);
-					for(Tile tile : Set) {
-						temphand.remove(temphand.indexOf(tile));
+					for(int i = Set.size()-1; i>=0;i--) {		//remove joker fisrt, beacuse of the order
+						if(Set.get(i).isJoker()) {
+							temphand.remove(0);
+							Set.remove(i);
+						}
+					}
+					for(int i = 0; i<Set.size();i++) {
+						temphand.sort();
+						temphand.remove(temphand.indexOf(Set.get(i)));
 					}
 				}	else
 						break;
@@ -478,8 +494,8 @@ public class AILogic {
 			if(hand.getTile(i).getColor() == Tile.Color.JOKER) {
 				jokerNum++;
 				jokerorg++;
+				hasJoker = true;
 			}
-			hasJoker = true;
 		}
 		tile4Run.add(hand.getTile(0));
 		for(int i=1; i<hand.size()-jokerNum;i++) {
@@ -615,8 +631,8 @@ public class AILogic {
 			if(hand.getTile(i).getColor() == Tile.Color.JOKER) {
 				jokerNum++;
 				jokerorg++;
+				hasJoker = true;
 			}
-			hasJoker = true;
 		}
 		
 		tile4Set.add(hand.getTile(0));
@@ -766,10 +782,15 @@ public class AILogic {
 			//System.out.println(temphand);
 				run = findRun();
 				if(run != null) {
-					System.out.println("RUN:" + run);
-					for(Tile tile : run) {
-						temphand.remove(temphand.indexOf(tile));
-						count++;
+					//System.out.println("RUN:" + run);
+					for(int i = run.size()-1; i>=0;i--) {		//remove joker fisrt, beacuse of the order
+						if(run.get(i).isJoker()) {
+							temphand.remove(temphand.size()-1);
+							run.remove(i);
+						}
+					}
+					for(int i = run.size()-1; i>=0;i--) {
+							temphand.remove(temphand.indexOf(run.get(i)));
 					}
 				}	else
 						break;
@@ -780,9 +801,15 @@ public class AILogic {
 				group = findSet();
 				if(group != null) {
 					//System.out.println("Set: " + group);
-					for(Tile tile : group) {
-						temphand.remove(temphand.indexOf(tile));
-						count++;
+					for(int i = group.size()-1; i>=0;i--) {		//remove joker fisrt, beacuse of the order
+						if(group.get(i).isJoker()) {
+							temphand.remove(0);
+							group.remove(i);
+						}
+					}
+					for(int i = 0; i<group.size();i++) {
+						temphand.sort();
+						temphand.remove(temphand.indexOf(group.get(i)));
 					}
 				}else
 						break;
@@ -821,4 +848,106 @@ public class AILogic {
 		hand = orghand;
 		return count == size;
 	}
+
+	/*
+	 * possible situation 1 and 2: 
+	 * 1: meld: a s d f g, hand d f // f g // a s
+	 * get rid of f g and a s
+	 * cut one before f
+	 * 2: meld a s d f g, hand d // a // g
+	 * get rid of a and g
+	 * cut one before d
+	 * anytime, cut left, and add to the original meld
+	 * 
+	 */
+	public HashMap<ArrayList<Tile>, Integer> findRunCut(Meld meld) {
+		// TODO Auto-generated method stub
+		if(hand.size() == 0)
+			return null;
+		HashMap<ArrayList<Tile>, Integer> runCanSet = new HashMap<ArrayList<Tile>,Integer>(); //<tile to play, index>
+		ArrayList<Tile> tile4Run = new ArrayList<Tile>();
+		boolean disconnect = true;	// check if next tile number & color is connecte
+		boolean run = true;		// used to stop loop when reach 30 points
+		int playIndex = 0;	//point to tile4Run position;
+		int handIndex;  //used when looping hand cards
+		int jokerNum = 0;	// joker number
+		int jokerorg = 0;	// joker number (final)
+		boolean hasJoker = false;
+		Meld tempmeld = new Meld(meld);
+		hand.sort();		//sort
+		//check if has joker
+		for(int i = 0; i<hand.size();i++) {			//count size of joker;
+			if(hand.getTile(i).getColor() == Tile.Color.JOKER) {
+				jokerNum++;
+				jokerorg++;
+				hasJoker = true;
+			}
+		}
+		tile4Run.add(hand.getTile(0));
+		for(int i=1; i<hand.size()-jokerNum;i++) {
+			if(tile4Run.get(playIndex).getColor() == hand.getTile(i).getColor() 
+					&& hand.getTile(i).getNumber()-1 == tile4Run.get(playIndex).getNumber()) {
+				tile4Run.add(hand.getTile(i));
+				playIndex++;
+				disconnect  = false;
+				if(i == hand.size()-jokerNum-1) 
+					disconnect = true;
+			}else
+				disconnect = true;
+		
+			if(disconnect) {
+				disconnect  = false;
+				if(tempmeld.isRun()) {
+					if(tile4Run.size() == 2) {
+						if(tempmeld.size() >= 4) {	// 1 a b 4
+							for(int t=0; t<tempmeld.size()-1;t++) {
+								if(tile4Run.get(0).toString().equals(tempmeld.getTile(t).toString())) {
+									if(t != 0 && t + 1 != tempmeld.size()-1) {	// can cut 0 | a b 4
+										runCanSet.put(tile4Run, t-1);
+										return runCanSet;
+									} else
+										break;
+								}  
+							}
+						}
+					} else if (tile4Run.size() == 1) {
+						if(tempmeld.size() >= 5) {	// 1 2 a 4 5
+							for(int t=0; t<tempmeld.size()-1;t++) {
+								if(tile4Run.get(0).toString().equals(tempmeld.getTile(t).toString())) {
+									if(t >= 2 && t + 1 != tempmeld.size()-1) {	// can cut 0 1 | a 3 4
+										runCanSet.put(tile4Run, t-1);
+										return runCanSet;
+									}else
+										break;
+								}
+							}
+						}
+					}
+					//cannot be cutted, check next
+					tile4Run = new ArrayList<Tile>();
+					tile4Run.add(hand.getTile(i));
+					playIndex = 0;
+				} else {	//meld is set
+					return null;
+				}
+			}
+		}
+		
+		if(hand.size() == 1) {
+			if(tempmeld.size() >= 5) {	// 1 2 a 4 5
+				for(int t=0; t<tempmeld.size()-1;t++) {
+					if(tile4Run.get(0).toString().equals(tempmeld.getTile(t).toString())) {
+						if(t >= 2 && t + 1 != tempmeld.size()-1) {	// can cut 0 1 | a 3 4
+							runCanSet.put(tile4Run, t-1);
+							return runCanSet;
+						}else
+							break;
+					}
+				}
+			}
+		}
+		return null;
+	}
+	
+	
 }

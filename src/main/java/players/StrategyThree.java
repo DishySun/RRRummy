@@ -15,13 +15,18 @@ public class StrategyThree implements AIStrategy, Observer {
 	private HashMap<Integer, Integer> playerHandSizes;
 	private ArrayList<Tile> run;
 	private ArrayList<Tile> group;
+	private ArrayList<Tile> runCut;
 	private HashMap<Tile,Integer> meldOnTable;
 	private HashMap<ArrayList<Tile>,Integer> moveRunToTable;
 	private HashMap<ArrayList<Tile>,Integer> moveGroupToTable;
+	private HashMap<ArrayList<Tile>,Integer> cutRunToTable;
 	boolean moveRun2Table;
 	boolean moveSet2Table;
+	boolean cutRun2Table;
+	boolean InMoveProg;
 	int moveRunIndex;
 	int moveSetIndex;
+	int cutRunIndex;
 	private Meld tempMeld;
 	boolean moveGroup2Table;
 	private int countInitial;
@@ -33,8 +38,11 @@ public class StrategyThree implements AIStrategy, Observer {
 		countInitial = 0;
 		moveRunIndex = 0;
 		moveSetIndex = 0;
+		cutRunIndex = 0;
 		moveRun2Table = false;
 		moveSet2Table = false;
+		InMoveProg = false;
+		cutRun2Table = false;
 		tempMeld = new Meld();
 		playerHandSizes = new HashMap<Integer, Integer>();
 	}
@@ -45,6 +53,7 @@ public class StrategyThree implements AIStrategy, Observer {
 		returnString = "";
 		run = new ArrayList<Tile>();
 		group = new ArrayList<Tile>();
+		runCut = new ArrayList<Tile>();
 		meldOnTable = new HashMap<Tile,Integer>();
 		
 		boolean hasLess = false;
@@ -90,11 +99,11 @@ public class StrategyThree implements AIStrategy, Observer {
 					break;
 				} 
 			}
-			if(hasLess || moveRun2Table || moveSet2Table) {		//has 3 fewer tiles than p3, play all request use of table
+			if((hasLess || moveRun2Table || moveSet2Table) && !InMoveProg) {		//has 3 fewer tiles than p3, play all request use of table
 				//System.out.println("Some one has 3 fewer tiles than this AI");
 				run = logic.findRun();
+				myHand.sort();
 				if(run != null) {
-					myHand.sort();
 					returnString = "Play";
 					for(int i=0; i<run.size();i++) {
 						returnString += " " + myHand.handIndexOf(run.get(i));
@@ -130,7 +139,7 @@ public class StrategyThree implements AIStrategy, Observer {
 						//System.out.println("--"+myHand +  " " +moveRun2Table);
 				if(!moveRun2Table) {		//if not in move run progress
 					for(Meld m : table) {
-						moveRunToTable = logic.findRunMove(m);
+					moveRunToTable = logic.findRunMove(m);
 						if(moveRunToTable != null) {
 							moveRun2Table = true;
 							tempMeld = m;
@@ -206,7 +215,6 @@ public class StrategyThree implements AIStrategy, Observer {
 				return "END";
 			}else {	// no less 3
 				if(logic.canPlayAll()) {	//if can play all, request use of table
-					
 					run = logic.findRun();
 					if(run != null) {
 						myHand.sort();
@@ -246,6 +254,7 @@ public class StrategyThree implements AIStrategy, Observer {
 					}
 				}else {
 					// can not win in this turn, no player has 3 less tile, play tile that match meld on table
+					InMoveProg = true;
 						meldOnTable = logic.findMeldsOnTable();
 						if(meldOnTable != null) {
 							for(Entry<Tile, Integer>Entry : meldOnTable.entrySet()) {
@@ -325,10 +334,41 @@ public class StrategyThree implements AIStrategy, Observer {
 									returnString += " tail";
 								return returnString;
 						}
-					}
 						
-				
-							
+						if(!cutRun2Table) {	//if not in cut prog
+							for(Meld m : table) {
+								cutRunToTable = logic.findRunCut(m);
+								myHand.sort();
+								if(cutRunToTable != null) {	// can cut
+									cutRun2Table = true;
+									tempMeld = m;
+									for(Entry<ArrayList<Tile>, Integer> Entry : cutRunToTable.entrySet()) {
+										runCut = Entry.getKey();
+										cutRunIndex = Entry.getValue();	// 
+										myHand.sort();
+										returnString = "Cut " + table.indexOf(m) + " at " +cutRunIndex ;
+										return returnString;
+									}
+								}
+							}
+						} else {	// in cut prog
+							meldOnTable = logic.findMeldsOnTable();
+							if(meldOnTable != null) {
+								for(Entry<Tile, Integer>Entry : meldOnTable.entrySet()) {
+									Tile tile = Entry.getKey();
+									int index = Entry.getValue();
+									myHand.sort();
+									if(tile.isJoker())
+										returnString = "Play "  + myHand.handIndexOf(tile) + " to " + index + " " + "tail";
+									else
+										returnString = "Play "  + myHand.handIndexOf(tile) + " to " + index/* + " " + "1"*/;	
+									return returnString;
+								}
+							} else
+								cutRun2Table = false;
+						}
+					}
+				InMoveProg = false;		
 			}
 			//nothing to play
 			return "END";
