@@ -119,6 +119,48 @@ public class AILogicTest {
 		assertEquals(36, i);
 	}
 	
+//B1, B1, B3, B13, R2, R3, R4, R5, R7, R8, R11, R13, G4, O6, O7, O9
+	@Test
+	public void test_findRun() {
+		try {
+			atile1 = new Tile("B1");
+			atile2 = new Tile("B1");
+			atile3 = new Tile("B3");
+			atile4 = new Tile("R2");
+			atile5 = new Tile("R3");
+			atile6 = new Tile("R4");
+			atile7 = new Tile("R5");
+			atile8 = new Tile("R7");
+			atile9 = new Tile("R8");
+			atile10 = new Tile("R11");
+			atile11 = new Tile("R13");
+			atile12 = new Tile("G4");
+			atile13 = new Tile("O6");
+			btile1 = new Tile("O7");
+			btile2 = new Tile("O9");
+		}catch(InvalidTileException e) {
+			fail();
+		}
+		hand.add(atile1);
+		hand.add(atile2);
+		hand.add(atile3);
+		hand.add(atile4);
+		hand.add(atile5);
+		hand.add(atile6);
+		hand.add(atile7);
+		hand.add(atile8);
+		hand.add(atile9);
+		hand.add(atile10);
+		hand.add(atile11);
+		hand.add(atile12);
+		hand.add(atile13);
+		hand.add(btile1);
+		hand.add(btile2);
+		System.out.println(hand);
+		tileArray = logic.findRun();
+		assertEquals("[R2, R3, R4, R5]", tileArray.toString());
+	}
+	
 	@Test
 	public void test_findRun0() {
 		try {
@@ -967,4 +1009,80 @@ public class AILogicTest {
 		assertTrue(canPlay);
 	}
 	
+	@Test
+	public void test_findCutRun() throws AbleToAddBothSideException {
+		//test two tile
+		HashMap<ArrayList<Tile>,Integer> tile2play = new HashMap<ArrayList<Tile>,Integer>();
+		try {
+			atile1 = new Tile("R1");
+			atile2 = new Tile("R2");
+			atile3 = new Tile("R3");
+			atile4 = new Tile("R4");
+			atile5 = new Tile("R5");
+			atile6 = new Tile("Joker");
+		}catch(InvalidTileException e) {
+			fail();
+		}
+		Meld melda;
+		Meld meldb;
+		melda = new Meld();
+		meldb = new Meld();
+		melda.add(atile1);
+		melda.add(atile2);
+		melda.add(atile3);
+		melda.add(atile4);
+		melda.add(atile5);
+		melda.add(atile6);
+		meldList.add(melda);
+		assertEquals(1, meldList.size());
+		hand.add(atile2);	
+		hand.add(atile3);
+		tile2play = logic.findRunCut(melda);
+		assertEquals("{[R2, R3]=0}", tile2play.toString());	//move 0 3
+		hand.remove(1);
+		hand.remove(0);
+		hand.add(atile4);
+		hand.add(atile5);
+		tile2play = logic.findRunCut(melda);
+		assertEquals("{[R4, R5]=2}", tile2play.toString());	//move 0 3
+	}
+	
+	@Test
+	public void test_findCutRun2() throws AbleToAddBothSideException {
+		//test find, and play
+		HashMap<ArrayList<Tile>,Integer> tile2play = new HashMap<ArrayList<Tile>,Integer>();
+		try {
+			atile1 = new Tile("R1");
+			atile2 = new Tile("R2");
+			atile3 = new Tile("R3");
+			atile4 = new Tile("R4");
+			atile5 = new Tile("R5");
+			atile6 = new Tile("Joker");
+			atile7 = new Tile("R7");
+			atile8 = new Tile("R8");
+			atile9 = new Tile("Joker");
+		}catch(InvalidTileException e) {
+			fail();
+		}
+		Meld melda;
+		melda = new Meld();
+		melda.add(atile1);
+		melda.add(atile2);
+		melda.add(atile3);
+		melda.add(atile4);
+		melda.add(atile5);
+		melda.add(atile6);
+		meldList.add(melda);
+		assertEquals(1, meldList.size());
+		hand.add(atile3);
+		tile2play = logic.findRunCut(melda);
+		assertEquals("{[R3]=1}", tile2play.toString());	//move 0 3
+		melda.add(atile7);
+		melda.add(atile8);
+		melda.add(atile9);
+		hand.remove(0);
+		hand.add(atile7);
+		tile2play = logic.findRunCut(melda);
+		assertEquals("{[R7]=5}", tile2play.toString());	//move 0 3
+	}
 }

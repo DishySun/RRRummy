@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.omg.CORBA.PUBLIC_MEMBER;
 
 import observer.Subject;
+import rrrummy.AbleToAddBothSideException;
 import rrrummy.InvalidTileException;
 import rrrummy.Meld;
 import rrrummy.Table;
@@ -29,6 +30,132 @@ public class StrategyThreeTest {
 		hand = new ArrayList<Tile>();
 		table = new Table();
 		table.register(testAI.getStrategy());
+	}
+	
+//B5, R5, G2, G3, G6, O1, O2, O5, O9, O10
+	
+	@Test
+	public void test_generateCommand1() {
+		//play init
+		try {
+			atile1 = new Tile("R1");
+			atile2 = new Tile("R2");
+			atile3 = new Tile("R3");
+			atile4 = new Tile("R4");
+			atile5 = new Tile("R3");
+			atile6 = new Tile("B6");
+			atile7 = new Tile("O7");
+			atile8 = new Tile("R4");
+			atile9 = new Tile("G10");
+			atile10 = new Tile("B11");
+			atile11 = new Tile("O11");
+			atile12 = new Tile("G5");
+			atile13 = new Tile("B13");
+			aJoker = new Tile("J");
+			bJoker = new Tile("J");
+		}catch(InvalidTileException e) {
+			fail();
+		}
+		HashMap<Integer, Integer> handSizes = new HashMap<Integer, Integer>();
+		ArrayList<Meld> table = new ArrayList<Meld>();
+		testAI.getStrategy().update(table);
+		testAI.getStrategy().update(1, 1);
+		testAI.getStrategy().update(2, 5);
+		hand.add(atile1);
+		hand.add(atile2);
+		hand.add(atile3);
+		hand.add(atile4);
+		hand.add(atile5);
+		hand.add(atile6);
+		hand.add(atile7);
+		hand.add(atile8);
+		hand.add(atile9);
+		hand.add(atile10);
+		hand.add(atile11);
+		hand.add(atile12);
+		hand.add(bJoker);
+		hand.add(aJoker);
+		
+		Hand hand2 = new Hand(hand);
+//B6, B11, R1, R2, R3, R3, R4, R4, G5, G10, O7, O11, JK, JK
+		testAI.getStrategy().setHand(hand2);
+		hand2.sort();
+		String command = testAI.getStrategy().generateCommand();
+		//first play run
+		assertEquals("Play 2 3 5 6", command);
+		//remove hand R1 R2 R3 R4
+		hand2.remove(hand.indexOf(atile2));
+		hand2.remove(hand.indexOf(atile3));
+		hand2.remove(hand.indexOf(atile4));
+		hand2.remove(hand.indexOf(atile1));
+		testAI.getStrategy().setHand(hand2);
+//B6, B11, R3, R4, G5, G10, O7, O11, JK, JK
+		hand2.sort();
+		command = testAI.getStrategy().generateCommand();
+		//play second run
+		assertEquals("Play 2 3 8", command);
+		hand2.remove(hand.indexOf(atile5));
+		hand2.remove(hand.indexOf(atile8));
+		hand2.remove(hand.indexOf(aJoker));
+//B6, B11, G5, G10, O7, O11, JK
+		hand2.sort();
+		command = testAI.getStrategy().generateCommand();
+		//no run to play , play first group
+		assertEquals("Play 5 1 6", command);
+		hand2.remove(hand.indexOf(atile10));
+		hand2.remove(hand.indexOf(atile11));
+		hand2.remove(hand.indexOf(bJoker));
+//G5, B6, O7, G10
+		hand2.sort();
+		command = testAI.getStrategy().generateCommand();
+		//after initial,2 player, no one has less 3 tile than ai, nothing to play, end
+		
+		try {
+			atile1 = new Tile("B5");
+			atile2 = new Tile("R5");
+			atile3 = new Tile("G2");
+			atile4 = new Tile("G3");
+			atile5 = new Tile("G6");
+			atile6 = new Tile("O1");
+			atile7 = new Tile("O2");
+			atile8 = new Tile("O5");
+			atile9 = new Tile("O9");
+			atile10 = new Tile("O10");
+			
+			atile11 = new Tile("R2");
+			atile12 = new Tile("R3");
+			atile13 = new Tile("R3");
+			aJoker = new Tile("R4");
+		}catch(InvalidTileException e) {
+			fail();
+		}
+		table = new ArrayList<Meld>();
+		Meld meld = new Meld();
+		meld.addTail(atile11);
+		meld.addTail(atile12);
+		meld.addTail(atile13);
+		meld.addTail(aJoker);
+		testAI.getStrategy().update(table);
+		testAI.getStrategy().update(1, 11);
+		testAI.getStrategy().update(2, 1);
+		hand = new ArrayList<Tile>();
+		hand.add(atile1);
+		hand.add(atile2);
+		hand.add(atile3);
+		hand.add(atile4);
+		hand.add(atile5);
+		hand.add(atile6);
+		hand.add(atile7);
+		hand.add(atile8);
+		hand.add(atile9);
+		hand.add(atile10);
+		hand2 = new Hand(hand);
+		testAI.initHand(hand);
+		testAI.getStrategy().setHand(hand2);
+		testAI.printHand();
+		command = testAI.getStrategy().generateCommand();
+		//
+		assertEquals("Play 7 1 0", command);
 	}
 	
 	@Test
@@ -57,7 +184,7 @@ public class StrategyThreeTest {
 		ArrayList<Meld> table = new ArrayList<Meld>();
 		testAI.getStrategy().update(table);
 		testAI.getStrategy().update(1, 1);
-		testAI.getStrategy().update(2, 5);
+		testAI.getStrategy().update(2, 3);
 		hand.add(atile1);
 		hand.add(atile2);
 		hand.add(atile3);
@@ -858,8 +985,6 @@ public class StrategyThreeTest {
 		hand2.remove(hand.indexOf(atile3));
 		hand2.add(atile1);
 //B6, R1, G5, G10, O7
-		System.out.println(table);
-		System.out.println("hand: " + hand2);
 		command = testAI.getStrategy().generateCommand();
 		//2 player, one has less 3 tile than ai, tried play, but END
 		assertEquals("END", command);
@@ -877,5 +1002,68 @@ public class StrategyThreeTest {
 		//2 player, one has less 3 tile than ai, play 2 table
 		System.out.println(command);
 		assertEquals("Play 1 to 0", command);
+	}
+	
+	@Test
+	public void test_cut() throws AbleToAddBothSideException {
+		//END
+		try {
+			atile1 = new Tile("R1");
+			atile2 = new Tile("R2");
+			atile3 = new Tile("R3");
+			atile4 = new Tile("R4");
+			atile5 = new Tile("R5");
+			atile6 = new Tile("R6");
+			atile7 = new Tile("R7");
+			atile8 = new Tile("R8");
+			atile9 = new Tile("R9");
+			aJoker = new Tile("J");
+			bJoker = new Tile("J");
+		}catch(InvalidTileException e) {
+			fail();
+		}
+		ArrayList<Meld> table = new ArrayList<Meld>();
+		testAI.getStrategy().update(table);
+		testAI.getStrategy().update(1, 1);
+		testAI.getStrategy().update(2, 5);
+		hand.add(atile9);
+		hand.add(aJoker);
+		hand.add(bJoker);
+		
+		Hand hand2 = new Hand(hand);
+		testAI.initHand(hand);
+		testAI.getStrategy().setHand(hand2);
+		String command = testAI.getStrategy().generateCommand();
+		//play initial
+		assertEquals("Play 0 1 2", command);
+		hand.removeAll(hand);
+		hand2 = new Hand(hand);
+		Meld melda;
+		Meld meldb;
+		melda = new Meld();
+		meldb = new Meld();
+		melda.add(atile1);
+		melda.add(atile2);
+		melda.add(atile3);
+		melda.add(atile4);
+		melda.add(atile5);
+		melda.add(atile6);
+		table.add(melda);
+		hand2.add(atile3);
+		command = testAI.getStrategy().generateCommand();
+		assertEquals("Cut 0 at 1", command);
+		melda.removeTail();
+		melda.removeTail();
+		melda.removeTail();
+		melda.removeTail();
+		meldb.add(atile3);
+		meldb.add(atile4);
+		meldb.add(atile5);
+		meldb.add(atile6);
+		table.add(meldb);
+		System.out.println(hand2);
+		System.out.println(table);
+		command = testAI.getStrategy().generateCommand();
+		assertEquals("Play 0 to 0", command);
 	}
 }
