@@ -786,6 +786,36 @@ public class AILogicTest {
 	}
 	
 	@Test
+	public void test_findMoveRun2() throws AbleToAddBothSideException {
+		//test find, and play
+		HashMap<ArrayList<Tile>,Integer> tile2play = new HashMap<ArrayList<Tile>,Integer>();
+		try {
+			atile1 = new Tile("G2");
+			atile2 = new Tile("G3");
+			atile3 = new Tile("G4");
+			atile4 = new Tile("R4");
+			atile5 = new Tile("B4");
+			atile6 = new Tile("O4");
+		}catch(InvalidTileException e) {
+			fail();
+		}
+		Meld melda;
+		melda = new Meld();
+		melda.add(atile3);
+		melda.add(atile4);
+		melda.add(atile5);
+		melda.add(atile6);
+		meldList.add(melda);
+		assertEquals(1, meldList.size());
+		hand.add(atile1);	//r6
+		hand.add(atile2);//r5
+		
+		tile2play = logic.findRunMove(melda);
+
+		assertEquals("{[G2, G3]=0}", tile2play.toString());	
+	}
+	
+	@Test
 	public void test_findMoveSet() throws AbleToAddBothSideException {
 		//test find, and play
 		HashMap<ArrayList<Tile>,Integer> tile2play = new HashMap<ArrayList<Tile>,Integer>();
@@ -1084,5 +1114,115 @@ public class AILogicTest {
 		hand.add(atile7);
 		tile2play = logic.findRunCut(melda);
 		assertEquals("{[R7]=5}", tile2play.toString());	//move 0 3
+	}
+	
+	@Test
+	public void test_replace() throws AbleToAddBothSideException {
+		//test replace, run
+		HashMap<Tile,Integer> tile2play = new HashMap<Tile,Integer>();
+		try {
+			atile1 = new Tile("R1");
+			atile2 = new Tile("R2");
+			atile3 = new Tile("R3");
+			atile4 = new Tile("R4");
+			atile5 = new Tile("R5");
+			atile6 = new Tile("Joker");
+			atile7 = new Tile("R6");
+			atile8 = new Tile("R8");
+			atile9 = new Tile("Joker");
+			atile10 = new Tile("Joker");
+			atile11 = new Tile("Joker");
+		}catch(InvalidTileException e) {
+			fail();
+		}
+		Meld melda;
+		melda = new Meld();
+		melda.add(atile6);
+		melda.addTail(atile2);
+		melda.addTail(atile11);
+		melda.addTail(atile10);
+		melda.add(atile5);
+		melda.add(atile9);
+		meldList.add(melda);
+		assertEquals(1, meldList.size());
+		hand.add(atile7);
+		tile2play = logic.findReplace(melda);
+		assertEquals("{R6=5}", tile2play.toString());	
+		hand.remove(0);
+		hand.add(atile1);
+		tile2play = logic.findReplace(melda);
+		assertEquals("{R1=0}", tile2play.toString());	
+		hand.remove(0);
+		hand.add(atile3);
+		tile2play = logic.findReplace(melda);
+		assertEquals("{R3=2}", tile2play.toString());	
+		hand.remove(0);
+		hand.add(atile4);
+		tile2play = logic.findReplace(melda);
+		assertEquals("{R4=3}", tile2play.toString());	
+	}
+	
+	@Test
+	public void test_replace2() throws AbleToAddBothSideException {
+		//test replace, set
+		HashMap<Tile,Integer> tile2play = new HashMap<Tile,Integer>();
+		try {
+			atile1 = new Tile("R1");
+			atile2 = new Tile("O1");
+			atile3 = new Tile("B1");
+			atile4 = new Tile("G1");
+			atile5 = new Tile("R5");
+			atile6 = new Tile("Joker");
+			atile7 = new Tile("R6");
+			atile8 = new Tile("R8");
+			atile9 = new Tile("Joker");
+		}catch(InvalidTileException e) {
+			fail();
+		}
+		Meld melda;
+		Meld meldb;
+		Meld meldc;
+		Meld meldd;
+		melda = new Meld();
+		meldb = new Meld();
+		meldc = new Meld();
+		meldd= new Meld();
+		melda.add(atile6);
+		melda.addTail(atile2);
+		melda.add(atile3);
+		melda.add(atile4);
+		hand.add(atile1);
+		hand.add(atile2);
+		hand.add(atile6);
+		tile2play = logic.findReplace(melda);
+		assertEquals("{R1=1}", tile2play.toString());	
+		hand.remove(0);
+		meldb.add(atile1);
+		meldb.add(atile2);
+		meldb.add(atile3);
+		meldb.add(atile6);
+		hand.add(atile1);
+		hand.add(atile4);
+		hand.add(atile6);
+		tile2play = logic.findReplace(meldb);
+		assertEquals("{G1=3}", tile2play.toString());	
+		meldc.add(atile1);
+		meldc.addTail(atile9);
+		meldc.addTail(atile6);
+		meldc.add(atile4);
+		hand.remove(0);
+		hand.add(atile2);
+		tile2play = logic.findReplace(meldc);
+		assertEquals("{O1=1}", tile2play.toString());	
+		hand.remove(0);
+		hand.add(atile3);
+		tile2play = logic.findReplace(meldc);
+		assertEquals("{B1=1}", tile2play.toString());	
+		meldd.add(atile1);
+		meldd.addTail(atile2);
+		meldd.addTail(atile6);
+		meldd.add(atile4);
+		tile2play = logic.findReplace(meldd);
+		assertEquals("{B1=2}", tile2play.toString());	
 	}
 }

@@ -502,7 +502,7 @@ public class StrategyThreeTest {
 		ArrayList<Meld> table = new ArrayList<Meld>();
 		testAI.getStrategy().update(table);
 		testAI.getStrategy().update(1, 14);
-		testAI.getStrategy().update(2, 14);
+		testAI.getStrategy().update(2, 1);
 		hand.add(atile1);
 		hand.add(atile2);
 		hand.add(atile3);
@@ -550,7 +550,7 @@ public class StrategyThreeTest {
 		hand2.add(atile4);
 		command = testAI.getStrategy().generateCommand();
 		//can not play all tile
-		assertEquals("END", command);
+		assertEquals("Play 3 2 0 4", command);
 		ArrayList<Tile> melds = new ArrayList<Tile>();
 		melds.add(atile1);
 		melds.add(atile2);
@@ -822,7 +822,7 @@ public class StrategyThreeTest {
 		Hand hand2 = new Hand(hand);
 		testAI.getStrategy().update(table);
 		testAI.getStrategy().update(1, 14);
-		testAI.getStrategy().update(2, 9);
+		testAI.getStrategy().update(2, 0);
 		hand.add(atile13);
 		hand.add(atile12);
 		hand.add(atile11);
@@ -885,6 +885,7 @@ public class StrategyThreeTest {
 		command = testAI.getStrategy().generateCommand();
 		testAI.printHand();
 		System.out.println(command);
+		System.out.println(table);
 		assertEquals("Play 0 1 2 3", command);
 		hand.remove(3);
 		hand.remove(2);
@@ -1061,9 +1062,114 @@ public class StrategyThreeTest {
 		meldb.add(atile5);
 		meldb.add(atile6);
 		table.add(meldb);
-		System.out.println(hand2);
-		System.out.println(table);
 		command = testAI.getStrategy().generateCommand();
 		assertEquals("Play 0 to 0", command);
+	}
+	
+	@Test
+	public void test_move() throws AbleToAddBothSideException {
+		//B12, R6, G2, G2, G8, G10, G12, G12, O4, O5, O6
+		try {
+			atile1 = new Tile("R6");
+			atile2 = new Tile("O4");
+			atile3 = new Tile("O5");
+			atile4 = new Tile("O6");
+			atile8 = new Tile("B12");
+			atile9 = new Tile("G2");
+			atile10 = new Tile("G12");
+			atile11 = new Tile("G12");
+			
+			atile5 = new Tile("O10");
+			atile6 = new Tile("O11");
+			atile7 = new Tile("O12");
+			bJoker = new Tile ("Joker");
+		}catch(InvalidTileException e) {
+			fail();
+		}
+		ArrayList<Meld> table = new ArrayList<Meld>();
+		testAI.getStrategy().update(table);
+		testAI.getStrategy().update(1, 5);
+		testAI.getStrategy().update(2, 5);
+		hand.add(atile5);
+		hand.add(atile6);
+		hand.add(bJoker);
+		Hand hand2 = new Hand(hand);
+		testAI.initHand(hand);
+		testAI.getStrategy().setHand(hand2);
+		String command = testAI.getStrategy().generateCommand();
+		//play initial
+		assertEquals("Play 0 1 2", command);
+		hand.removeAll(hand);
+		hand2 = new Hand(hand);
+		Meld melda;
+		Meld meldb;
+		melda = new Meld();
+		meldb = new Meld();
+		melda.add(atile5);
+		melda.add(atile6);
+		melda.add(atile7);
+		melda.addTail(bJoker);
+		table.add(melda);
+		hand2.add(atile1);
+		hand2.add(atile2);
+		hand2.add(atile3);
+		hand2.add(atile4);
+		hand2.add(atile8);
+		hand2.add(atile9);
+		hand2.add(atile10);
+		hand2.add(atile11);
+		testAI.printHand();
+		System.out.println(table);
+		command = testAI.getStrategy().generateCommand();
+		assertEquals("Play 7 1", command);
+		command = testAI.getStrategy().generateCommand();
+		assertEquals("Move 0 tail to 0 tail", command);
+	}
+	
+	@Test
+	public void test_replace() throws AbleToAddBothSideException {
+		//B12, R6, G2, G2, G8, G10, G12, G12, O4, O5, O6
+		try {
+			atile1 = new Tile("R1");
+			atile2 = new Tile("R2");
+			atile3 = new Tile("R3");
+			atile4 = new Tile("R4");
+			bJoker = new Tile ("Joker");
+			atile5 = new Tile("R5");
+			atile10 = new Tile("R10");
+			atile11 = new Tile("R11");
+		}catch(InvalidTileException e) {
+			fail();
+		}
+		ArrayList<Meld> table = new ArrayList<Meld>();
+		testAI.getStrategy().update(table);
+		testAI.getStrategy().update(1, 5);
+		testAI.getStrategy().update(2, 5);
+		hand.add(atile10);
+		hand.add(atile11);
+		hand.add(bJoker);
+		Hand hand2 = new Hand(hand);
+		testAI.initHand(hand);
+		testAI.getStrategy().setHand(hand2);
+		String command = testAI.getStrategy().generateCommand();
+		//play initial
+		assertEquals("Play 0 1 2", command);
+		hand.removeAll(hand);
+		hand2 = new Hand(hand);
+		Meld melda;
+		Meld meldb;
+		melda = new Meld();
+		meldb = new Meld();
+		melda.add(atile1);
+		melda.add(atile2);
+		melda.add(atile3);
+		melda.add(atile4);
+		melda.addTail(bJoker);
+		table.add(melda);
+		hand2.add(atile5);
+		testAI.printHand();
+		System.out.println(table);
+		command = testAI.getStrategy().generateCommand();
+		assertEquals("Replace 0 to 0 4", command);
 	}
 }
