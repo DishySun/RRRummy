@@ -992,17 +992,22 @@ public class AILogicTest {
 			atile9 = new Tile("B6");
 			atile10 = new Tile("B4");
 			atile11 = new Tile("R6");
-			atile12 = new Tile("G7");
+			atile12 = new Tile("G9");
 			atile13 = new Tile("B5");
 			aJoker = new Tile("J");
 			bJoker = new Tile("J");
+			btile1 = new Tile("G10");
+			btile2 = new Tile("B9");
 		}catch(InvalidTileException e) {
 			fail();
 		}
 		Meld melda;
 		Meld meldb;
+		Meld meldc;
+		Meld meldd;
 		melda = new Meld();
 		meldb = new Meld();
+		meldc = new Meld();
 		melda.add(atile1);
 		melda.add(atile2);
 		melda.add(atile3);
@@ -1014,27 +1019,136 @@ public class AILogicTest {
 		meldList.add(meldb);
 //[[R1, R2, R3], [R4, G4, JK]]
 		assertEquals(2, meldList.size());
-		hand.add(atile6);//R8*
+		//hand.add(atile6);//R8*
 		hand.add(atile7);//O4
 		hand.add(atile8);//R4 
 		hand.add(atile9);//B6
 		hand.add(atile10);//B4
-		hand.add(atile11);//R6
+		//hand.add(atile11);//R6
 		hand.add(atile12);//G7*
 		hand.add(atile13);//B5
-		hand.add(aJoker);//J
+		//hand.add(aJoker);//J
 		canPlay = logic.canPlayAll();
 //[B4, B5, B6], [R4, JK, R6], {O4=1} = 7
 		assertFalse(canPlay);
 //B4, B5, B6, R4, R6, R8, G7, O4, JK
-		hand.remove(5);
-		hand.remove(5);
+		//hand.remove(5);
+		//hand.remove(5);
 //B4, B5, B6, R4, R6, O4, JK
 //[[R1, R2, R3], [R4, G4, JK]]
+		logic = new AILogic(hand,meldList);
+		canPlay = logic.canPlayAll();
+		System.out.println(meldList);
+		assertFalse(canPlay);
+		//hand.add(btile1);
+		hand.add(btile2);
+		meldc.add(atile10);
+		meldc.add(atile13);
+		meldc.addTail(aJoker);
+		meldc.addTail(bJoker);
+		meldList.add(meldc);
 		System.out.println("-----");
 		System.out.println(meldList);
 		System.out.println(hand);
 		logic = new AILogic(hand,meldList);
+		canPlay = logic.canPlayAll();
+		assertTrue(canPlay);
+		System.out.println(hand);
+		System.out.println(meldList);
+		
+	}
+	
+	@Test
+	public void test_canPlayAll3() throws AbleToAddBothSideException {
+		HashMap<Tile,Integer> tile2play = new HashMap<Tile,Integer>();
+		boolean canPlay = false;
+		try {
+			atile1 = new Tile("R1");
+			atile2 = new Tile("R2");
+			atile3 = new Tile("R3");
+			atile4 = new Tile("R4");
+			atile5 = new Tile("R5");
+			atile6 = new Tile("R6");
+			atile7 = new Tile("R7");
+			
+			btile1 = new Tile("R2");
+			btile2 = new Tile("R3");
+			btile3 = new Tile("R5");
+			btile4 = new Tile("R6");
+		}catch(InvalidTileException e) {
+			fail();
+		}
+		Meld melda;
+
+		melda = new Meld();
+		melda.add(atile1);
+		melda.add(atile2);
+		melda.add(atile3);
+		melda.add(atile4);
+		melda.add(atile5);
+		melda.add(atile6);
+		melda.add(atile7);
+		meldList.add(melda);
+//[[R1, R2, R3], [R4, G4, JK]]
+		assertEquals(1, meldList.size());
+		//hand.add(atile6);//R8*
+		hand.add(btile1);//O4
+		hand.add(btile2);//R4 
+		logic = new AILogic(hand,meldList);
+		
+		canPlay = logic.canPlayAll();
+		assertTrue(canPlay);
+		hand.add(btile3);//O4
+		hand.add(btile4);//R4 
+		logic = new AILogic(hand,meldList);
+		System.out.println("-----");
+		System.out.println(meldList);
+		System.out.println(hand);
+		canPlay = logic.canPlayAll();
+		System.out.println(meldList);
+		System.out.println(hand);
+		assertTrue(canPlay);
+	}
+	
+	
+	@Test
+	public void test_canPlayAll4() throws AbleToAddBothSideException {
+		HashMap<Tile,Integer> tile2play = new HashMap<Tile,Integer>();
+		boolean canPlay = false;
+		try {
+			atile1 = new Tile("R1");
+			atile2 = new Tile("R2");
+			atile3 = new Tile("R3");
+			atile4 = new Tile();
+			atile5 = new Tile("R5");
+			atile6 = new Tile("R6");
+			atile7 = new Tile("R7");
+			
+			btile1 = new Tile("R2");
+			btile2 = new Tile("R3");
+			btile3 = new Tile("R5");
+			btile4 = new Tile("R4");
+		}catch(InvalidTileException e) {
+			fail();
+		}
+		Meld melda;
+
+		melda = new Meld();
+		melda.add(atile1);
+		melda.add(atile2);
+		melda.add(atile3);
+		melda.add(atile4);
+		melda.add(atile5);
+		melda.add(atile6);
+		melda.add(atile7);
+		meldList.add(melda);
+//[[R1, R2, R3], [R4, G4, JK]]
+		assertEquals(1, meldList.size());
+		//hand.add(atile6);//R8*
+		hand.add(btile4);//R4 
+		logic = new AILogic(hand,meldList);
+		System.out.println(meldList);
+		System.out.println(hand);
 		canPlay = logic.canPlayAll();
 		assertTrue(canPlay);
 	}
