@@ -536,6 +536,12 @@ public class AILogic {
 		
 			if(disconnect) {
 				disconnect  = false;
+				if(tempmeld.size() == 1) {	// Jk from replace
+					if(tile4Run.size() == 2) {
+						runCanMove.put(tile4Run, 0);
+						return runCanMove;
+					}
+				}
 				if(tempmeld.isRun()) {
 					if(tile4Run.size() == 2) {
 						Tile removeTail = tempmeld.removeTail();
@@ -569,6 +575,7 @@ public class AILogic {
 										&& tile4Run.get(0).getNumber() -1 == removeHead.getNumber())
 										|| (tile4Run.get(0).getColor() == removeHead.getColor()  && tile4Run.get(1).getNumber() + 1 == removeHead.getNumber())) {
 											tempmeld.addHead(removeHead);
+											//System.out.println("----------: " + tempmeld);
 											runCanMove.put(tile4Run, 0);
 											return runCanMove;
 									}
@@ -586,7 +593,7 @@ public class AILogic {
 					if(tile4Run.size() == 2) {
 						Tile removeTail = tempmeld.removeTail();
 						if(tempmeld.isValid()) {	// if can move
-							System.out.println("------- set meld: " + tempmeld + " --- tail: " + removeTail);
+							//System.out.println("------- set meld: " + tempmeld + " --- tail: " + removeTail);
 							if(removeTail.isJoker()) {	// if is joker, can move for sure
 								tempmeld.addTail(removeTail);
 								runCanMove.put(tile4Run, tempmeld.size()-1);
@@ -600,9 +607,17 @@ public class AILogic {
 									return runCanMove;
 								}
 								tempmeld.addTail(removeTail);
+								while(tempmeld.getTile(0) != firstTile) {
+									removeTail = tempmeld.removeHead();
+									tempmeld.addTail(removeTail);
+								}
 							}
 						}else {	//cannot move, add back
 							tempmeld.addTail(removeTail);
+							while(tempmeld.getTile(0) != firstTile) {
+								removeTail = tempmeld.removeHead();
+								tempmeld.addTail(removeTail);
+							}
 						}
 						//tail cannot move, check head
 						//re sort tempmeld
@@ -613,7 +628,7 @@ public class AILogic {
 						}
 						Tile removeHead = tempmeld.removeHead();
 						if(tempmeld.isValid()) {	// if can move
-							System.out.println("------- set meld: " + tempmeld + " --- head: " + removeHead);
+							//System.out.println("------- set meld: " + tempmeld + " --- head: " + removeHead);
 							if(removeHead.isJoker()) {	// if is joker, can move for sure
 								tempmeld.addHead(removeHead);
 								runCanMove.put(tile4Run, 0);
@@ -627,9 +642,17 @@ public class AILogic {
 											return runCanMove;
 									}
 								tempmeld.addHead(removeHead);
+								while(tempmeld.getTile(0) != firstTile) {
+									removeTail = tempmeld.removeHead();
+									tempmeld.addTail(removeTail);
+								}
 								}
 							}else {	//cannot move, add head
 								tempmeld.addHead(removeHead);
+								while(tempmeld.getTile(0) != firstTile) {
+									removeTail = tempmeld.removeHead();
+									tempmeld.addTail(removeTail);
+								}
 							}
 						}
 						//both cannot be movied, check next
@@ -681,6 +704,12 @@ public class AILogic {
 			
 			if(disconnect){
 				disconnect = false;
+				if(tempmeld.size() == 1) {	// Jk from replace
+					if(tile4Set.size() == 2) {
+						setCanMove.put(tile4Set, 0);
+						return setCanMove;
+					}
+				}
 				if(tempmeld.isSet()) {
 						if(tile4Set.size() == 2 && tempmeld.size() >= 4) {
 							for(int m=0;m<tempmeld.size();m++) {
@@ -698,9 +727,17 @@ public class AILogic {
 													return setCanMove;
 											}
 											tempmeld.addTail(removeTail);
+											while(tempmeld.getTile(0) != firstTile) {
+												removeTail = tempmeld.removeHead();
+												tempmeld.addTail(removeTail);
+											}
 										}
 								} else {	// cannot move, added back
 									tempmeld.addTail(removeTail);
+									while(tempmeld.getTile(0) != firstTile) {
+										removeTail = tempmeld.removeHead();
+										tempmeld.addTail(removeTail);
+									}
 								}
 								//tail cannot move, check head
 								//re sort tempmeld
@@ -723,9 +760,17 @@ public class AILogic {
 													return setCanMove;
 											}
 											tempmeld.addHead(removeHead);
+											while(tempmeld.getTile(0) != firstTile) {
+												removeTail = tempmeld.removeHead();
+												tempmeld.addTail(removeTail);
+											}
 										}
 								} else {	// cannot move, added back
 									tempmeld.addHead(removeHead);
+									while(tempmeld.getTile(0) != firstTile) {
+										removeTail = tempmeld.removeHead();
+										tempmeld.addTail(removeTail);
+									}
 								}
 							}		
 					}
@@ -734,7 +779,6 @@ public class AILogic {
 						tile4Set.add(hand.getTile(i));
 						playIndex = 0;
 				}else {	// is run
-					
 					if(tile4Set.size() == 2 && tempmeld.size() >= 4) {
 						for(int m=0;m<tempmeld.size();m++) {
 							Tile removeTail = tempmeld.removeTail();
@@ -747,6 +791,7 @@ public class AILogic {
 									if(!hasSameColor(tile4Set, removeTail) 			//no same color && same # && tile4Set # < 4
 											&& removeTail.getNumber() == tile4Set.get(playIndex).getNumber()) {
 												tempmeld.addTail(removeTail);
+												//System.out.println("----------: " + tempmeld);
 												setCanMove.put(tile4Set, tempmeld.size()-1);
 												return setCanMove;
 										}
@@ -802,6 +847,8 @@ public class AILogic {
 		HashMap<Tile, Integer> meld2Table = new HashMap<Tile,Integer>();
 		HashMap<ArrayList<Tile>, Integer> moveRun2Table = new HashMap<ArrayList<Tile>,Integer>();
 		HashMap<ArrayList<Tile>, Integer> moveSet2Table = new HashMap<ArrayList<Tile>,Integer>();
+		HashMap<ArrayList<Tile>,Integer> cutRunToTable = new HashMap<ArrayList<Tile>,Integer>();
+		HashMap<Tile,Integer>replace = new HashMap<Tile,Integer>();
 		
 		for(Meld m : meldList) {
 			Meld tempMeld = new Meld(m);
@@ -813,6 +860,7 @@ public class AILogic {
 		hand = temphand;
 		int count = 0;
 		int size = hand.size();
+		
 		while(true) {
 			//System.out.println(temphand);
 				run = findRun();
@@ -832,7 +880,7 @@ public class AILogic {
 				}	else
 						break;
 		}
-	
+
 		while(true) {
 			//System.out.println(temphand);
 				group = findSet();
@@ -871,18 +919,119 @@ public class AILogic {
 			}else
 					break;
 		}
-		
-		/*while(true) {
-			for(Meld meld : meldList) {
-				moveRun2Table = temphand.findRunMove(meld);
+
+		while(true) {
+			int listSize = tempMeldList.size();
+			temphand = hand;
+			for(Meld meld : tempMeldList) {
+				if(meld.size() == 0)
+					continue;
+				moveRun2Table = findRunMove(meld);
 				if(moveRun2Table != null) {
 					for(Entry<ArrayList<Tile>, Integer> entry : moveRun2Table.entrySet()) {
-						ArrayList<Tile> arr = entry.getKey();
+						ArrayList<Tile> runMove = entry.getKey();
+						int index = entry.getValue();	// 
+						Meld m = new Meld();
+						m.addTail(runMove.get(0));
+						m.addTail(runMove.get(1));
+						m.addTail(meld.getTile(index));
+						tempMeldList.add(m);
+						temphand.remove(temphand.indexOf(runMove.get(1)));
+						temphand.remove(temphand.indexOf(runMove.get(0)));
+						if(index == 0)
+							meld.removeHead();
+						else
+							meld.removeTail();
+						count+=2;
 					}
+					break;
 				}
 			}
-			break;
-		}*/
+			if(listSize == tempMeldList.size())
+				break;
+		}
+		
+		while(true) {
+			int listSize = tempMeldList.size();
+			temphand = hand;
+			for(Meld meld : tempMeldList) {
+				if(meld.size() == 0)
+					continue;
+				moveSet2Table = findSetMove(meld);
+				if(moveSet2Table != null) {
+
+					for(Entry<ArrayList<Tile>, Integer> entry : moveSet2Table.entrySet()) {
+						ArrayList<Tile> setMove = entry.getKey();
+						int index = entry.getValue();	// 
+						Meld m = new Meld();
+						m.addTail(setMove.get(0));
+						m.addTail(setMove.get(1));
+						m.addTail(meld.getTile(index));
+						tempMeldList.add(m);
+						temphand.remove(temphand.indexOf(setMove.get(1)));
+						temphand.remove(temphand.indexOf(setMove.get(0)));
+						if(index == 0)
+							meld.removeHead();
+						else
+							meld.removeTail();
+						count+=2;
+					}
+					break;
+				}
+			}
+			if(listSize == tempMeldList.size())
+				break;
+		}
+		
+		while(true) {
+			int listSize = tempMeldList.size();
+			temphand = hand;
+			for(Meld meld : tempMeldList) {
+				if(meld.size() == 0)
+					continue;
+				cutRunToTable = findRunCut(meld);
+				if(cutRunToTable != null) {	// can cut
+					for(Entry<ArrayList<Tile>, Integer> Entry : cutRunToTable.entrySet()) {
+						ArrayList<Tile> runCut = Entry.getKey();
+						int index = Entry.getValue();	// 
+						Meld m = new Meld();
+						while(meld.size()-1 != index) {
+							m.addHead(meld.removeTail());
+						}
+						tempMeldList.add(m);
+						for(Tile tile : runCut) {
+							meld.addTail(temphand.remove(temphand.indexOf(tile)));
+						}
+						count+=runCut.size();
+					}
+					break;
+				}
+			}
+			if(listSize == tempMeldList.size())
+				break;
+		}
+		while(true) {
+			int listSize = tempMeldList.size();
+			temphand = hand;
+			for(Meld meld : tempMeldList) {
+				replace = findReplace(meld);
+				if(replace != null) {
+					for(Entry<Tile, Integer>Entry : replace.entrySet()) {
+						Tile tile = Entry.getKey();
+						int index = Entry.getValue();
+						Tile joker =  meld.replace(tile, index);
+						Meld m = new Meld();
+						m.addTail(joker);
+						tempMeldList.add(m);
+						temphand.remove(temphand.indexOf(tile));
+					}
+					count++;
+					break;
+				}
+			}
+			if(listSize == tempMeldList.size())
+				break;
+		}
 		meldList = orgMeldList;
 		hand = orghand;
 		//System.out.println(size);
@@ -1114,64 +1263,4 @@ public class AILogic {
 		}
 		return null;
 	}
-	
-	
-	
-	/*
-	 * only possible situation is 
-	 * meld : a b c d
-	 * hand: b c or c b
-	 */
-	/*public HashMap<ArrayList<Tile>, Integer> findSetCut(Meld meld) {
-		// TODO Auto-generated method stub
-		if(hand.size() == 0 || hand.size() == 1)
-			return null;
-		HashMap<ArrayList<Tile>, Integer> setCanCut = new HashMap<ArrayList<Tile>,Integer>();
-		ArrayList<Tile> tile4Set = new ArrayList<Tile>();
-		boolean disconnect = true;	// check if next tile number & color is connecte
-		int playIndex = 0;	//point to tile4Run position;
-		int jokerNum = 0;	// joker number
-		Meld tempmeld = new Meld(meld);
-		hand.sortByNum();		//sort
-		for(int i = 0; i<hand.size();i++) {			//count size of joker;
-			if(hand.getTile(i).getColor() == Tile.Color.JOKER) {
-				jokerNum++;
-			}
-		}
-		
-		tile4Set.add(hand.getTile(0));
-		for(int i=1; i<hand.size()-jokerNum;i++) {		// R1 B1
-			if(!hasSameColor(tile4Set, hand.getTile(i))
-					&& hand.getTile(i).getNumber() == tile4Set.get(playIndex).getNumber()) {
-				tile4Set.add(hand.getTile(i));
-				playIndex++;
-				disconnect = false;
-				if(i == hand.size()-jokerNum-1) 
-					disconnect = true;
-			} else
-				disconnect = true;
-			
-			if(disconnect){
-				disconnect = false;
-				if(tempmeld.isSet()) {
-					if(tile4Set.size() == 2 && tempmeld.size() >= 4) {
-						if(!hasSameColor2(tile4Set, tempmeld) 			//no same color && same # && tile4Set # < 4
-								&& (tempmeld.getTile(1).toString().equals(tile4Set.get(0).toString())
-										|| tempmeld.getTile(1).toString().equals(tile4Set.get(1).toString()))
-								&& (tempmeld.getTile(2).toString().equals(tile4Set.get(1).toString())
-										|| tempmeld.getTile(2).toString().equals(tile4Set.get(0).toString()))) {
-								setCanCut.put(tile4Set, 0);
-								return setCanCut;
-						}
-					} 
-					//cannot cutted, check next
-					tile4Set.clear();	
-					tile4Set.add(hand.getTile(i));
-					playIndex = 0;
-				}	else 
-						return null;
-			}
-		}
-		return null;
-	}*/
 }
