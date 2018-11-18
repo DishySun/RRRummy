@@ -73,6 +73,26 @@ public class AILogic {
 		return false;	
 	}
 	
+	public boolean hasSameColor2(ArrayList<Tile> tile, Meld comptile) {
+		// TODO Auto-generated method stub
+		for (Tile t : tile) {
+			for(int m = 0; m<comptile.size();m++) {
+				if(t.getColor() == comptile.getTile(m).getColor()) 
+					return true;
+			}
+		}
+		return false;	
+	}
+	
+	public boolean hasSameColor3(Meld meld, Tile comptile) {
+		// TODO Auto-generated method stub
+		for(int i=0; i<meld.size();i++) {
+			if(meld.getTile(i).getColor() == comptile.getColor())
+				return true;
+		}
+		return false;	
+	}
+	
 	public ArrayList<Tile> findRun() {
 		// TODO Auto-generated method stub
 		if(hand.size() == 0)
@@ -465,15 +485,17 @@ public class AILogic {
 			return null;
 		for(int j=0; j<temphand.size();j++) {	
 			for(int i=0; i<tempMeldList.size();i++) {
+				if(tempMeldList.get(i).size() != 1 && tempMeldList.get(i).getHead().getColor() != Tile.Color.JOKER) {
 					if(tempMeldList.get(i).getMap().containsKey(temphand.getTile(j).toString())) {	//if can add and not used
 						mdlesMap.put(temphand.getTile(j),i);
 						return mdlesMap;
 					}
+				}
 			}
 		}
 		return null;
 	}
-
+	
 	public HashMap<ArrayList<Tile>, Integer> findRunMove(Meld meld) {
 		// TODO Auto-generated method stub
 		if(hand.size() == 0)
@@ -490,6 +512,9 @@ public class AILogic {
 		Meld tempmeld = new Meld(meld);
 		hand.sort();		//sort
 		//check if has joker
+		Tile firstTile = null;
+		firstTile = tempmeld.getTile(0);
+		
 		for(int i = 0; i<hand.size();i++) {			//count size of joker;
 			if(hand.getTile(i).getColor() == Tile.Color.JOKER) {
 				jokerNum++;
@@ -561,6 +586,7 @@ public class AILogic {
 					if(tile4Run.size() == 2) {
 						Tile removeTail = tempmeld.removeTail();
 						if(tempmeld.isValid()) {	// if can move
+							System.out.println("------- set meld: " + tempmeld + " --- tail: " + removeTail);
 							if(removeTail.isJoker()) {	// if is joker, can move for sure
 								tempmeld.addTail(removeTail);
 								runCanMove.put(tile4Run, tempmeld.size()-1);
@@ -580,10 +606,14 @@ public class AILogic {
 						}
 						//tail cannot move, check head
 						//re sort tempmeld
-						tempmeld = new Meld(meld);
-						
+
+						while(tempmeld.getTile(0) != firstTile) {
+							removeTail = tempmeld.removeHead();
+							tempmeld.addTail(removeTail);
+						}
 						Tile removeHead = tempmeld.removeHead();
 						if(tempmeld.isValid()) {	// if can move
+							System.out.println("------- set meld: " + tempmeld + " --- head: " + removeHead);
 							if(removeHead.isJoker()) {	// if is joker, can move for sure
 								tempmeld.addHead(removeHead);
 								runCanMove.put(tile4Run, 0);
@@ -627,6 +657,8 @@ public class AILogic {
 		boolean hasJoker = false;
 		Meld tempmeld = new Meld(meld);
 		hand.sortByNum();		//sort
+		Tile firstTile = null;
+		firstTile = tempmeld.getTile(0);
 		for(int i = 0; i<hand.size();i++) {			//count size of joker;
 			if(hand.getTile(i).getColor() == Tile.Color.JOKER) {
 				jokerNum++;
@@ -672,7 +704,10 @@ public class AILogic {
 								}
 								//tail cannot move, check head
 								//re sort tempmeld
-								tempmeld = new Meld(meld);
+								while(tempmeld.getTile(0) != firstTile) {
+									removeTail = tempmeld.removeHead();
+									tempmeld.addTail(removeTail);
+								}
 								
 								Tile removeHead = tempmeld.removeHead();
 								if(tempmeld.isValid()) {	// if can move
@@ -787,10 +822,12 @@ public class AILogic {
 						if(run.get(i).isJoker()) {
 							temphand.remove(temphand.size()-1);
 							run.remove(i);
+							count++;
 						}
 					}
 					for(int i = run.size()-1; i>=0;i--) {
 							temphand.remove(temphand.indexOf(run.get(i)));
+							count++;
 					}
 				}	else
 						break;
@@ -805,11 +842,13 @@ public class AILogic {
 						if(group.get(i).isJoker()) {
 							temphand.remove(0);
 							group.remove(i);
+							count++;
 						}
 					}
 					for(int i = 0; i<group.size();i++) {
 						temphand.sort();
 						temphand.remove(temphand.indexOf(group.get(i)));
+						count++;
 					}
 				}else
 						break;
@@ -846,6 +885,8 @@ public class AILogic {
 		}*/
 		meldList = orgMeldList;
 		hand = orghand;
+		//System.out.println(size);
+		//System.out.println(count);
 		return count == size;
 	}
 
@@ -900,21 +941,27 @@ public class AILogic {
 				if(tempmeld.isRun()) {
 					if(tile4Run.size() == 2) {
 						if(tempmeld.size() >= 4) {	// 1 a b 4
-							for(int t=0; t<tempmeld.size()-1;t++) {
+							for(int t=0; t<tempmeld.size();t++) {
 								if(tile4Run.get(0).toString().equals(tempmeld.getTile(t).toString())) {
 									if(t != 0 && t + 1 != tempmeld.size()-1) {	// can cut 0 | a b 4
-										runCanSet.put(tile4Run, t-1);
-										return runCanSet;
+										if(t == 1 && tempmeld.getTile(t).getColor() == Tile.Color.JOKER) {
+											continue;
+										} else if(t +1 == tempmeld.size()-2 &&  tempmeld.getTile(t+1).getColor() == Tile.Color.JOKER) {
+											continue;
+										}else {
+											runCanSet.put(tile4Run, t-1);
+											return runCanSet;
+										}
 									} else
 										break;
 								}  
 							}
 						}
 					} else if (tile4Run.size() == 1) {
-						if(tempmeld.size() >= 5) {	// 1 2 a 4 5
-							for(int t=0; t<tempmeld.size()-1;t++) {
+						if(tempmeld.size() >= 5) {	// 1 2 a 4 5 or 1 2 3 a 5 or 1 2 3 4 a or 1 a 3 4 5
+							for(int t=0; t<tempmeld.size();t++) {
 								if(tile4Run.get(0).toString().equals(tempmeld.getTile(t).toString())) {
-									if(t >= 2 && t + 1 != tempmeld.size()-1) {	// can cut 0 1 | a 3 4
+									if(t >= 2 && t  < tempmeld.size()-2) {	// can cut 0 1 | a 3 4
 										runCanSet.put(tile4Run, t-1);
 										return runCanSet;
 									}else
@@ -935,7 +982,7 @@ public class AILogic {
 		
 		if(hand.size() == 1) {
 			if(tempmeld.size() >= 5) {	// 1 2 a 4 5
-				for(int t=0; t<tempmeld.size()-1;t++) {
+				for(int t=0; t<tempmeld.size();t++) {
 					if(tile4Run.get(0).toString().equals(tempmeld.getTile(t).toString())) {
 						if(t >= 2 && t + 1 != tempmeld.size()-1) {	// can cut 0 1 | a 3 4
 							runCanSet.put(tile4Run, t-1);
@@ -948,6 +995,183 @@ public class AILogic {
 		}
 		return null;
 	}
+
+	public HashMap<Tile, Integer> findReplace(Meld meld) {
+		// TODO Auto-generated method stub
+		if(hand.size() == 0 || meld.size() < 3)
+			return null;
+		
+		HashMap<Tile, Integer> replaceTile = new HashMap<Tile,Integer>(); //<tile to replace, meld index>
+		boolean hasJoker = false;
+		//System.out.println(meld.size());
+		for(int t=0; t<meld.size();t++) {			//count size of joker;
+			if(meld.getTile(t).getColor() == Tile.Color.JOKER) 
+				hasJoker = true;
+		}
+
+		if(hasJoker) {
+			if(meld.isRun()) {
+				for(int t=0; t<meld.size();t++) {
+					if(meld.getTile(t).isJoker()) {	// is joker
+						for(int ht=0; ht<hand.size();ht++) {
+							if(t == 0) {	//joker at first tile
+								if(meld.getTile(t+1).isJoker()) {			// continuously joker 
+									if(hand.getTile(ht).getColor() == meld.getTile(t+2).getColor()
+											&& hand.getTile(ht).getNumber()+2 == meld.getTile(t+2).getNumber()) {
+										replaceTile.put(hand.getTile(ht), t);
+										return replaceTile;
+									}
+								}else {
+									if(hand.getTile(ht).getColor() == meld.getTile(t+1).getColor()
+											&& hand.getTile(ht).getNumber()+1 == meld.getTile(t+1).getNumber()) {
+										replaceTile.put(hand.getTile(ht), t);
+										return replaceTile;
+									}
+								}
+							} else if(t == meld.size()-1) {	// joker at last tile
+								if(meld.getTile(t - 1).isJoker()) {			// continuously joker 
+									if(hand.getTile(ht).getColor() == meld.getTile(t - 2).getColor()
+											&& hand.getTile(ht).getNumber() - 2 == meld.getTile(t-2).getNumber()) {
+										replaceTile.put(hand.getTile(ht), t);
+										return replaceTile;
+									}
+								}else {
+									if(hand.getTile(ht).getColor() == meld.getTile(t -1).getColor()
+											&& hand.getTile(ht).getNumber() - 1 == meld.getTile(t -1).getNumber()) {
+										replaceTile.put(hand.getTile(ht), t);
+										return replaceTile;
+									}
+								}
+							} else {
+								if(meld.getTile(t - 1).isJoker()) {			// 1 J t 4
+									if(hand.getTile(ht).getColor() == meld.getTile(t + 1).getColor()	
+											&& hand.getTile(ht).getNumber() + 1 == meld.getTile(t + 1).getNumber()) {
+										replaceTile.put(hand.getTile(ht), t);
+										return replaceTile;
+									}
+								}else {	// 1 t J 4 or 1 t 4
+									if(hand.getTile(ht).getColor() == meld.getTile(t -1).getColor()
+											&& hand.getTile(ht).getNumber() - 1 == meld.getTile(t -1).getNumber()) {
+										replaceTile.put(hand.getTile(ht), t);
+										return replaceTile;
+									}
+								}
+							}
+						}
+					}
+				}
+			} else {
+				for(int t=0; t<meld.size();t++) {
+					if(meld.getTile(t).isJoker()) {	// is joker
+						for(int ht=0; ht<hand.size();ht++) {
+							if(t == 0) {		//joker is first tile
+								if(meld.getTile(t+1).isJoker()) {			// continuously joker 
+									if(hand.getTile(ht).getNumber() == meld.getTile(t+2).getNumber()
+											&& !hasSameColor3(meld,hand.getTile(ht))) {
+										replaceTile.put(hand.getTile(ht), t);
+										return replaceTile;
+									}
+								} else {
+									if(hand.getTile(ht).getNumber() == meld.getTile(t+1).getNumber()
+											&& !hasSameColor3(meld,hand.getTile(ht))) {
+										replaceTile.put(hand.getTile(ht), t);
+										return replaceTile;
+									}
+								}
+							} else if(t == meld.size()-1) {		// joker is last tile
+								if(meld.getTile(t-1).isJoker()) {			// continuously joker 
+									if(hand.getTile(ht).getNumber() == meld.getTile(t-2).getNumber()
+											&& !hasSameColor3(meld,hand.getTile(ht))) {
+										replaceTile.put(hand.getTile(ht), t);
+										return replaceTile;
+									}
+								} else {
+									if(hand.getTile(ht).getNumber() == meld.getTile(t-1).getNumber()
+											&& !hasSameColor3(meld,hand.getTile(ht))) {
+										replaceTile.put(hand.getTile(ht), t);
+										return replaceTile;
+									}
+								}
+							} else {
+								if(meld.getTile(t-1).isJoker()) {			// a J _ b
+									if(hand.getTile(ht).getNumber() == meld.getTile(t+1).getNumber()
+											&& !hasSameColor3(meld,hand.getTile(ht))) {
+										replaceTile.put(hand.getTile(ht), t);
+										return replaceTile;
+									}
+								} else {	// a _ J b or a _ b
+									if(hand.getTile(ht).getNumber() == meld.getTile(t-1).getNumber()
+											&& !hasSameColor3(meld,hand.getTile(ht))) {
+										replaceTile.put(hand.getTile(ht), t);
+										return replaceTile;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		return null;
+	}
 	
 	
+	
+	/*
+	 * only possible situation is 
+	 * meld : a b c d
+	 * hand: b c or c b
+	 */
+	/*public HashMap<ArrayList<Tile>, Integer> findSetCut(Meld meld) {
+		// TODO Auto-generated method stub
+		if(hand.size() == 0 || hand.size() == 1)
+			return null;
+		HashMap<ArrayList<Tile>, Integer> setCanCut = new HashMap<ArrayList<Tile>,Integer>();
+		ArrayList<Tile> tile4Set = new ArrayList<Tile>();
+		boolean disconnect = true;	// check if next tile number & color is connecte
+		int playIndex = 0;	//point to tile4Run position;
+		int jokerNum = 0;	// joker number
+		Meld tempmeld = new Meld(meld);
+		hand.sortByNum();		//sort
+		for(int i = 0; i<hand.size();i++) {			//count size of joker;
+			if(hand.getTile(i).getColor() == Tile.Color.JOKER) {
+				jokerNum++;
+			}
+		}
+		
+		tile4Set.add(hand.getTile(0));
+		for(int i=1; i<hand.size()-jokerNum;i++) {		// R1 B1
+			if(!hasSameColor(tile4Set, hand.getTile(i))
+					&& hand.getTile(i).getNumber() == tile4Set.get(playIndex).getNumber()) {
+				tile4Set.add(hand.getTile(i));
+				playIndex++;
+				disconnect = false;
+				if(i == hand.size()-jokerNum-1) 
+					disconnect = true;
+			} else
+				disconnect = true;
+			
+			if(disconnect){
+				disconnect = false;
+				if(tempmeld.isSet()) {
+					if(tile4Set.size() == 2 && tempmeld.size() >= 4) {
+						if(!hasSameColor2(tile4Set, tempmeld) 			//no same color && same # && tile4Set # < 4
+								&& (tempmeld.getTile(1).toString().equals(tile4Set.get(0).toString())
+										|| tempmeld.getTile(1).toString().equals(tile4Set.get(1).toString()))
+								&& (tempmeld.getTile(2).toString().equals(tile4Set.get(1).toString())
+										|| tempmeld.getTile(2).toString().equals(tile4Set.get(0).toString()))) {
+								setCanCut.put(tile4Set, 0);
+								return setCanCut;
+						}
+					} 
+					//cannot cutted, check next
+					tile4Set.clear();	
+					tile4Set.add(hand.getTile(i));
+					playIndex = 0;
+				}	else 
+						return null;
+			}
+		}
+		return null;
+	}*/
 }

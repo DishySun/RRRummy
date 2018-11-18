@@ -20,6 +20,8 @@ public class StrategyThree implements AIStrategy, Observer {
 	private HashMap<ArrayList<Tile>,Integer> moveRunToTable;
 	private HashMap<ArrayList<Tile>,Integer> moveGroupToTable;
 	private HashMap<ArrayList<Tile>,Integer> cutRunToTable;
+	private HashMap<Tile,Integer>replace;
+	boolean hasLess;
 	boolean moveRun2Table;
 	boolean moveSet2Table;
 	boolean cutRun2Table;
@@ -43,6 +45,7 @@ public class StrategyThree implements AIStrategy, Observer {
 		moveSet2Table = false;
 		InMoveProg = false;
 		cutRun2Table = false;
+		hasLess = false;
 		tempMeld = new Meld();
 		playerHandSizes = new HashMap<Integer, Integer>();
 	}
@@ -55,8 +58,6 @@ public class StrategyThree implements AIStrategy, Observer {
 		group = new ArrayList<Tile>();
 		runCut = new ArrayList<Tile>();
 		meldOnTable = new HashMap<Tile,Integer>();
-		
-		boolean hasLess = false;
 		
 		if(countInitial < 30) {	//play initial
 			if(logic.checkInitialSum() >= 30-countInitial) {
@@ -91,13 +92,15 @@ public class StrategyThree implements AIStrategy, Observer {
 			}	else
 					return "END";
 		}else {
-			for(Entry<Integer, Integer> entry : playerHandSizes.entrySet()) {
-				//int id = entry.getKey();
-				int handsize = entry.getValue();
-				if(handsize+3 < myHand.size()) {
-					hasLess = true;
-					break;
-				} 
+			if(!hasLess) {
+				for(Entry<Integer, Integer> entry : playerHandSizes.entrySet()) {
+					//int id = entry.getKey();
+					int handsize = entry.getValue();
+					if(handsize+3 < myHand.size()) {
+						hasLess = true;
+						break;
+					} 
+				}
 			}
 			if((hasLess || moveRun2Table || moveSet2Table) && !InMoveProg) {		//has 3 fewer tiles than p3, play all request use of table
 				//System.out.println("Some one has 3 fewer tiles than this AI");
@@ -211,10 +214,58 @@ public class StrategyThree implements AIStrategy, Observer {
 						return returnString;
 				}	
 				
+				if(!cutRun2Table) {	//if not in cut prog
+					for(Meld m : table) {
+						cutRunToTable = logic.findRunCut(m);
+						myHand.sort();
+						if(cutRunToTable != null) {	// can cut
+							cutRun2Table = true;
+							tempMeld = m;
+							for(Entry<ArrayList<Tile>, Integer> Entry : cutRunToTable.entrySet()) {
+								runCut = Entry.getKey();
+								cutRunIndex = Entry.getValue();	// 
+								myHand.sort();
+								returnString = "Cut " + table.indexOf(m) + " at " +cutRunIndex ;
+								return returnString;
+							}
+						}
+					}
+				} else {	// in cut prog
+					meldOnTable = logic.findMeldsOnTable();
+					if(meldOnTable != null) {
+						for(Entry<Tile, Integer>Entry : meldOnTable.entrySet()) {
+							Tile tile = Entry.getKey();
+							int index = Entry.getValue();
+							myHand.sort();
+							if(tile.isJoker())
+								returnString = "Play "  + myHand.handIndexOf(tile) + " to " + index + " " + "tail";
+							else
+								returnString = "Play "  + myHand.handIndexOf(tile) + " to " + index/* + " " + "1"*/;	
+							return returnString;
+						}
+					} else
+						cutRun2Table = false;
+				}
+				for(Meld m : table) {
+					//System.out.println("Check replace");
+					replace = logic.findReplace(m);
+					if(replace != null) {
+						for(Entry<Tile, Integer>Entry : replace.entrySet()) {
+							Tile tile = Entry.getKey();
+							int index = Entry.getValue();
+							myHand.sort();
+							//Replace int(handIndex) to int(tableIndex) int(meldIndex)
+							returnString = "Replace " + myHand.indexOf(tile) + " to ";
+							returnString += table.indexOf(m) + " " +  index;
+							return returnString;
+						}
+					}
+				}
+				hasLess = false;
 				System.out.println("p3 could play but has not tile to play");
 				return "END";
 			}else {	// no less 3
-				if(logic.canPlayAll()) {	//if can play all, request use of table
+				if(logic.canPlayAll() && !InMoveProg) {	//if can play all, request use of table
 					run = logic.findRun();
 					if(run != null) {
 						myHand.sort();
@@ -270,6 +321,7 @@ public class StrategyThree implements AIStrategy, Observer {
 						}
 						
 						if(!moveRun2Table) {		//if not in move run progress
+							//System.out.println("---- in move run check ----");
 							for(Meld m : table) {
 								moveRunToTable = logic.findRunMove(m);
 								myHand.sort();
@@ -289,6 +341,7 @@ public class StrategyThree implements AIStrategy, Observer {
 								}
 							}	
 						}	else {	// if in move run progress already
+							//System.out.println("---- in move run ----");
 								moveRun2Table = false;
 								returnString = "Move";
 								returnString += " " + table.indexOf(tempMeld);
@@ -303,6 +356,7 @@ public class StrategyThree implements AIStrategy, Observer {
 						}	
 						
 						if(!moveSet2Table) {		//if not in move set progress
+							//System.out.println("---- in move set check ----");
 							for(Meld m : table) {
 								moveGroupToTable = logic.findSetMove(m);
 								myHand.sort();
@@ -322,6 +376,7 @@ public class StrategyThree implements AIStrategy, Observer {
 								}
 							}	
 						}	else {	// if in move set progress already
+							//System.out.println("---- in move set ----");
 							moveSet2Table = false;
 								returnString = "Move";
 								returnString += " " + table.indexOf(tempMeld);
@@ -366,6 +421,21 @@ public class StrategyThree implements AIStrategy, Observer {
 								}
 							} else
 								cutRun2Table = false;
+						}
+						for(Meld m : table) {
+							//System.out.println("Check replace");
+							replace = logic.findReplace(m);
+							if(replace != null) {
+								for(Entry<Tile, Integer>Entry : replace.entrySet()) {
+									Tile tile = Entry.getKey();
+									int index = Entry.getValue();
+									myHand.sort();
+									//Replace int(handIndex) to int(tableIndex) int(meldIndex)
+									returnString = "Replace " + myHand.indexOf(tile) + " to ";
+									returnString += table.indexOf(m) + " " +  index;
+									return returnString;
+								}
+							}
 						}
 					}
 				InMoveProg = false;		
