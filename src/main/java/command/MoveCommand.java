@@ -1,7 +1,7 @@
 package command;
 
+import game.Game;
 import game.View;
-import rrrummy.Game;
 
 public class MoveCommand implements Command{
 	

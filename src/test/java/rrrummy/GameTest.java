@@ -1,6 +1,7 @@
 package rrrummy;
 import java.util.ArrayList;
 
+import game.Game;
 import game.View;
 
 import  junit.framework.TestCase;

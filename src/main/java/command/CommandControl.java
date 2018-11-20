@@ -3,8 +3,9 @@ package command;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import game.Game;
 import game.View;
-import rrrummy.Game;
+
 import java.lang.NumberFormatException;
 import java.lang.IndexOutOfBoundsException;
 

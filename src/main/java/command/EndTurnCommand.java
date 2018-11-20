@@ -1,5 +1,5 @@
 package command;
-import rrrummy.Game;
+import game.Game;
 
 public class EndTurnCommand implements Command{
 

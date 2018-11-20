@@ -1,6 +1,6 @@
 package command;
 
-import rrrummy.Game;
+import game.Game;
 
 public class CutCommand implements Command{
 

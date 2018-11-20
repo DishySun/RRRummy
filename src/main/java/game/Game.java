@@ -1,4 +1,4 @@
-package rrrummy;
+package game;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -12,10 +12,14 @@ import java.util.Collections;
 import java.util.Scanner;
 
 import command.CommandControl;
-import game.View;
 import players.AI;
 import players.Player;
 import players.StrategyFile;
+import rrrummy.AbleToAddBothSideException;
+import rrrummy.InvalidTileException;
+import rrrummy.Stock;
+import rrrummy.Table;
+import rrrummy.Tile;
 
 public class Game {
 	private final int INIT_HAND_SIZE = 14;

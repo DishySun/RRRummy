@@ -2,9 +2,9 @@ package command;
 
 import java.util.ArrayList;
 
+import game.Game;
 import game.View;
 import rrrummy.AbleToAddBothSideException;
-import rrrummy.Game;
 
 public class PlayCommand implements Command{
 	/* Correct Form:
