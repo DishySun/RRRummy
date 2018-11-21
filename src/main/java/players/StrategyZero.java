@@ -57,7 +57,9 @@ public class StrategyZero implements AIStrategy{
 			}	else
 				return "END";
 		}else {
-			run = logic.findRun();
+			returnString = logic.AI1Command(myHand,table);
+			return returnString;
+			/*run = logic.findRun();
 			if(run != null)	{
 				myHand.sort();
 				returnString = "Play";
@@ -77,7 +79,7 @@ public class StrategyZero implements AIStrategy{
 					return returnString;
 				}
 				return "END";
-			}	
+			}	*/
 		}
 	}
 	
