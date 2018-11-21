@@ -324,7 +324,7 @@ public class Meld {
 		}
 		return new Meld(returnArr);
 	}
-	private Tile.Color getRunColor(){
+	public Tile.Color getRunColor(){
 		for(Tile t : meld) {
 			if (!t.isJoker()) return t.getColor();
 		}
