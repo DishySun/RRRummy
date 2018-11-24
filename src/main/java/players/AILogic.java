@@ -16,6 +16,7 @@ public class AILogic {
 	private HashMap<ArrayList<Tile>,Integer> moveGroupToTable;
 	private HashMap<ArrayList<Tile>,Integer> cutRunToTable;
 	private HashMap<Tile,Integer>replace;
+	private ArrayList<Meld> tempMeldList;
 	boolean hasLess;
 	boolean moveRun2Table;
 	boolean moveSet2Table;
@@ -504,6 +505,8 @@ public class AILogic {
 		ArrayList<Meld> tempMeldList = new ArrayList<Meld>();
 		Hand temphand = new Hand(hand);
 		hand = temphand;
+		//System.out.println(temphand);
+		//System.out.println(tempMeldList);
 		for(Meld m : meldList) {
 			Meld tempMeld = new Meld(m);
 			tempMeldList.add(tempMeld);
@@ -1296,6 +1299,8 @@ public class AILogic {
 	public boolean hasMapfromTable(ArrayList<Tile> tile, ArrayList<Meld> meldList) {
 		// TODO Auto-generated method stub
 		int countMep = 0;
+		if(tile.size() == 1) 
+			return true;
 		Meld meld = new Meld(tile);
 		for(Meld m : meldList) {
 			for(int i=0; i<m.size();i++) {
@@ -1496,7 +1501,7 @@ public class AILogic {
 
 	public String AI1Command(Hand myHand, ArrayList<Meld> t) {
 		hand = myHand;
-		table = t;
+		meldList = t;
 		String returnString = "";
 		run = findRun();
 		if(run != null)	{
@@ -1521,7 +1526,7 @@ public class AILogic {
 		}	
 	}
 	
-	public String AI4CommandInitial(Hand myHand, ArrayList<Meld> t, int countInitial) {
+	/*public String AI4CommandInitial(Hand myHand, ArrayList<Meld> t, int countInitial) {
 		hand = myHand;
 		table = t;
 		String returnString = "";
@@ -1556,13 +1561,16 @@ public class AILogic {
 			//System.out.print("Someone has played initial, but P2 can't play 30+points");
 			return "END";
 		}	
-	} 
+	} */
 	
 	public String AI4Command(Hand myHand, ArrayList<Meld> t) {
 		hand = myHand;
-		table = t;
+		meldList = t;
+//System.out.println(hand);
+//System.out.println(meldList);
 		String returnString = "";
-		if(canPlayAll() && !InRestProg) {	//if can play all, request use of table
+		if(canPlayAll() && !InRestProg) {	//if can play all, request use of meldList
+//System.out.println("can play all");
 			run = findRun();
 			if(run != null) {
 				myHand.sort();
@@ -1598,11 +1606,12 @@ public class AILogic {
 			
 			if(!moveRun2Table) {		//if not in move run progress
 				if(!moveSet2Table) {	//if not in move set progress
-					for(Meld m : table) {
+					for(Meld m : meldList) {
 						moveRunToTable = findRunMove(m);
 							if(moveRunToTable != null) {
 								moveRun2Table = true;
 								tempMeld = m;
+								tempMeldList = new ArrayList<Meld>(meldList);
 								for(Entry<ArrayList<Tile>, Integer> Entry : moveRunToTable.entrySet()) {
 									ArrayList<Tile> runMove = Entry.getKey();
 									moveRunIndex = Entry.getValue();	// 
@@ -1621,14 +1630,14 @@ public class AILogic {
 				//System.out.println("move run");
 					moveRun2Table = false;
 					//System.out.println(tempMeld);
-					//	System.out.println("move +" +  table.indexOf(tempMeld));
+					//	System.out.println("move +" +  meldList.indexOf(tempMeld));
 					returnString = "Move";
-					returnString += " " + table.indexOf(tempMeld);
+					returnString += " " + tempMeldList.indexOf(tempMeld);
 					if(moveRunIndex == 0)
 						returnString += " head to ";
 					else
 						returnString += " tail to ";
-					returnString +=  table.size()-1;
+					returnString +=  meldList.size()-1;
 					if(tempMeld.getTile(moveRunIndex).isJoker())
 						returnString += " tail";
 					//System.out.println(returnString);
@@ -1637,12 +1646,13 @@ public class AILogic {
 			
 			if(!moveSet2Table) {		//if not in move set progress
 				if(!moveRun2Table) {
-					for(Meld m : table) {
+					for(Meld m : meldList) {
 						moveGroupToTable = findSetMove(m);
 						myHand.sort();
 						if(moveGroupToTable != null) {
 							moveSet2Table = true;
 							tempMeld = m;
+							tempMeldList = new ArrayList<Meld>(meldList);
 							for(Entry<ArrayList<Tile>, Integer> Entry : moveGroupToTable.entrySet()) {
 								ArrayList<Tile> setMove = Entry.getKey();
 								moveSetIndex = Entry.getValue();	// 
@@ -1661,21 +1671,21 @@ public class AILogic {
 				//System.out.println("move set");
 				moveSet2Table = false;
 					//System.out.println(tempMeld);
-					//	System.out.println("move +" +  table.indexOf(tempMeld));
+					//	System.out.println("move +" +  meldList.indexOf(tempMeld));
 					returnString = "Move";
-					returnString += " " + table.indexOf(tempMeld);
+					returnString += " " + tempMeldList.indexOf(tempMeld);
 					if(moveSetIndex == 0)
 						returnString += " head to ";
 					else
 						returnString += " tail to ";
-					returnString +=  table.size()-1;
+					returnString +=  meldList.size()-1;
 					if(tempMeld.getTile(moveSetIndex).isJoker())
 						returnString += " tail";
 					return returnString;
 			}	
-			
+
 			if(!cutRun2Table) {	//if not in cut prog
-				for(Meld m : table) {
+				for(Meld m : meldList) {
 					cutRunToTable = findRunCut(m);
 					myHand.sort();
 					if(cutRunToTable != null) {	// can cut
@@ -1685,7 +1695,7 @@ public class AILogic {
 							runCut = Entry.getKey();
 							cutRunIndex = Entry.getValue();	// 
 							myHand.sort();
-							returnString = "Cut " + table.indexOf(m) + " at " +cutRunIndex ;
+							returnString = "Cut " + meldList.indexOf(m) + " at " +cutRunIndex ;
 							return returnString;
 						}
 					}
@@ -1708,7 +1718,7 @@ public class AILogic {
 			}
 			
 			//replace prog
-			for(Meld m : table) {
+			for(Meld m : meldList) {
 				//System.out.println("Check replace");
 				replace = findReplace(m);
 				if(replace != null) {
@@ -1718,15 +1728,17 @@ public class AILogic {
 						myHand.sort();
 						//Replace int(handIndex) to int(tableIndex) int(meldIndex)
 						returnString = "Replace " + myHand.indexOf(tile) + " to ";
-						returnString += table.indexOf(m) + " " +  index;
+						returnString += meldList.indexOf(m) + " " +  index;
 						return returnString;
 					}
 				}
 			}
 			return "END";
-		} else {																// if cannot play all, play meld base on table
+		} else {																// if cannot play all, play meld base on meldList
+//System.out.println("can not play all");
+			InRestProg = true;
 			run = findRun();
-			if(run != null && hasMapfromTable(run, table)) {
+			if(run != null && hasMapfromTable(run, meldList)) {
 				myHand.sort();
 				returnString = "Play";
 				for(int i=0; i<run.size();i++) {
@@ -1736,7 +1748,7 @@ public class AILogic {
 			} 
 			group = findSet();
 			myHand.sort();
-			if(group != null&& hasMapfromTable(run, table)) {
+			if(group != null&& hasMapfromTable(group, meldList)) {
 				myHand.sort();
 				returnString = "Play";
 				for(int i=0; i<group.size();i++) {
@@ -1745,7 +1757,7 @@ public class AILogic {
 				return returnString;
 			}	
 			meldOnTable = findMeldsOnTable();
-			if(meldOnTable != null&& hasMapfromTable(run, table)) {
+			if(meldOnTable != null) {
 				for(Entry<Tile, Integer>Entry : meldOnTable.entrySet()) {
 					Tile tile = Entry.getKey();
 					int index = Entry.getValue();
@@ -1760,11 +1772,12 @@ public class AILogic {
 			
 			if(!moveRun2Table) {		//if not in move run progress
 				if(!moveSet2Table) {	//if not in move set progress
-					for(Meld m : table) {
+					for(Meld m : meldList) {
 						moveRunToTable = findRunMove(m);
 							if(moveRunToTable != null) {
 								moveRun2Table = true;
 								tempMeld = m;
+								tempMeldList = new ArrayList<Meld>(meldList);
 								for(Entry<ArrayList<Tile>, Integer> Entry : moveRunToTable.entrySet()) {
 									ArrayList<Tile> runMove = Entry.getKey();
 									moveRunIndex = Entry.getValue();	// 
@@ -1783,14 +1796,14 @@ public class AILogic {
 				//System.out.println("move run");
 					moveRun2Table = false;
 					//System.out.println(tempMeld);
-					//	System.out.println("move +" +  table.indexOf(tempMeld));
+					//	System.out.println("move +" +  tempMeldList.indexOf(tempMeld));
 					returnString = "Move";
-					returnString += " " + table.indexOf(tempMeld);
+					returnString += " " + tempMeldList.indexOf(tempMeld);
 					if(moveRunIndex == 0)
 						returnString += " head to ";
 					else
 						returnString += " tail to ";
-					returnString +=  table.size()-1;
+					returnString +=  meldList.size()-1;
 					if(tempMeld.getTile(moveRunIndex).isJoker())
 						returnString += " tail";
 					//System.out.println(returnString);
@@ -1799,12 +1812,13 @@ public class AILogic {
 			
 			if(!moveSet2Table) {		//if not in move set progress
 				if(!moveRun2Table) {
-					for(Meld m : table) {
+					for(Meld m : meldList) {
 						moveGroupToTable = findSetMove(m);
 						myHand.sort();
 						if(moveGroupToTable != null) {
 							moveSet2Table = true;
 							tempMeld = m;
+							tempMeldList = new ArrayList<Meld>(meldList);
 							for(Entry<ArrayList<Tile>, Integer> Entry : moveGroupToTable.entrySet()) {
 								ArrayList<Tile> setMove = Entry.getKey();
 								moveSetIndex = Entry.getValue();	// 
@@ -1823,21 +1837,21 @@ public class AILogic {
 				//System.out.println("move set");
 				moveSet2Table = false;
 					//System.out.println(tempMeld);
-					//	System.out.println("move +" +  table.indexOf(tempMeld));
+					//System.out.println("move +" +  tempMeldList.indexOf(tempMeld));
 					returnString = "Move";
-					returnString += " " + table.indexOf(tempMeld);
+					returnString += " " + tempMeldList.indexOf(tempMeld);
 					if(moveSetIndex == 0)
 						returnString += " head to ";
 					else
 						returnString += " tail to ";
-					returnString +=  table.size()-1;
+					returnString +=  meldList.size()-1;
 					if(tempMeld.getTile(moveSetIndex).isJoker())
 						returnString += " tail";
 					return returnString;
 			}	
 			
 			if(!cutRun2Table) {	//if not in cut prog
-				for(Meld m : table) {
+				for(Meld m : meldList) {
 					cutRunToTable = findRunCut(m);
 					myHand.sort();
 					if(cutRunToTable != null) {	// can cut
@@ -1847,7 +1861,7 @@ public class AILogic {
 							runCut = Entry.getKey();
 							cutRunIndex = Entry.getValue();	// 
 							myHand.sort();
-							returnString = "Cut " + table.indexOf(m) + " at " +cutRunIndex ;
+							returnString = "Cut " + meldList.indexOf(m) + " at " +cutRunIndex ;
 							return returnString;
 						}
 					}
@@ -1870,7 +1884,7 @@ public class AILogic {
 			}
 			
 			//replace prog
-			for(Meld m : table) {
+			for(Meld m : meldList) {
 				//System.out.println("Check replace");
 				replace = findReplace(m);
 				if(replace != null) {
@@ -1880,11 +1894,12 @@ public class AILogic {
 						myHand.sort();
 						//Replace int(handIndex) to int(tableIndex) int(meldIndex)
 						returnString = "Replace " + myHand.indexOf(tile) + " to ";
-						returnString += table.indexOf(m) + " " +  index;
+						returnString += meldList.indexOf(m) + " " +  index;
 						return returnString;
 					}
 				}
 			}
+			InRestProg = false;
 			return "END";
 		}
 	}

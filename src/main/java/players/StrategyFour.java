@@ -63,9 +63,10 @@ public class StrategyFour implements AIStrategy, Observer{
 				} 
 			}
 			if(hasInitial) {
-				returnString = logic.AI4CommandInitial(myHand,table,countInitial);
-				return returnString;
-				/*if(logic.checkInitialSum() >= 30-countInitial) {
+				//returnString = logic.AI4CommandInitial(myHand,table,countInitial);
+				//return returnString;
+				logic = new AILogic(myHand,table);
+				if(logic.checkInitialSum() >= 30-countInitial) {
 					run = logic.findRun();
 					if(run != null) {
 						countInitial += logic.checkSum(run);
@@ -96,7 +97,7 @@ public class StrategyFour implements AIStrategy, Observer{
 					//System.out.print("Someone has played initial, but P2 can't play 30+points");
 					return "END";
 				}	
-			*/} else {
+			} else {
 				return "END";
 			}
 		} else {		//after initial

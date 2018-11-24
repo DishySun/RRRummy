@@ -153,7 +153,7 @@ public class StrategyFourTest {
 		testAI.printHand();
 		command = testAI.getStrategy().generateCommand();
 		//
-		assertEquals("Play 7 1 0", command);
+		assertEquals("END", command);
 	}
 	
 	@Test
@@ -238,7 +238,7 @@ public class StrategyFourTest {
 		hand2.sort();
 		command = testAI.getStrategy().generateCommand();
 		//2 player, one has less 3 tile than ai, play, or end
-		assertEquals("Play 1 2 3", command);
+		assertEquals("END", command);
 		hand2.remove(hand.indexOf(atile1));
 		hand2.remove(hand.indexOf(atile2));
 		hand2.remove(hand.indexOf(atile3));
@@ -548,7 +548,7 @@ public class StrategyFourTest {
 		hand2.add(atile4);
 		command = testAI.getStrategy().generateCommand();
 		//can not play all tile
-		assertEquals("Play 3 2 0 4", command);
+		assertEquals("END", command);
 		ArrayList<Tile> melds = new ArrayList<Tile>();
 		melds.add(atile1);
 		melds.add(atile2);
@@ -593,7 +593,7 @@ public class StrategyFourTest {
 		}
 		ArrayList<Meld> table = new ArrayList<Meld>();
 		testAI.getStrategy().update(table);
-		testAI.getStrategy().update(1, 14);
+		testAI.getStrategy().update(1, 10);
 		testAI.getStrategy().update(2, 14);
 		hand.add(atile1);
 		hand.add(atile2);
@@ -678,6 +678,8 @@ public class StrategyFourTest {
 		hand2.add(atile10);
 		testAI.getStrategy().update(3, -10);
 		command = testAI.getStrategy().generateCommand();
+		System.out.println(hand2);
+		System.out.println(table);
 		assertEquals("Play 1 2", command);
 		Meld meld3 = new Meld(melds);
 		meld3.addTail(atile2);
@@ -829,7 +831,7 @@ public class StrategyFourTest {
 		testAI.getStrategy().setHand(hand2);
 		testAI.printHand();
 		String command = testAI.getStrategy().generateCommand();
-		System.out.println(command);
+		//System.out.println(command);
 		assertEquals("Play 0 1 2", command);	
 		hand.remove(0);
 		hand.remove(0);
@@ -874,16 +876,16 @@ public class StrategyFourTest {
 		command = testAI.getStrategy().generateCommand();
 		//first play run
 		testAI.printHand();
-		System.out.println(command);
+		//System.out.println(command);
 		assertEquals("Play 0 1 2 3", command);	
 		hand.remove(3);
 		hand.remove(2);
 		hand.remove(1);
 		hand.remove(0);
-		command = testAI.getStrategy().generateCommand();
 		testAI.printHand();
-		System.out.println(command);
 		System.out.println(table);
+		command = testAI.getStrategy().generateCommand();
+		//System.out.println(command);
 		assertEquals("Play 0 1 2 3", command);
 		hand.remove(3);
 		hand.remove(2);
@@ -976,9 +978,11 @@ public class StrategyFourTest {
 		hand2.add(atile2);
 		hand2.add(atile3);
 		hand2.sort();
+		System.out.println("hand:" + hand2);
+		
 		command = testAI.getStrategy().generateCommand();
 		//2 player, one has less 3 tile than ai, play, or end
-		assertEquals("Play 1 2 3", command);
+		assertEquals("END", command);
 		hand2.remove(hand.indexOf(atile1));
 		hand2.remove(hand.indexOf(atile2));
 		hand2.remove(hand.indexOf(atile3));
@@ -995,11 +999,12 @@ public class StrategyFourTest {
 		table.add(meld);
 //[[R2, R3, R4]]
 		hand2.sort();
+		System.out.println("12123132");
 		testAI.printHand();
 		//System.out.println(table);
 		command = testAI.getStrategy().generateCommand();
 		//2 player, one has less 3 tile than ai, play 2 table
-		System.out.println(command);
+		//System.out.println(command);
 		assertEquals("Play 1 to 0", command);
 	}
 	
@@ -1049,6 +1054,7 @@ public class StrategyFourTest {
 		melda.add(atile6);
 		table.add(melda);
 		hand2.add(atile3);
+		System.out.println("asdasdasd");
 		command = testAI.getStrategy().generateCommand();
 		assertEquals("Cut 0 at 1", command);
 		melda.removeTail();
@@ -1116,8 +1122,9 @@ public class StrategyFourTest {
 		hand2.add(atile9);
 		hand2.add(atile10);
 		hand2.add(atile11);
-		testAI.printHand();
-		System.out.println(table);
+System.out.println("13123123");
+		//testAI.printHand();
+		//System.out.println("Table:  " + table);
 		command = testAI.getStrategy().generateCommand();
 		assertEquals("Play 7 1", command);
 		command = testAI.getStrategy().generateCommand();
