@@ -471,8 +471,6 @@ public class StrategyFourTest {
 		// initial no. > 30, check playing
 		command = testAI.getStrategy().generateCommand();
 		assertEquals("END", command);
-		command = testAI.getStrategy().generateCommand();
-		assertEquals("END", command);
 	}
 	
 	@Test

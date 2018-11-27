@@ -1644,15 +1644,15 @@ public class AILogicTest {
 		boolean countMapfromHand;
 		ArrayList<Tile> tile2play = new ArrayList<Tile>();
 		try {
-			atile1 = new Tile("R1");
-			atile2 = new Tile("R2");
-			atile3 = new Tile("R3");
+			atile1 = new Tile("R3");
+			atile2 = new Tile("B3");
+			atile3 = new Tile("O3");
 			atile4 = new Tile("R4");
-			atile5 = new Tile("O4");
-			atile6 = new Tile("B4");
+			atile5 = new Tile("R5");
+			atile6 = new Tile("R6");
 			atile7 = new Tile("R7");
-			atile8 = new Tile("R8");
-			atile9 = new Tile("R9");
+			atile8 = new Tile("B7");
+			atile9 = new Tile("O7");
 			aJoker = new Tile("Joker");
 		}catch(InvalidTileException e) {
 			fail();
@@ -1664,21 +1664,216 @@ public class AILogicTest {
 		melda.add(atile1);
 		melda.add(atile2);
 		melda.add(atile3);
-		meldb.add(atile6);
-		meldb.addTail(aJoker);
-		meldb.add(atile8);
 		meldList.add(melda);
-		meldList.add(meldb);
-		hand.add(atile4);
-		hand.add(atile5);
-		hand.add(atile6);
 		tile2play.add(atile4);
 		tile2play.add(atile5);
 		tile2play.add(atile6);
 		System.out.println(tile2play);
 		System.out.println(meldList);
 		countMapfromHand = logic.hasMapfromTable(tile2play, meldList);
+		assertEquals(false, countMapfromHand);	
+		meldb.add(atile7);
+		meldb.add (atile8);
+		meldb.add(atile9);
+		meldList.add(meldb);
+		countMapfromHand = logic.hasMapfromTable(tile2play, meldList);
 		assertEquals(true, countMapfromHand);	
+	}
+	
+	@Test
+	public void test_hasMapfromTable9Set() throws AbleToAddBothSideException {
+		//test replace, set
+		boolean countMapfromHand;
+		ArrayList<Tile> tile2play = new ArrayList<Tile>();
+		try {
+			atile1 = new Tile("R3");
+			atile2 = new Tile("B3");
+			atile3 = new Tile("O3");
+			atile4 = new Tile("R4");
+			atile5 = new Tile("R5");
+			atile6 = new Tile("R6");
+			atile7 = new Tile("R7");
+			atile8 = new Tile("B7");
+			atile9 = new Tile("O7");
+			aJoker = new Tile("Joker");
+		}catch(InvalidTileException e) {
+			fail();
+		}
+		Meld melda;
+		Meld meldb;
+		melda = new Meld();
+		meldb = new Meld();
+		melda.addTail(aJoker);
+		melda.addTail(atile1);
+		melda.addTail(aJoker);
+		melda.add(atile3);
+		meldList.add(melda);
+		tile2play.add(aJoker);
+		tile2play.add(atile5);
+		tile2play.add(atile6);
 		System.out.println(tile2play);
+		System.out.println(meldList);
+		countMapfromHand = logic.hasMapfromTable(tile2play, meldList);
+		assertEquals(false, countMapfromHand);	
+		meldb.addTail(aJoker);
+		meldb.addTail(atile6);
+		meldb.addTail(aJoker);
+		meldList.add(meldb);
+		System.out.println(tile2play);
+		System.out.println(meldList);
+		countMapfromHand = logic.hasMapfromTable(tile2play, meldList);
+		assertEquals(true, countMapfromHand);	
+	}
+	
+	@Test
+	public void hasSmaeColor4() {
+		try {
+			atile1 = new Tile("R1");
+			atile2 = new Tile("R2");
+			atile3 = new Tile("R3");
+			atile4 = new Tile("O3");
+			atile5 = new Tile("G3");
+			atile6 = new Tile("B3");
+			atile7 = new Tile("R7");
+			atile8 = new Tile("R4");
+			atile9 = new Tile("R5");
+			aJoker = new Tile("Joker");
+		}catch(InvalidTileException e) {
+			fail();
+		}
+		Meld melda;
+		Meld meldb;
+		melda = new Meld();
+		meldb = new Meld();
+		melda.addTail(aJoker);
+		melda.addTail(atile5);
+		melda.addTail(atile6);
+		meldb.addTail(aJoker);
+		meldb.addTail(atile8);
+		meldb.addTail(atile9);
+		System.out.println(melda);
+		System.out.println(meldb);
+		assertFalse(logic.hasSameColor4(melda,meldb));
+	}
+	
+	@Test
+	public void oneSameTilenSet() {
+		try {
+			atile1 = new Tile("R1");
+			atile2 = new Tile("R2");
+			atile3 = new Tile("R3");
+			atile4 = new Tile("O3");
+			atile5 = new Tile("G3");
+			atile6 = new Tile("B3");
+			atile7 = new Tile("R7");
+			atile8 = new Tile("R4");
+			atile9 = new Tile("R5");
+			aJoker = new Tile("Joker");
+		}catch(InvalidTileException e) {
+			fail();
+		}
+		Meld melda;
+		Meld meldb;
+		melda = new Meld();
+		meldb = new Meld();
+		melda.addTail(aJoker);
+		melda.addTail(atile5);
+		melda.addTail(atile6);
+		meldb.addTail(atile5);
+		meldb.addTail(atile6);
+		meldb.addTail(aJoker);
+		System.out.println(melda);
+		System.out.println(meldb);
+		assertFalse(logic.oneSameTilenSet(melda,meldb));
+	}
+	
+	@Test
+	public void test_hasMapfromTable1Set2Run() throws AbleToAddBothSideException {
+		//test replace, set
+		boolean countMapfromHand;
+		ArrayList<Tile> tile2play = new ArrayList<Tile>();
+		try {
+			atile1 = new Tile("R1");
+			atile2 = new Tile("R2");
+			atile3 = new Tile("R3");
+			atile4 = new Tile("O3");
+			atile5 = new Tile("G3");
+			atile6 = new Tile("B3");
+			atile7 = new Tile("R7");
+			atile8 = new Tile("R4");
+			atile9 = new Tile("R5");
+			aJoker = new Tile("Joker");
+		}catch(InvalidTileException e) {
+			fail();
+		}
+		Meld melda;
+		Meld meldb;
+		melda = new Meld();
+		meldb = new Meld();
+		melda.addTail(atile1);
+		melda.addTail(atile2);
+		melda.addTail(atile3);
+		melda.addTail(aJoker);
+		meldList.add(melda);
+		tile2play.add(aJoker);
+		tile2play.add(atile5);
+		tile2play.add(atile6);
+		System.out.println(tile2play);
+		System.out.println(meldList);
+		countMapfromHand = logic.hasMapfromTable(tile2play, meldList);
+		assertEquals(false, countMapfromHand);	
+		meldb.addTail(aJoker);
+		meldb.addTail(atile8);
+		meldb.addTail(atile9);
+		meldList.add(meldb);
+		System.out.println(tile2play);
+		System.out.println(meldList);
+		countMapfromHand = logic.hasMapfromTable(tile2play, meldList);
+		assertEquals(true, countMapfromHand);	
+	}
+	
+	@Test
+	public void test_hasMapfromTable2Set2Set() throws AbleToAddBothSideException {
+		//test replace, set
+		boolean countMapfromHand;
+		ArrayList<Tile> tile2play = new ArrayList<Tile>();
+		try {
+			atile1 = new Tile("O3");
+			atile2 = new Tile("G3");
+			atile3 = new Tile("B3");
+			atile4 = new Tile("O3");
+			atile5 = new Tile("G3");
+			atile6 = new Tile("B3");
+			atile7 = new Tile("O3");
+			atile8 = new Tile("G3");
+			atile9 = new Tile("B3");
+			aJoker = new Tile("Joker");
+		}catch(InvalidTileException e) {
+			fail();
+		}
+		Meld melda;
+		Meld meldb;
+		melda = new Meld();
+		meldb = new Meld();
+		melda.addTail(atile1);
+		melda.addTail(atile2);
+		melda.addTail(atile3);
+		melda.addTail(aJoker);
+		meldList.add(melda);
+		tile2play.add(aJoker);
+		tile2play.add(atile5);
+		tile2play.add(atile6);
+		System.out.println(tile2play);
+		System.out.println(meldList);
+		countMapfromHand = logic.hasMapfromTable(tile2play, meldList);
+		assertEquals(false, countMapfromHand);	
+		meldb.addTail(aJoker);
+		meldb.addTail(atile8);
+		meldb.addTail(atile7);
+		meldList.add(meldb);
+		System.out.println(tile2play);
+		System.out.println(meldList);
+		countMapfromHand = logic.hasMapfromTable(tile2play, meldList);
+		assertEquals(true, countMapfromHand);	
 	}
 }
