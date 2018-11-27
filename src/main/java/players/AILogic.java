@@ -97,6 +97,7 @@ public class AILogic {
 	
 	public boolean hasSameColor(ArrayList<Tile> tile, Tile compareTile) {
 		// TODO Auto-generated method stub
+		if(compareTile.isJoker()) return false;
 		for (Tile t : tile) {
 			if(t.getColor() == compareTile.getColor()) return true;
 		}
@@ -107,8 +108,11 @@ public class AILogic {
 		// TODO Auto-generated method stub
 		for (Tile t : tile) {
 			for(int m = 0; m<comptile.size();m++) {
-				if(t.getColor() == comptile.getTile(m).getColor()) 
+				if(t.getColor() == comptile.getTile(m).getColor()) {
+					if(comptile.getTile(m).isJoker()) 
+						continue;
 					return true;
+				}	
 			}
 		}
 		return false;	
@@ -117,10 +121,46 @@ public class AILogic {
 	public boolean hasSameColor3(Meld meld, Tile comptile) {
 		// TODO Auto-generated method stub
 		for(int i=0; i<meld.size();i++) {
-			if(meld.getTile(i).getColor() == comptile.getColor())
+			if(meld.getTile(i).getColor() == comptile.getColor()) {
+				if(meld.getTile(i).isJoker()) 
+					continue;
 				return true;
+			}
 		}
 		return false;	
+	}
+	
+	public boolean hasSameColor4(Meld meld, Meld comptile) {
+		// TODO Auto-generated method stub
+		for(int i=0; i<meld.size();i++) {
+			for(int m = 0; m<comptile.size();m++) {
+				if(meld.getTile(i).getColor() == comptile.getTile(m).getColor()) {
+					if(meld.getTile(i).isJoker()) 
+						continue;
+					return true;
+				}
+					
+			}
+		}
+		return false;	
+	}
+	
+	public boolean oneSameTilenSet(Meld meld, Meld comMeld) {
+		//check if 2 sets has exactly the same tiles;
+		if(!meld.isSet() && !comMeld.isSet()) return false;
+		if(meld.size() != comMeld.size()) return false;
+		int count = 0;
+		for(int m=0; m<meld.size();m++) {
+			for(int c=0; c<comMeld.size();c++) {
+				if(meld.getTile(m).isJoker() || comMeld.getTile(c).isJoker())
+					continue;
+				if(meld.getTile(m).getNumber() == comMeld.getTile(c).getNumber()
+						&&meld.getTile(m).getColor() == comMeld.getTile(c).getColor()) {
+					count++;
+				}
+			}
+		}
+		return count == 1;
 	}
 	
 	public ArrayList<Tile> findRun() {
@@ -517,7 +557,7 @@ public class AILogic {
 			return null;
 		for(int j=0; j<temphand.size();j++) {	
 			for(int i=0; i<tempMeldList.size();i++) {
-				if(tempMeldList.get(i).size() != 1 && tempMeldList.get(i).getHead().getColor() != Tile.Color.JOKER) {
+				if(tempMeldList.get(i).size() != 1 /*&& tempMeldList.get(i).getHead().getColor() != Tile.Color.JOKER*/) {
 					if(tempMeldList.get(i).getMap().containsKey(temphand.getTile(j).toString())) {	//if can add and not used
 						mdlesMap.put(temphand.getTile(j),i);
 						return mdlesMap;
@@ -1303,19 +1343,51 @@ public class AILogic {
 			return true;
 		ArrayList<Tile> tempTile  = new ArrayList<Tile>(tile);
 		Meld meld = new Meld(tempTile);
-		if(meld.isSet())
-			return true;
-		for(Meld m : meldList) {
-			if(m.size() == 1)
-				continue;
-			else {
-				for(int i=0; i<m.size();i++) {
-					if(meld.getMap().containsKey(m.getTile(i).toString())) {
-						if(!m.getTile(i).isJoker())
-							countMep++;
-						else {
-							if(matchJoker(meld, m, i))
+		if(meld.isRun()) {		// play run
+			for(Meld m : meldList) {
+				if(m.size() == 1)
+					continue;
+				else {
+					for(int i=0; i<m.size();i++) {
+						if(meld.getMap().containsKey(m.getTile(i).toString())) {
+							if(m.isSet()) {
+								if(!m.getTile(i).isJoker()) {
+									countMep++;
+									break;
+								} else {	// meld list has joker
+									if(matchJoker(meld, m, i)) {
+										countMep++;
+										break;
+									}
+								}
+							} else {
+								if(!m.getTile(i).isJoker())
+									countMep++;
+								else {	// meld list has joker
+									if(matchJoker(meld, m, i))
+										countMep++;
+								}
+							}
+						}
+					}
+				}
+			}
+		} else {		// play set
+			for(Meld m : meldList) {
+				if(m.size() == 1)
+					continue;
+				else {
+					for(int i=0; i<m.size();i++) {
+						if(meld.getMap().containsKey(m.getTile(i).toString())) {
+							if(!m.getTile(i).isJoker()) {
 								countMep++;
+								break;
+							} else {	// meld list has joker
+								if(matchJoker(meld, m, i)) {
+									countMep++;
+									break;
+								}
+							}
 						}
 					}
 				}
@@ -1441,7 +1513,7 @@ public class AILogic {
 						}
 					}
 				}
-			} else { 	//joker not at head and tail
+			} else { 	//joker at mid
 				if(hasJoker) {// playMeld has joker
 					if(playMeld.getHead().isJoker()) {	//play head tile is joker
 						if(tableMeld.getTile(index+1).getColor() == playMeld.getRunColor()		//at front
@@ -1502,7 +1574,221 @@ public class AILogic {
 					}
 				}
 			}
+		} else if(playMeld.isRun() && tableMeld.isSet()) {	// play run, check set
+			if(index == 0 || index == tableMeld.size()-1) {			// joker on table  at head or tails
+				if(hasJoker) {		// play meld has joker
+					if(playMeld.getHead().isJoker()) {
+						if((tableMeld.getTile(1).getNumber() == playMeld.getTile(1).getNumber()-2
+								|| tableMeld.getTile(1).getNumber() == playMeld.getTail().getNumber()+1)
+								&& !hasSameColor4(tableMeld, playMeld)) {
+							return true;
+						}
+					}else if(playMeld.getTail().isJoker()) {
+						if((tableMeld.getTile(1).getNumber() == playMeld.getHead().getNumber()-1
+								|| tableMeld.getTile(1).getNumber() == playMeld.getTile(playMeld.size()-2).getNumber()+2)
+								&& !hasSameColor4(tableMeld, playMeld)) {
+							return true;
+						}
+					}else {
+						if((tableMeld.getTile(1).getNumber() == playMeld.getHead().getNumber()-1
+								|| tableMeld.getTile(1).getNumber() == playMeld.getTail().getNumber()+1)
+								&& !hasSameColor4(tableMeld, playMeld)) {
+							return true;
+						}
+					}
+				} else {	// play meld has no joker
+					if(index == 0) {
+						if(tableMeld.getTail().isJoker()) {	// double joker ie. J O B J
+							if((tableMeld.getTile(1).getNumber() == playMeld.getHead().getNumber()-1
+									|| tableMeld.getTile(1).getNumber() == playMeld.getTail().getNumber()+1)
+									&& !hasSameColor4(tableMeld, playMeld)) {
+								return true;
+							}
+						} else {
+							if((tableMeld.getTail().getNumber() == playMeld.getHead().getNumber()-1
+									|| tableMeld.getTail().getNumber() == playMeld.getTail().getNumber()+1)
+									&& !hasSameColor4(tableMeld, playMeld)) {
+								return true;
+							}
+						}
+					} else {
+						if(tableMeld.getHead().isJoker()) {	// double joker ie. J O B J
+							if((tableMeld.getTile(1).getNumber() == playMeld.getHead().getNumber()-1
+									|| tableMeld.getTile(1).getNumber() == playMeld.getTail().getNumber()+1)
+									&& !hasSameColor4(tableMeld, playMeld)) {
+								return true;
+							}
+						} else {
+							if((tableMeld.getHead().getNumber() == playMeld.getHead().getNumber()-1
+									|| tableMeld.getHead().getNumber() == playMeld.getTail().getNumber()+1)
+									&& !hasSameColor4(tableMeld, playMeld)) {
+								return true;
+							}
+						}
+					}
+				}
+			} else {	// joker on table  at mid
+				if(hasJoker) {		// play meld has joker
+					if(playMeld.getHead().isJoker()) {
+						if((tableMeld.getHead().getNumber() == playMeld.getTile(1).getNumber()-2
+								|| tableMeld.getHead().getNumber() == playMeld.getTail().getNumber()+1)
+								&& !hasSameColor4(tableMeld, playMeld)) {
+							return true;
+						}
+					}else if(playMeld.getTail().isJoker()) {
+						if((tableMeld.getHead().getNumber() == playMeld.getHead().getNumber()-1
+								|| tableMeld.getHead().getNumber() == playMeld.getTile(playMeld.size()-2).getNumber()+1)
+								&& !hasSameColor4(tableMeld, playMeld)) {
+							return true;
+						}
+					}else {
+						if((tableMeld.getHead().getNumber() == playMeld.getHead().getNumber()-1
+								|| tableMeld.getHead().getNumber() == playMeld.getTail().getNumber()+1)
+								&& !hasSameColor4(tableMeld, playMeld)) {
+							return true;
+						}
+					}
+				} else {	// play meld has no joker
+					if(tableMeld.getHead().isJoker()) {	// double joker ie. J O B J
+						if((tableMeld.getTail().getNumber() == playMeld.getHead().getNumber()-1
+								|| tableMeld.getTail().getNumber() == playMeld.getTail().getNumber()+1)
+								&& !hasSameColor4(tableMeld, playMeld)) {
+							return true;
+						}
+					} else {
+						if((tableMeld.getHead().getNumber() == playMeld.getHead().getNumber()-1
+								|| tableMeld.getHead().getNumber() == playMeld.getTail().getNumber()+1)
+								&& !hasSameColor4(tableMeld, playMeld)) {
+							return true;
+						}
+					}
+				}
+			}
+		} else if(playMeld.isSet() && tableMeld.isRun()) {
+			if(index == 0 || index == tableMeld.size()-1) {			// joker on table  at head or tails
+				if(index == 0) {			
+					if(hasJoker) {
+						if(playMeld.getHead().isJoker()) {
+							if(tableMeld.getTile(index+1).isJoker()) {	// table: I J 5
+								if(tableMeld.getTile(index+2).getNumber()-2 == playMeld.getTail().getNumber()
+										&& !hasSameColor4(tableMeld, playMeld)) 
+									return true;
+							} else {	// table: I 4 J
+								if(tableMeld.getTile(index+1).getNumber()-1 == playMeld.getTail().getNumber()
+										&& !hasSameColor4(tableMeld, playMeld)) {
+									return true;
+								}
+							}
+						}else {
+							if(tableMeld.getTile(index+1).isJoker()) {	// table: I J 5
+								if(tableMeld.getTile(index+2).getNumber()-2 == playMeld.getHead().getNumber()
+										&& !hasSameColor4(tableMeld, playMeld)) 
+									return true;
+							} else {	// table: I 4 J
+								if(tableMeld.getTile(index+1).getNumber()-1 == playMeld.getHead().getNumber()
+										&& !hasSameColor4(tableMeld, playMeld)) 
+									return true;
+							}
+						}
+					} else {
+						if(tableMeld.getTile(index+1).isJoker()) {	// table: I J 5
+							if(tableMeld.getTile(index+2).getNumber()-2 == playMeld.getHead().getNumber()
+									&& !hasSameColor4(tableMeld, playMeld)) 
+								return true;
+						} else {	// table: I 4 J
+							if(tableMeld.getTile(index+1).getNumber()-1 == playMeld.getHead().getNumber()
+									&& !hasSameColor4(tableMeld, playMeld)) 
+								return true;
+						}
+					}
+				} else {
+					if(hasJoker) {
+						if(playMeld.getHead().isJoker()) {
+							if(tableMeld.getTile(index-1).isJoker()) {	// table: 3 J I
+								if(tableMeld.getTile(index-2).getNumber()+2 == playMeld.getTail().getNumber()
+										&& !hasSameColor4(tableMeld, playMeld)) 
+									return true;
+							} else {	// table: J 4 I
+								if(tableMeld.getTile(index-1).getNumber()+1 == playMeld.getTail().getNumber()
+										&& !hasSameColor4(tableMeld, playMeld)) 
+									return true;
+							}
+						}else {
+							if(tableMeld.getTile(index-1).isJoker()) {	// table: 3 J I
+								if(tableMeld.getTile(index-2).getNumber()+2 == playMeld.getHead().getNumber()
+										&& !hasSameColor4(tableMeld, playMeld)) 
+									return true;
+							} else {	// table: J 4 I
+								if(tableMeld.getTile(index-1).getNumber()+1 == playMeld.getHead().getNumber()
+										&& !hasSameColor4(tableMeld, playMeld)) 
+									return true;
+							}
+						}
+					} else {
+						if(tableMeld.getTile(index-1).isJoker()) {	// table: 3 J I
+							if(tableMeld.getTile(index-2).getNumber()+2 == playMeld.getHead().getNumber()
+									&& !hasSameColor4(tableMeld, playMeld)) 
+								return true;
+						} else {	// table: J 4 I
+							if(tableMeld.getTile(index-1).getNumber()+1 == playMeld.getHead().getNumber()
+									&& !hasSameColor4(tableMeld, playMeld)) 
+								return true;
+						}
+					}
+				}
+			} else {	// joker on table at mid
+				if(hasJoker) {
+					if(playMeld.getHead().isJoker()) {
+						if(tableMeld.getTile(index-1).isJoker()) {	// table: J I 5
+							if(tableMeld.getTile(index+1).getNumber()-1 == playMeld.getTail().getNumber()
+									&& !hasSameColor4(tableMeld, playMeld)) {
+								return true;
+							}
+						} else {	// table: 4 I J
+							if(tableMeld.getTile(index-1).getNumber()+1 == playMeld.getTail().getNumber()
+									&& !hasSameColor4(tableMeld, playMeld)) {
+								return true;
+							}
+						}
+					}else {
+						if(tableMeld.getTile(index-1).isJoker()) {	// table: J I 5
+							if(tableMeld.getTile(index+1).getNumber()-1 == playMeld.getHead().getNumber()
+									&& !hasSameColor4(tableMeld, playMeld)) 
+								return true;
+						} else {	// table: 4 I J
+							if(tableMeld.getTile(index-1).getNumber()+1 == playMeld.getHead().getNumber()
+									&& !hasSameColor4(tableMeld, playMeld)) 
+								return true;
+						}
+					}
+				} else {
+					if(tableMeld.getTile(index-1).isJoker()) {	// table: J I 5
+						if(tableMeld.getTile(index+1).getNumber()-1 == playMeld.getHead().getNumber()
+								&& !hasSameColor4(tableMeld, playMeld)) 
+							return true;
+					} else {	// table: 4 I J
+						if(tableMeld.getTile(index-1).getNumber()+1 == playMeld.getHead().getNumber()
+								&& !hasSameColor4(tableMeld, playMeld)) 
+							return true;
+					}
+				}
+			}
+		}else if(playMeld.isSet() && tableMeld.isSet()) {
+			if(tableMeld.size() == 4) {
+				for(int p=0; p<playMeld.size();p++) {
+					for(int t=0; t<tableMeld.size();t++) {
+						if(!playMeld.getTile(p).isJoker() && !tableMeld.getTile(t).isJoker()) {
+							if(playMeld.getTile(p).getNumber() == tableMeld.getTile(t).getNumber())
+								return true;
+						}
+					}
+				}
+			} else {
+				//return true iff has exactly 1 same tile
+				return oneSameTilenSet(playMeld, tableMeld);
+			}
 		}
+			
 		return false;
 	}
 
@@ -1573,12 +1859,13 @@ public class AILogic {
 		}	
 	} */
 	
-	public String AI4Command(Hand myHand, ArrayList<Meld> t) {
+	public String AI4Command(Hand myHand, ArrayList<Meld> t, int stockLeft) {
 		hand = myHand;
 		meldList = t;
 		run = new ArrayList<Tile>();
 		group = new ArrayList<Tile>();
 		String returnString = "";
+		
 		if(canPlayAll() && !InRestProg) {	//if can play all, request use of meldList
 //System.out.println("can play all");
 			run = findRun();
@@ -1744,10 +2031,173 @@ public class AILogic {
 				}
 			}
 			return "END";
-		}		
-		//if stock left is 1, stock - table total tile + all player hand tiles number 
-		
-		else {																// if cannot play all, play meld base on meldList
+		} else if(stockLeft < 4) {	//if stock less than 3 tile, play all
+			InRestProg = true;
+			run = findRun();
+			if(run != null) {
+				myHand.sort();
+				returnString = "Play";
+				for(int i=0; i<run.size();i++) {
+					returnString += " " + myHand.handIndexOf(run.get(i));
+				}
+				return returnString;
+			} 
+			group = findSet();
+			myHand.sort();
+			if(group != null) {
+				myHand.sort();
+				returnString = "Play";
+				for(int i=0; i<group.size();i++) {
+						returnString += " " + myHand.handIndexOf(group.get(i));
+				}
+				return returnString;
+			}	
+			meldOnTable = findMeldsOnTable();
+			if(meldOnTable != null) {
+				for(Entry<Tile, Integer>Entry : meldOnTable.entrySet()) {
+					Tile tile = Entry.getKey();
+					int index = Entry.getValue();
+					myHand.sort();
+					if(tile.isJoker())
+						returnString = "Play "  + myHand.handIndexOf(tile) + " to " + index + " " + "tail";
+					else
+						returnString = "Play "  + myHand.handIndexOf(tile) + " to " + index/* + " " + "1"*/;	
+					return returnString;
+				}
+			} 
+			
+			if(!moveRun2Table) {		//if not in move run progress
+				if(!moveSet2Table) {	//if not in move set progress
+					for(Meld m : meldList) {
+						moveRunToTable = findRunMove(m);
+							if(moveRunToTable != null) {
+								moveRun2Table = true;
+								tempMeld = m;
+								tempMeldList = new ArrayList<Meld>(meldList);
+								for(Entry<ArrayList<Tile>, Integer> Entry : moveRunToTable.entrySet()) {
+									ArrayList<Tile> runMove = Entry.getKey();
+									moveRunIndex = Entry.getValue();	// 
+									myHand.sort();
+									returnString = "Play";
+									for(int i=0; i<runMove.size();i++) {
+										returnString += " " + myHand.handIndexOf(runMove.get(i));
+									}
+									//System.out.println("Try using move 2 ");
+									return returnString;
+								}
+							}
+						}	
+				}
+			}	else {	// if in move run progress already
+				//System.out.println("move run");
+					moveRun2Table = false;
+					//System.out.println(tempMeld);
+					//	System.out.println("move +" +  tempMeldList.indexOf(tempMeld));
+					returnString = "Move";
+					returnString += " " + tempMeldList.indexOf(tempMeld);
+					if(moveRunIndex == 0)
+						returnString += " head to ";
+					else
+						returnString += " tail to ";
+					returnString +=  meldList.size()-1;
+					if(tempMeld.getTile(moveRunIndex).isJoker())
+						returnString += " tail";
+					//System.out.println(returnString);
+					return returnString;
+			}	
+			
+			if(!moveSet2Table) {		//if not in move set progress
+				if(!moveRun2Table) {
+					for(Meld m : meldList) {
+						moveGroupToTable = findSetMove(m);
+						myHand.sort();
+						if(moveGroupToTable != null) {
+							moveSet2Table = true;
+							tempMeld = m;
+							tempMeldList = new ArrayList<Meld>(meldList);
+							for(Entry<ArrayList<Tile>, Integer> Entry : moveGroupToTable.entrySet()) {
+								ArrayList<Tile> setMove = Entry.getKey();
+								moveSetIndex = Entry.getValue();	// 
+								myHand.sort();
+								returnString = "Play";
+								for(int i=0; i<setMove.size();i++) {
+									returnString += " " + myHand.handIndexOf(setMove.get(i));
+								}
+								//System.out.println("Try using move 2 set");
+								return returnString;
+							}
+						}
+					}	
+				}
+			}	else {	// if in move set progress already
+				//System.out.println("move set");
+				moveSet2Table = false;
+					//System.out.println(tempMeld);
+					//System.out.println("move +" +  tempMeldList.indexOf(tempMeld));
+					returnString = "Move";
+					returnString += " " + tempMeldList.indexOf(tempMeld);
+					if(moveSetIndex == 0)
+						returnString += " head to ";
+					else
+						returnString += " tail to ";
+					returnString +=  meldList.size()-1;
+					if(tempMeld.getTile(moveSetIndex).isJoker())
+						returnString += " tail";
+					return returnString;
+			}	
+			
+			if(!cutRun2Table) {	//if not in cut prog
+				for(Meld m : meldList) {
+					cutRunToTable = findRunCut(m);
+					myHand.sort();
+					if(cutRunToTable != null) {	// can cut
+						cutRun2Table = true;
+						tempMeld = m;
+						for(Entry<ArrayList<Tile>, Integer> Entry : cutRunToTable.entrySet()) {
+							runCut = Entry.getKey();
+							cutRunIndex = Entry.getValue();	// 
+							myHand.sort();
+							returnString = "Cut " + meldList.indexOf(m) + " at " +cutRunIndex ;
+							return returnString;
+						}
+					}
+				}
+			} else {	// in cut prog
+				meldOnTable = findMeldsOnTable();
+				if(meldOnTable != null) {
+					for(Entry<Tile, Integer>Entry : meldOnTable.entrySet()) {
+						Tile tile = Entry.getKey();
+						int index = Entry.getValue();
+						myHand.sort();
+						if(tile.isJoker())
+							returnString = "Play "  + myHand.handIndexOf(tile) + " to " + index + " " + "tail";
+						else
+							returnString = "Play "  + myHand.handIndexOf(tile) + " to " + index/* + " " + "1"*/;	
+						return returnString;
+					}
+				} else
+					cutRun2Table = false;
+			}
+			
+			//replace prog
+			for(Meld m : meldList) {
+				//System.out.println("Check replace");
+				replace = findReplace(m);
+				if(replace != null) {
+					for(Entry<Tile, Integer>Entry : replace.entrySet()) {
+						Tile tile = Entry.getKey();
+						int index = Entry.getValue();
+						myHand.sort();
+						//Replace int(handIndex) to int(tableIndex) int(meldIndex)
+						returnString = "Replace " + myHand.indexOf(tile) + " to ";
+						returnString += meldList.indexOf(m) + " " +  index;
+						return returnString;
+					}
+				}
+			}
+			InRestProg = false;
+			return "END";
+		} else {																// if cannot play all, play meld base on meldList
 //System.out.println("can not play all");
 			InRestProg = true;
 			run = findRun();

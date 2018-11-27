@@ -101,7 +101,17 @@ public class StrategyFour implements AIStrategy, Observer{
 				return "END";
 			}
 		} else {		//after initial
-			returnString = logic.AI4Command(myHand, table);
+			int totalTile  = 0;
+			for(Entry<Integer, Integer> entry : playerHandSizes.entrySet()) {
+				//int id = entry.getKey();
+				int handsize = entry.getValue();
+				totalTile += handsize;;
+			}
+			for(Meld m : table) {
+				totalTile += m.size();
+			}
+			int stockLeft = 106 - totalTile;
+			returnString = logic.AI4Command(myHand, table, stockLeft);
 			return returnString;
 		}
 	}
