@@ -1301,15 +1301,22 @@ public class AILogic {
 		int countMep = 0;
 		if(tile.size() == 1) 
 			return true;
-		Meld meld = new Meld(tile);
+		ArrayList<Tile> tempTile  = new ArrayList<Tile>(tile);
+		Meld meld = new Meld(tempTile);
+		if(meld.isSet())
+			return true;
 		for(Meld m : meldList) {
-			for(int i=0; i<m.size();i++) {
-				if(meld.getMap().containsKey(m.getTile(i).toString())) {
-					if(!m.getTile(i).isJoker())
-						countMep++;
-					else {
-						if(matchJoker(meld, m, i))
+			if(m.size() == 1)
+				continue;
+			else {
+				for(int i=0; i<m.size();i++) {
+					if(meld.getMap().containsKey(m.getTile(i).toString())) {
+						if(!m.getTile(i).isJoker())
 							countMep++;
+						else {
+							if(matchJoker(meld, m, i))
+								countMep++;
+						}
 					}
 				}
 			}
@@ -1503,6 +1510,9 @@ public class AILogic {
 		hand = myHand;
 		meldList = t;
 		String returnString = "";
+		run = new ArrayList<Tile>();
+		group = new ArrayList<Tile>();
+		
 		run = findRun();
 		if(run != null)	{
 			myHand.sort();
@@ -1566,8 +1576,8 @@ public class AILogic {
 	public String AI4Command(Hand myHand, ArrayList<Meld> t) {
 		hand = myHand;
 		meldList = t;
-//System.out.println(hand);
-//System.out.println(meldList);
+		run = new ArrayList<Tile>();
+		group = new ArrayList<Tile>();
 		String returnString = "";
 		if(canPlayAll() && !InRestProg) {	//if can play all, request use of meldList
 //System.out.println("can play all");
@@ -1734,7 +1744,10 @@ public class AILogic {
 				}
 			}
 			return "END";
-		} else {																// if cannot play all, play meld base on meldList
+		}		
+		//if stock left is 1, stock - table total tile + all player hand tiles number 
+		
+		else {																// if cannot play all, play meld base on meldList
 //System.out.println("can not play all");
 			InRestProg = true;
 			run = findRun();
@@ -1748,7 +1761,7 @@ public class AILogic {
 			} 
 			group = findSet();
 			myHand.sort();
-			if(group != null&& hasMapfromTable(group, meldList)) {
+			if(group != null && hasMapfromTable(group, meldList)) {
 				myHand.sort();
 				returnString = "Play";
 				for(int i=0; i<group.size();i++) {

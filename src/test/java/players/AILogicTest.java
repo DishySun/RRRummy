@@ -1635,5 +1635,50 @@ public class AILogicTest {
 		System.out.println(meldList);
 		countMapfromHand = logic.hasMapfromTable(tile2play, meldList);
 		assertEquals(true, countMapfromHand);	
+		System.out.println(tile2play);
+	}
+	
+	@Test
+	public void test_hasMapfromTable8Set() throws AbleToAddBothSideException {
+		//test replace, set
+		boolean countMapfromHand;
+		ArrayList<Tile> tile2play = new ArrayList<Tile>();
+		try {
+			atile1 = new Tile("R1");
+			atile2 = new Tile("R2");
+			atile3 = new Tile("R3");
+			atile4 = new Tile("R4");
+			atile5 = new Tile("O4");
+			atile6 = new Tile("B4");
+			atile7 = new Tile("R7");
+			atile8 = new Tile("R8");
+			atile9 = new Tile("R9");
+			aJoker = new Tile("Joker");
+		}catch(InvalidTileException e) {
+			fail();
+		}
+		Meld melda;
+		Meld meldb;
+		melda = new Meld();
+		meldb = new Meld();
+		melda.add(atile1);
+		melda.add(atile2);
+		melda.add(atile3);
+		meldb.add(atile6);
+		meldb.addTail(aJoker);
+		meldb.add(atile8);
+		meldList.add(melda);
+		meldList.add(meldb);
+		hand.add(atile4);
+		hand.add(atile5);
+		hand.add(atile6);
+		tile2play.add(atile4);
+		tile2play.add(atile5);
+		tile2play.add(atile6);
+		System.out.println(tile2play);
+		System.out.println(meldList);
+		countMapfromHand = logic.hasMapfromTable(tile2play, meldList);
+		assertEquals(true, countMapfromHand);	
+		System.out.println(tile2play);
 	}
 }
