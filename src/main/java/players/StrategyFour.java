@@ -65,8 +65,7 @@ public class StrategyFour implements AIStrategy, Observer{
 		}
 		int stockLeft = 106 - totalTile;
 		returnString = logic.AI4Command(myHand, table, playerHandSizes, stockLeft);
-		return returnString;
-		
+		return returnString;	
 	}
 	
 	@Override
