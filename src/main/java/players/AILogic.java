@@ -7,16 +7,8 @@ import java.util.Map.Entry;
 import rrrummy.*;
 
 public class AILogic {
-	private ArrayList<Meld> table;
 	private ArrayList<Tile> run;
 	private ArrayList<Tile> group;
-	private ArrayList<Tile> runCut;
-	private HashMap<Tile,Integer> meldOnTable;
-	private HashMap<ArrayList<Tile>,Integer> moveRunToTable;
-	private HashMap<ArrayList<Tile>,Integer> moveGroupToTable;
-	private HashMap<ArrayList<Tile>,Integer> cutRunToTable;
-	private HashMap<Tile,Integer>replace;
-	private ArrayList<Meld> tempMeldList;
 	boolean hasLess;
 	boolean moveRun2Table;
 	boolean moveSet2Table;
@@ -25,23 +17,12 @@ public class AILogic {
 	int moveRunIndex;
 	int moveSetIndex;
 	int cutRunIndex;
-	private Meld tempMeld;
 	boolean moveGroup2Table;
 	Hand hand;
 	ArrayList<Meld> meldList; 
 	public AILogic(Hand h, ArrayList<Meld> m) {
 		hand = h;
 		meldList = m;
-		
-		moveRunIndex = 0;
-		moveSetIndex = 0;
-		cutRunIndex = 0;
-		moveRun2Table = false;
-		moveSet2Table = false;
-		InRestProg = false;
-		cutRun2Table = false;
-		hasLess = false;
-		tempMeld = new Meld();
 	}
 	
 	public int checkSum(ArrayList<Tile> tileArray) {
@@ -1859,7 +1840,7 @@ public class AILogic {
 		}	
 	} */
 	
-	public String AI4Command(Hand myHand, ArrayList<Meld> t, int stockLeft) {
+	/*public String AI4Command(Hand myHand, ArrayList<Meld> t, int stockLeft) {
 		hand = myHand;
 		meldList = t;
 		run = new ArrayList<Tile>();
@@ -1896,7 +1877,7 @@ public class AILogic {
 					if(tile.isJoker())
 						returnString = "Play "  + myHand.handIndexOf(tile) + " to " + index + " " + "tail";
 					else
-						returnString = "Play "  + myHand.handIndexOf(tile) + " to " + index/* + " " + "1"*/;	
+						returnString = "Play "  + myHand.handIndexOf(tile) + " to " + index + " " + "1";	
 					return returnString;
 				}
 			} 
@@ -2007,7 +1988,7 @@ public class AILogic {
 						if(tile.isJoker())
 							returnString = "Play "  + myHand.handIndexOf(tile) + " to " + index + " " + "tail";
 						else
-							returnString = "Play "  + myHand.handIndexOf(tile) + " to " + index/* + " " + "1"*/;	
+							returnString = "Play "  + myHand.handIndexOf(tile) + " to " + index + " " + "1";	
 						return returnString;
 					}
 				} else
@@ -2061,7 +2042,7 @@ public class AILogic {
 					if(tile.isJoker())
 						returnString = "Play "  + myHand.handIndexOf(tile) + " to " + index + " " + "tail";
 					else
-						returnString = "Play "  + myHand.handIndexOf(tile) + " to " + index/* + " " + "1"*/;	
+						returnString = "Play "  + myHand.handIndexOf(tile) + " to " + index + " " + "1";	
 					return returnString;
 				}
 			} 
@@ -2172,7 +2153,7 @@ public class AILogic {
 						if(tile.isJoker())
 							returnString = "Play "  + myHand.handIndexOf(tile) + " to " + index + " " + "tail";
 						else
-							returnString = "Play "  + myHand.handIndexOf(tile) + " to " + index/* + " " + "1"*/;	
+							returnString = "Play "  + myHand.handIndexOf(tile) + " to " + index + " " + "1";	
 						return returnString;
 					}
 				} else
@@ -2228,7 +2209,7 @@ public class AILogic {
 					if(tile.isJoker())
 						returnString = "Play "  + myHand.handIndexOf(tile) + " to " + index + " " + "tail";
 					else
-						returnString = "Play "  + myHand.handIndexOf(tile) + " to " + index/* + " " + "1"*/;	
+						returnString = "Play "  + myHand.handIndexOf(tile) + " to " + index + " " + "1";	
 					return returnString;
 				}
 			} 
@@ -2339,7 +2320,7 @@ public class AILogic {
 						if(tile.isJoker())
 							returnString = "Play "  + myHand.handIndexOf(tile) + " to " + index + " " + "tail";
 						else
-							returnString = "Play "  + myHand.handIndexOf(tile) + " to " + index/* + " " + "1"*/;	
+							returnString = "Play "  + myHand.handIndexOf(tile) + " to " + index + " " + "1";	
 						return returnString;
 					}
 				} else
@@ -2365,5 +2346,5 @@ public class AILogic {
 			InRestProg = false;
 			return "END";
 		}
-	}
+	}*/
 }

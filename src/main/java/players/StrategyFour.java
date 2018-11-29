@@ -32,10 +32,12 @@ public class StrategyFour implements AIStrategy, Observer{
 	boolean moveGroup2Table;
 	private int countInitial;
 	private String returnString;
-	private AILogic logic;
+	private AILogic lg;
+	private AI4Logic logic;
 	
 	public StrategyFour() {
-		logic = new AILogic(myHand,table);
+		lg = new AILogic(myHand,table);
+		logic = new AI4Logic(lg);
 		countInitial = 0;
 		moveRunIndex = 0;
 		moveSetIndex = 0;
@@ -52,68 +54,19 @@ public class StrategyFour implements AIStrategy, Observer{
 	@Override
 	public String generateCommand() {
 		// TODO Auto-generated method stub
-		boolean hasInitial = false;
-		if(countInitial < 30) {	//play initial when someone has played initial
-			for(Entry<Integer, Integer> entry : playerHandSizes.entrySet()) {
-				//int id = entry.getKey();
-				int handsize = entry.getValue();
-				if(handsize < 14) {
-					hasInitial = true;
-					break;
-				} 
-			}
-			if(hasInitial) {
-				//returnString = logic.AI4CommandInitial(myHand,table,countInitial);
-				//return returnString;
-				logic = new AILogic(myHand,table);
-				if(logic.checkInitialSum() >= 30-countInitial) {
-					run = logic.findRun();
-					if(run != null) {
-						countInitial += logic.checkSum(run);
-						myHand.sort();
-						returnString = "Play";
-						for(int i=0; i<run.size();i++) {
-							returnString += " " + myHand.handIndexOf(run.get(i)); 
-						}
-						return returnString;
-					}
-					else {
-						group = logic.findSet();
-						myHand.sort();
-						if(group != null) {
-							countInitial += logic.checkSum(group);
-							myHand.sort();
-							returnString = "Play";
-							for(int i=0; i<group.size();i++) {
-								returnString += " " + myHand.handIndexOf(group.get(i)); 
-							}
-							return returnString;
-						}	
-						else {
-							return "END";
-						}
-					}
-				}	else {
-					//System.out.print("Someone has played initial, but P2 can't play 30+points");
-					return "END";
-				}	
-			} else {
-				return "END";
-			}
-		} else {		//after initial
-			int totalTile  = 0;
-			for(Entry<Integer, Integer> entry : playerHandSizes.entrySet()) {
-				//int id = entry.getKey();
-				int handsize = entry.getValue();
-				totalTile += handsize;;
-			}
-			for(Meld m : table) {
-				totalTile += m.size();
-			}
-			int stockLeft = 106 - totalTile;
-			returnString = logic.AI4Command(myHand, table, stockLeft);
-			return returnString;
+		int totalTile  = 0;
+		for(Entry<Integer, Integer> entry : playerHandSizes.entrySet()) {
+			//int id = entry.getKey();
+			int handsize = entry.getValue();
+			totalTile += handsize;;
 		}
+		for(Meld m : table) {
+			totalTile += m.size();
+		}
+		int stockLeft = 106 - totalTile;
+		returnString = logic.AI4Command(myHand, table, playerHandSizes, stockLeft);
+		return returnString;
+		
 	}
 	
 	@Override
