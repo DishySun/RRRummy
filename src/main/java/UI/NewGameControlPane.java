@@ -99,10 +99,10 @@ public class NewGameControlPane extends Pane{
     			}});
         	AIOK.relocate(350, 500);
         	AIOK.setOnAction(new EventHandler<ActionEvent>() {
-
     			@Override
     			public void handle(ActionEvent event) {
-    				
+            		if(nStrategy != null)
+            			getChildren().removeAll(nStrategy);
     				String a = apCB.getValue();
     			    in = Integer.parseInt(a);
     				nStrategy = new ArrayList<ChoiceBox<String>>();
