@@ -82,7 +82,7 @@ public class HomeScreen extends Application{
 	            orgTranslateY = imageViewBeingMoved.getTranslateY();
 	            
 	            
-	            //((TileImagePane)((ImageView)t.getSource()).getParent()).remove(imageViewBeingMoved);
+	            ((TileImagePane)((ImageView)t.getSource()).getParent()).remove(imageViewBeingMoved);
 	            p.getChildren().add(imageViewBeingMoved);
 	            imageViewBeingMoved.relocate(orgSceneX-10, orgSceneY-15);
 	            imageViewBeingMoved.getScene().setOnMouseMoved(imageViewOnMouseMovedEventHandler);
@@ -90,7 +90,6 @@ public class HomeScreen extends Application{
 				imageViewBeingMoved.getScene().setOnMouseMoved(null);
 				melds.add(imageViewBeingMoved, 0, true);
 				imageViewBeingMoved = null;
-				System.out.println("ggggg");
 			}
         }
 	};
