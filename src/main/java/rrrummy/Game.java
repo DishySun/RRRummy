@@ -16,6 +16,9 @@ import game.View;
 import players.AI;
 import players.Player;
 import players.StrategyFile;
+import players.StrategyThree;
+import players.StrategyTwo;
+import players.StrategyZero;
 
 public class Game {
 	private final int INIT_HAND_SIZE = 14;
@@ -61,6 +64,39 @@ public class Game {
 		view = new View();
 		playReplay();
 		
+	}
+
+
+	public Game(int hn, int in, ArrayList<String> playersNameList, ArrayList<String> strategyList, View view2) {
+		// TODO Auto-generated constructor stub
+		players = new ArrayList<Player>();
+		for(int i=0;i<hn;i++) {
+			Player player = new Player(playersNameList.get(i));
+			players.add(player);
+		}
+		if(in != 0) {
+			for(String s : strategyList) {
+				switch(s) {
+				case "1":
+					players.add(new AI(new StrategyZero()));
+					break;
+				case "2":
+					players.add(new AI(new StrategyTwo()));
+					break;
+				case "3":
+					players.add(new AI(new StrategyThree()));
+					break;
+				default:
+					players.add(new AI(new StrategyThree()));
+				}
+			}
+		}
+		this.table = new Table();
+		this.stock = new Stock();
+		currentPlayer = 0;
+		commandControl = new CommandControl(view,this);
+		view = new View();
+		registerObservers();
 	}
 
 	public void registerObservers() {

@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Optional;
 
+import game.View;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -17,8 +18,10 @@ import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
+import rrrummy.Game;
 import javafx.scene.control.TextField;
 
+@SuppressWarnings("restriction")
 public class NewGameControlPane extends Pane{
 
 	private RiggingPane r;
@@ -32,13 +35,15 @@ public class NewGameControlPane extends Pane{
 	ArrayList<String> nStra;
 	ChoiceBox <String> tempCB,hpCB;
 	private String Stra;
+	Optional<String> playerNames;
+	ArrayList<String> playersNameList;
+	ArrayList<String> StrategyList;
 	
-
 	public NewGameControlPane (){
-		
 		initUI();
-		
-		
+		playersNameList = new ArrayList<String>();
+		StrategyList = new ArrayList<String>();
+				
 		Play.relocate(800, 400);
 		getChildren().addAll(Rigging,Play);
 		Rigging.relocate(800, 600);		
@@ -86,8 +91,10 @@ public class NewGameControlPane extends Pane{
     				dialog.setTitle("Player Name Input");
     				dialog.setHeaderText("Player " + (i+1) + ", Could you tell me your name please?");
     				dialog.setContentText("Please enter your name:");
-    				Optional<String> result = dialog.showAndWait();
-    				System.out.println(result);
+    				playerNames = dialog.showAndWait();
+    				playersNameList.add(playerNames.get());
+    				System.out.println(playerNames.get());
+    				System.out.println(playerNames);
     				}
     			}});
         	AIOK.relocate(350, 500);
@@ -98,13 +105,8 @@ public class NewGameControlPane extends Pane{
     				
     				String a = apCB.getValue();
     			    in = Integer.parseInt(a);
-    			    //System.out.println(in);
     				nStrategy = new ArrayList<ChoiceBox<String>>();
-    				ArrayList<String> Stra1 = new ArrayList<String>();
-    				for(int i = 0; i < 4;i++) {
-    				Stra1.add("Strategy " + i);
-    				//System.out.println(Stra1);
-    				}
+   	                String[] Stra = new String[] { "1", "2", "3", "4" };
    	             for(int item = 0; item < in;item++)
    	             {
    	             	tempCB = new ChoiceBox<String>(FXCollections.observableArrayList("Strategy 1", "Strategy 2", "Strategy 3", "Strategy 4"));
@@ -112,11 +114,12 @@ public class NewGameControlPane extends Pane{
    	             	tempCB.setLayoutX(100*(item+1)-50);
    	             	tempCB.setLayoutY(450);
    	                nStrategy.add(tempCB);
-   	             nStrategy.get(item).getSelectionModel().selectedIndexProperty()
-		   	        .addListener(new ChangeListener<Number>() {
-		   	          public void changed(ObservableValue ov, Number value, Number new_value) {
-		   	           Stra = Stra1.get(new_value.intValue()+1);
-		   	        	System.out.println(Stra);
+
+   	                nStrategy.get(item).getSelectionModel().selectedIndexProperty()
+		   	        	.addListener(new ChangeListener<Number>() {
+			   	          public void changed(ObservableValue ov, Number value, Number new_value) {
+			   	        	System.out.println(Stra[new_value.intValue()].toString());
+			   	        	StrategyList.add(Stra[new_value.intValue()].toString());
 					}});
    	             }			   	    
     				getChildren().addAll(nStrategy);	
@@ -126,20 +129,27 @@ public class NewGameControlPane extends Pane{
 
 			@Override
 			public void handle(ActionEvent event) {
-				
+				if(hn+in <=4 && hn+in >=2) {
+					View view = new View();
+					System.out.println("play");
+					Game game = new Game(hn,in,playersNameList,StrategyList,view);
+					game.startGame();
+				}
 			}});
 		Rigging.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
 			public void handle(ActionEvent event) {
-				r =  new RiggingPane(hn+in,PlayerName,nStra);
-				getChildren().removeAll(Rigging,Play,HPOK,AIOK);
-				getChildren().removeAll(label,hmlabel,ailabel);
-				getChildren().removeAll(AIPlayerNum);
-				getChildren().removeAll(HumanPlayerNum);
-				getChildren().removeAll(nStrategy);
-				getChildren().add(r);
-				
+				if(hn+in <=4 && hn+in >=2) {
+					r =  new RiggingPane(hn+in,PlayerName,nStra);
+					getChildren().removeAll(Rigging,Play,HPOK,AIOK);
+					getChildren().removeAll(label,hmlabel,ailabel);
+					getChildren().removeAll(AIPlayerNum);
+					getChildren().removeAll(HumanPlayerNum);
+					if(nStrategy != null)
+						getChildren().removeAll(nStrategy);
+					getChildren().add(r);
+				}
 			}});
 	}
 	
