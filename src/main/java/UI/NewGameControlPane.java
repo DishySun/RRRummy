@@ -26,10 +26,12 @@ public class NewGameControlPane extends Pane{
 	ArrayList<ChoiceBox <String>> HumanPlayerNum;
 	ArrayList<ChoiceBox <String>> AIPlayerNum;
 	private Label label,ailabel,hmlabel;
-	public int hn,in;
+	private int hn,in;
 	ArrayList<ChoiceBox <String>> nStrategy;
+	ArrayList<String> PlayerName;
+	ArrayList<String> nStra;
 	ChoiceBox <String> tempCB,hpCB;
-	TextField textField;
+	private String Stra;
 	
 
 	public NewGameControlPane (){
@@ -53,13 +55,6 @@ public class NewGameControlPane extends Pane{
 		HumanPlayerNum = new ArrayList<ChoiceBox<String>>();
 		AIPlayerNum = new ArrayList<ChoiceBox<String>>();
 		
-		textField = new TextField();
-
-        Button button = new Button("Click to get text");
-        button.relocate(100, 200);
-        button.setOnAction(action -> {
-            System.out.println(textField.getText());
-        });
 		hpCB = new ChoiceBox<String>();
 		for(int i=0;i<4;i++) {
         hpCB.getItems().add(""+(i+1));
@@ -77,7 +72,7 @@ public class NewGameControlPane extends Pane{
         	apCB.setLayoutY(400);
         	AIPlayerNum.add(apCB);
         	getChildren().addAll(AIPlayerNum);
-        	getChildren().addAll(HPOK,AIOK,textField,button);
+        	getChildren().addAll(HPOK,AIOK);
         	HPOK.relocate(130, 500);
         	HPOK.setOnAction(new EventHandler<ActionEvent>() {
 
@@ -85,7 +80,7 @@ public class NewGameControlPane extends Pane{
     			public void handle(ActionEvent event) {
     				String h = hpCB.getValue();
     				hn = Integer.parseInt(h);
-    				 System.out.println(hn);
+    				 //System.out.println(hn);
     				for (int i = 0; i< hn; i++) {
     				TextInputDialog dialog = new TextInputDialog();
     				dialog.setTitle("Player Name Input");
@@ -103,9 +98,13 @@ public class NewGameControlPane extends Pane{
     				
     				String a = apCB.getValue();
     			    in = Integer.parseInt(a);
-    			    System.out.println(in);
+    			    //System.out.println(in);
     				nStrategy = new ArrayList<ChoiceBox<String>>();
-    				String[] Stra = new String[] { "Strategy 1", "Strategy 2", "Strategy 3", "Strategy 4" };
+    				ArrayList<String> Stra1 = new ArrayList<String>();
+    				for(int i = 0; i < 4;i++) {
+    				Stra1.add("Strategy " + i);
+    				//System.out.println(Stra1);
+    				}
    	             for(int item = 0; item < in;item++)
    	             {
    	             	tempCB = new ChoiceBox<String>(FXCollections.observableArrayList("Strategy 1", "Strategy 2", "Strategy 3", "Strategy 4"));
@@ -116,7 +115,8 @@ public class NewGameControlPane extends Pane{
    	             nStrategy.get(item).getSelectionModel().selectedIndexProperty()
 		   	        .addListener(new ChangeListener<Number>() {
 		   	          public void changed(ObservableValue ov, Number value, Number new_value) {
-		   	        	System.out.println(Stra[new_value.intValue()]);
+		   	           Stra = Stra1.get(new_value.intValue()+1);
+		   	        	System.out.println(Stra);
 					}});
    	             }			   	    
     				getChildren().addAll(nStrategy);	
@@ -132,11 +132,12 @@ public class NewGameControlPane extends Pane{
 
 			@Override
 			public void handle(ActionEvent event) {
-				r =  new RiggingPane();
-				getChildren().removeAll(Rigging,Play,HPOK,AIOK,textField,button);
+				r =  new RiggingPane(hn+in,PlayerName,nStra);
+				getChildren().removeAll(Rigging,Play,HPOK,AIOK);
 				getChildren().removeAll(label,hmlabel,ailabel);
 				getChildren().removeAll(AIPlayerNum);
 				getChildren().removeAll(HumanPlayerNum);
+				getChildren().removeAll(nStrategy);
 				getChildren().add(r);
 				
 			}});
