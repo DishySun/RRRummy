@@ -16,11 +16,11 @@ import rrrummy.InvalidTileException;
 import rrrummy.Tile;
 import javafx.scene.control.TextField;
 
-@SuppressWarnings("restriction")
+//@SuppressWarnings("restriction")
 public class RiggingPane extends Pane{
 
 	//private NewGameControlPane n;
-	//private int pn,an;
+	private int HumanPlayer,AIPlayer,totalPlayer;
 	private ListView<String> cards;
 	private ObservableList<String> selectTiles;
 	private String selectTile;
@@ -29,9 +29,16 @@ public class RiggingPane extends Pane{
 	ArrayList<String> playersNameList;
 	ArrayList<String> StrategyList;
 
-	public RiggingPane(int totalPlayer, ArrayList<String> playerName, ArrayList<String> StraList){
+	public RiggingPane(int hPlayer,int aPlayer, ArrayList<String> playerName, ArrayList<String> StraList){
+		
+		HumanPlayer = hPlayer;
+		AIPlayer = aPlayer;
+		totalPlayer = AIPlayer+HumanPlayer;
+		System.out.println("h" + HumanPlayer);
+		System.out.println("a" + AIPlayer);
 		System.out.println("total" + totalPlayer);
 		System.out.println("PlayerName: " + playerName);
+		System.out.println("Strategy: " + StraList);
 		playersNameList = playerName;
 		StrategyList = StraList;
 		hands = new ArrayList<ArrayList<String>>();
@@ -52,9 +59,9 @@ public class RiggingPane extends Pane{
         data.add("B"+ (i+1));
         data.add("O"+ (i+1));
         }
-        for(int i=0;i<2;i++) {
-        data.add("JOKER"+ (i+1));
-        }      
+        //for(int i=0;i<2;i++) {
+        data.add("JOKER");
+        //}      
        
         getChildren().addAll(cards);
         
@@ -64,6 +71,11 @@ public class RiggingPane extends Pane{
 			pname.setLayoutX(30+i*180);
 			pname.setLayoutY(100);
 			pname.setDisable(true);
+			for(int h=0;h<HumanPlayer;h++) {
+			pname.setText(playersNameList.get(h));
+			}
+			for(int a=0;a<AIPlayer;a++)
+			pname.setText(StrategyList.get(a));	
 	        ListView<String> playerhands = new ListView<String>();
 	        
 	        playerhands.setLayoutX(30+i*180);

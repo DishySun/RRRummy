@@ -22,7 +22,7 @@ import javafx.stage.Stage;
 import rrrummy.Game;
 import javafx.scene.control.TextField;
 
-@SuppressWarnings("restriction")
+//@SuppressWarnings("restriction")
 public class NewGameControlPane extends Pane{
 
 	private RiggingPane r;
@@ -105,7 +105,7 @@ public class NewGameControlPane extends Pane{
     				String a = apCB.getValue();
     			    in = Integer.parseInt(a);
     				nStrategy = new ArrayList<ChoiceBox<String>>();
-   	                String[] Stra = new String[] { "1", "2", "3", "4" };
+   	                String[] Stra = new String[] { "Strategy 1", "Strategy 2", "Strategy 3", "Strategy 4" };
    	             for(int item = 0; item < in;item++)
    	             {
    	             	tempCB = new ChoiceBox<String>(FXCollections.observableArrayList("Strategy 1", "Strategy 2", "Strategy 3", "Strategy 4"));
@@ -176,7 +176,7 @@ public class NewGameControlPane extends Pane{
 	};
 	
 	public void rigging() {
-		r =  new RiggingPane(hn+in,playersNameList,StrategyList);
+		r =  new RiggingPane(hn,in,playersNameList,StrategyList);
 		getChildren().removeAll(Rigging,Play,HPOK,AIOK);
 		getChildren().removeAll(label,hmlabel,ailabel);
 		getChildren().removeAll(AIPlayerNum);
