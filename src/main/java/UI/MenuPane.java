@@ -5,6 +5,7 @@ import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.layout.Pane; 
 
+@SuppressWarnings("restriction")
 public class MenuPane extends Pane{
 
 	private Button Play,Replay;

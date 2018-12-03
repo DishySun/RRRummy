@@ -1,6 +1,9 @@
 package UI;
 
 import java.util.List;
+
+import game.GameControl;
+
 import java.util.ArrayList;
 
 import javafx.collections.FXCollections;
@@ -23,9 +26,14 @@ public class RiggingPane extends Pane{
 	private String selectTile;
 	private ObservableList<String> data;
 	private ArrayList<ArrayList<String>> hands;
+	ArrayList<String> playersNameList;
+	ArrayList<String> StrategyList;
 
-	public RiggingPane(int totalPlayer, ArrayList<String> Stra, ArrayList<String> Pname){
-		System.out.println("taotal" + totalPlayer);
+	public RiggingPane(int totalPlayer, ArrayList<String> playerName, ArrayList<String> StraList){
+		System.out.println("total" + totalPlayer);
+		System.out.println("PlayerName: " + playerName);
+		playersNameList = playerName;
+		StrategyList = StraList;
 		hands = new ArrayList<ArrayList<String>>();
 		for(int i=0; i<totalPlayer;i++) {		//initialize size
 			hands.add(new ArrayList<String>());
@@ -98,26 +106,8 @@ public class RiggingPane extends Pane{
         getChildren().add(Confirm1);
         
         Confirm1.setOnAction(event ->{
-        	ArrayList<ArrayList<Tile>> handsTile = new ArrayList<ArrayList<Tile>>();
-        	
         	if(checkHas14or0(hands)) {
-        		for(int i=0; i<hands.size();i++) {		//initialize size
-        			handsTile.add(new ArrayList<Tile>());
-        		}
-        		for(ArrayList<String> s : hands) {
-        			if(s != null) {
-        				for(String str : s) {
-        					try {
-								Tile t = new Tile(str);
-								handsTile.get(hands.indexOf(s)).add(t);
-							} catch (InvalidTileException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-        				}
-        			}
-        		}
-        		System.out.println(handsTile);
+        		play();
         	}	else
         		System.out.println("has to have 14 or 0 tile");
         });
@@ -151,5 +141,27 @@ public class RiggingPane extends Pane{
 				return false;
 		}
 		return true;
+	}
+	
+	private void play(){
+    	ArrayList<ArrayList<Tile>> handsTile = new ArrayList<ArrayList<Tile>>();
+		for(int i=0; i<hands.size();i++) {		//initialize size
+			handsTile.add(new ArrayList<Tile>());
+		}
+		for(ArrayList<String> s : hands) {
+			if(s != null) {
+				for(String str : s) {
+					try {
+						Tile t = new Tile(str);
+						handsTile.get(hands.indexOf(s)).add(t);
+					} catch (InvalidTileException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+		GameControl game = new GameControl(playersNameList,StrategyList,handsTile);
+		//game.newGame();
 	}
 }

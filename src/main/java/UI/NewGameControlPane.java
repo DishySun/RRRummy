@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Optional;
 
+import game.GameControl;
 import game.View;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -31,8 +32,6 @@ public class NewGameControlPane extends Pane{
 	private Label label,ailabel,hmlabel;
 	private int hn,in;
 	ArrayList<ChoiceBox <String>> nStrategy;
-	ArrayList<String> PlayerName;
-	ArrayList<String> nStra;
 	ChoiceBox <String> tempCB,hpCB;
 	private String Stra;
 	Optional<String> playerNames;
@@ -93,8 +92,8 @@ public class NewGameControlPane extends Pane{
     				dialog.setContentText("Please enter your name:");
     				playerNames = dialog.showAndWait();
     				playersNameList.add(playerNames.get());
-    				System.out.println(playerNames.get());
-    				System.out.println(playerNames);
+    				//System.out.println(playerNames.get());
+    				//System.out.println(playerNames);
     				}
     			}});
         	AIOK.relocate(350, 500);
@@ -130,10 +129,7 @@ public class NewGameControlPane extends Pane{
 			@Override
 			public void handle(ActionEvent event) {
 				if(hn+in <=4 && hn+in >=2) {
-					View view = new View();
-					System.out.println("play");
-					Game game = new Game(hn,in,playersNameList,StrategyList,view);
-					game.startGame();
+					playGame();
 				}
 			}});
 		Rigging.setOnAction(new EventHandler<ActionEvent>() {
@@ -141,14 +137,7 @@ public class NewGameControlPane extends Pane{
 			@Override
 			public void handle(ActionEvent event) {
 				if(hn+in <=4 && hn+in >=2) {
-					r =  new RiggingPane(hn+in,PlayerName,nStra);
-					getChildren().removeAll(Rigging,Play,HPOK,AIOK);
-					getChildren().removeAll(label,hmlabel,ailabel);
-					getChildren().removeAll(AIPlayerNum);
-					getChildren().removeAll(HumanPlayerNum);
-					if(nStrategy != null)
-						getChildren().removeAll(nStrategy);
-					getChildren().add(r);
+					rigging();
 				}
 			}});
 	}
@@ -176,4 +165,25 @@ public class NewGameControlPane extends Pane{
 		}
 	}
 
+	public void playGame() {
+		getChildren().clear();
+		//System.out.println("play");
+		//System.out.println("NewGame "+playersNameList);
+		GameControl game = new GameControl(playersNameList,StrategyList);
+		//game.newGame();
+		//game.startGame();
+		
+	};
+	
+	public void rigging() {
+		r =  new RiggingPane(hn+in,playersNameList,StrategyList);
+		getChildren().removeAll(Rigging,Play,HPOK,AIOK);
+		getChildren().removeAll(label,hmlabel,ailabel);
+		getChildren().removeAll(AIPlayerNum);
+		getChildren().removeAll(HumanPlayerNum);
+		if(nStrategy != null)
+			getChildren().removeAll(nStrategy);
+		getChildren().clear();
+		getChildren().add(r);
+	}
 }
