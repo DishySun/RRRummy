@@ -1,18 +1,14 @@
 package gui;
 
 import javafx.scene.layout.Pane;
-import javafx.event.EventHandler;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 
 import java.util.ArrayList;
 
 @SuppressWarnings("restriction")
 public class TileImagePane extends Pane{
 	
-	private double orgSceneX, orgSceneY;
-	private double orgTranslateX, orgTranslateY;
 	
 	public void add(ImageView iv, boolean headOrTail) {
 		//true for head, false for tail
