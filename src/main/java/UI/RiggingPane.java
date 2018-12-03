@@ -71,11 +71,12 @@ public class RiggingPane extends Pane{
 			pname.setLayoutX(30+i*180);
 			pname.setLayoutY(100);
 			pname.setDisable(true);
-			for(int h=0;h<HumanPlayer;h++) {
-			pname.setText(playersNameList.get(h));
-			}
-			for(int a=0;a<AIPlayer;a++)
-			pname.setText(StrategyList.get(a));	
+
+			if(i < HumanPlayer) 
+				pname.setText(playersNameList.get(i));
+			else 
+				pname.setText(StrategyList.get(i-HumanPlayer));
+			
 	        ListView<String> playerhands = new ListView<String>();
 	        
 	        playerhands.setLayoutX(30+i*180);

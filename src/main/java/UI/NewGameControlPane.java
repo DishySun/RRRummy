@@ -104,10 +104,14 @@ public class NewGameControlPane extends Pane{
             			getChildren().removeAll(nStrategy);
     				String a = apCB.getValue();
     			    in = Integer.parseInt(a);
+            		for(int i=0; i<in; i++) {
+            			StrategyList.add("Strategy 1");
+            		}
     				nStrategy = new ArrayList<ChoiceBox<String>>();
    	                String[] Stra = new String[] { "Strategy 1", "Strategy 2", "Strategy 3", "Strategy 4" };
    	             for(int item = 0; item < in;item++)
    	             {
+   	            	 int index = item;
    	             	tempCB = new ChoiceBox<String>(FXCollections.observableArrayList("Strategy 1", "Strategy 2", "Strategy 3", "Strategy 4"));
    	             	tempCB.setValue("Strategy 1");
    	             	tempCB.setLayoutX(100*(item+1)-50);
@@ -118,7 +122,7 @@ public class NewGameControlPane extends Pane{
 		   	        	.addListener(new ChangeListener<Number>() {
 			   	          public void changed(ObservableValue ov, Number value, Number new_value) {
 			   	        	System.out.println(Stra[new_value.intValue()].toString());
-			   	        	StrategyList.add(Stra[new_value.intValue()].toString());
+			   	        	StrategyList.set(index,Stra[new_value.intValue()].toString());
 					}});
    	             }			   	    
     				getChildren().addAll(nStrategy);	
