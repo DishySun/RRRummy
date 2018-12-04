@@ -13,12 +13,14 @@ public class TestScene extends Application {
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("test scence");
-        Timer btn = new Timer();
+        Timer timer = new Timer();
 //        btn.setText("Hello World");
 
         StackPane root = new StackPane();
-        root.getChildren().add(btn);
+        root.getChildren().add(timer);
         primaryStage.setScene(new Scene(root, 300, 250));
+        
+   
         primaryStage.show();
     }
 }
