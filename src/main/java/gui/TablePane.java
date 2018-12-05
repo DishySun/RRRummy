@@ -25,6 +25,7 @@ import gui_game.GameControl;
 public class TablePane extends Pane{
 	private CurrentPlayerPane currentPlayer;
 	private ArrayList<OtherPlayerPane> otherPlayers;
+	private ArrayList<Player> players;
 	private MeldImagePane melds;
 	private ArrayList<Image> red;
 	private ArrayList<Image> blue;
@@ -37,7 +38,7 @@ public class TablePane extends Pane{
 	private ScaleTransition selectingAnimation;
 	private ColorAdjust newlyPlayedTileEffect;
 	private GameControl gameControl;
-	private final int playerIndexToShow;
+	private int playerIndexToShow;
 	private double mouseX;
 	private double mouseY;
 	
@@ -49,6 +50,7 @@ public class TablePane extends Pane{
 		this.green = green;
 		this.orange = orange;
 		this.joker = joker;
+		this.players = players;
 		this.melds = new MeldImagePane(tableOnMouseClicked);
 		this.melds.relocate(120, 120);
 		this.otherPlayers = new ArrayList<OtherPlayerPane>();
@@ -161,7 +163,7 @@ public class TablePane extends Pane{
 	
 	private ImageView newImageView(Tile.Color c, int tileNumber) {
 		ImageView iv = new ImageView();
-		iv.setOnMouseClicked(imageViewOnMouseClickedEventHandler);
+		//iv.setOnMouseClicked(imageViewOnMouseClickedEventHandler);
 		switch (c) {
 		case RED:
 			iv.setImage(red.get(tileNumber -1));
@@ -305,8 +307,7 @@ public class TablePane extends Pane{
 
 		@Override
 		public void handle(ActionEvent event) {
-			// TODO Auto-generated method stub
-			
+			gameControl.endTurn();
 		}
 		
 	};
@@ -333,6 +334,32 @@ public class TablePane extends Pane{
 				if (p == -1) continue;
 				otherPlayers.get(p).add();
 			}
+		}
+	}
+
+	public void setAiTurn() {
+		currentPlayer.endTurnEventHandlers();
+		melds.clearEventHandler();
+	}
+
+	public void setHumanTurn(int currentPlayer2) {
+		if (this.playerIndexToShow == currentPlayer2) {
+			currentPlayer.getTurnEventHandlers(imageViewOnMouseClickedEventHandler);
+			melds.setOnClickedHandler(imageViewOnMouseClickedEventHandler);
+		}else {this.switchPlayer(currentPlayer2);}
+	}
+
+	private void switchPlayer(int currentPlayer2) {
+		playerIndexToShow = currentPlayer2;
+		currentPlayer = new CurrentPlayerPane(players.get(playerIndexToShow).getName(), endTurnEventHandler, hintEventHandler);
+		for (int i = 0; i < players.get(playerIndexToShow).handSize(); i++) {
+			Tile t = players.get(playerIndexToShow).getHand(i);
+			currentPlayer.addTile(this.newImageView(t.getColor(),t.getNumber()));
+		}
+		for (Player p : players) {
+			if (players.indexOf(p) == this.playerIndexToShow)continue;
+			int otherIndex = this.getOtherPlayerIndex(players.indexOf(p));
+			otherPlayers.get(otherIndex).setTileNumber(p.handSize());
 		}
 	}
 }

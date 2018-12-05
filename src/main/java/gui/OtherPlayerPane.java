@@ -50,4 +50,11 @@ public class OtherPlayerPane extends Pane{
 		handImages.remove();
 		handSize.setText(Integer.toString(handImages.size()));
 	}
+
+	public void setTileNumber(int handSize2) {
+		handImages.getChildren().clear();
+		for (int i = 0; i < handSize2; i++) {
+			this.add();
+		}
+	}
 }

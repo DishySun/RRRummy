@@ -221,8 +221,6 @@ public class Meld {
 	}
 	
 	public int add(Tile t) throws AbleToAddBothSideException{
-		System.out.println("(Meld.java: 221) adding "+t+" to "+toString());
-		System.out.println(tileMap);
 		if(size() == 0) {
 			meld.add(t);
 			if(!t.isJoker()) tileNumber++;

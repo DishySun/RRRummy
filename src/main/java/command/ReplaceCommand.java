@@ -1,13 +1,13 @@
 package command;
 
-import game.Game;
+import gui_game.GameControl;
 
 public class ReplaceCommand implements Command{
 
 	private int handIndex, tableIndex, meldIndex;
-	private Game game;
+	private GameControl game;
 	
-	public ReplaceCommand(int handIndex, int tableIndex, int meldIndex, Game game) {
+	public ReplaceCommand(int handIndex, int tableIndex, int meldIndex, GameControl game) {
 		this.handIndex = handIndex;
 		this.tableIndex = tableIndex;
 		this.meldIndex = meldIndex;
@@ -16,6 +16,6 @@ public class ReplaceCommand implements Command{
 	
 	@Override
 	public boolean excute() {
-		return game.replace(handIndex, tableIndex, meldIndex);
+		return game.commandReplace(handIndex, tableIndex, meldIndex);
 	}
 }

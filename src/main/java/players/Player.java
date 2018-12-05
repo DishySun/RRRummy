@@ -3,6 +3,7 @@ package players;
 import java.util.ArrayList;
 
 import game.View;
+import gui_game.GameControl;
 import rrrummy.Tile;
 import observer.*;
 
@@ -86,5 +87,9 @@ public class Player implements Subject{
 		for (Observer o: observers) {
 			o.update(this.getId(), handSize());
 		}
+	}
+
+	public void getTurn(GameControl g) {
+		g.humanTurn();
 	}
 }

@@ -99,13 +99,35 @@ public class Game {
 		return i;
 	}
 	
+	public boolean playerPlays(Player p,ArrayList<Integer> playerHandIndexs) {
+		//play an ArrayList of Tiles to new meld
+		ArrayList<Tile> arr = new ArrayList<Tile>();
+		
+		for (Integer i : playerHandIndexs) {
+			Tile t = p.getHand(i);
+			if(t == null) return false;
+			arr.add(t);
+		}
+		if(!table.add(arr)) return false;
+		for (Tile t : arr) {
+			int i = p.getHand(t);
+			p.play(i);
+		}
+		//System.out.println(players.get(currentPlayer).getName() +" has played "+arr.toString()+" as a new meld.");
+		p.caluPlayedScore(table.lastMeldScore());
+		return true;
+		
+	}
+	
 	public int move (int fromMeld, boolean removeHeadOrTail, int toMeld, boolean toHeadOrTail) {
 		int i = table.move (fromMeld, removeHeadOrTail, toMeld, toHeadOrTail);
 		System.out.println("normal move: " + i);
 		return i;
 	}
 	public int move(int fromMeldIndex, int fromTileIndex, int toMeldIndex, boolean headOrTail) {
-		int i = table.move(fromMeldIndex, fromTileIndex, toMeldIndex, headOrTail);
+		int i;
+		if (fromTileIndex == 14)	i = this.move(fromMeldIndex, false, toMeldIndex, headOrTail);
+		else i = this.move(fromMeldIndex, fromTileIndex, toMeldIndex, headOrTail);
 		System.out.println("move from set: " + i);
 		return i;
 	}
