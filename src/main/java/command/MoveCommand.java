@@ -1,33 +1,29 @@
 package command;
 
-import game.View;
-import rrrummy.Game;
+import gui_game.GameControl;
 
 public class MoveCommand implements Command{
 	
 	private int fromMeldIndex, fromMeldHoT, toMeldIndex, toMeldHoT;
-	private Game game;
-	private View view;
+	private GameControl game;
 	
 	
-	public MoveCommand(int fromMeldIndex, int fromMeldHoT, int toMeldIndex, Game game, View view) {
+	public MoveCommand(int fromMeldIndex, int fromMeldHoT, int toMeldIndex, GameControl game) {
 		//3 parameters
 		this.fromMeldIndex = fromMeldIndex;
 		this.fromMeldHoT = fromMeldHoT;
 		this.toMeldIndex = toMeldIndex;
 		this.toMeldHoT = -1;
 		this.game = game;
-		this.view = view;
 	}
 	
-	public MoveCommand(int fromMeldIndex, int fromMeldHoT, int toMeldIndex, int toMeldHoT, Game game, View v) {
+	public MoveCommand(int fromMeldIndex, int fromMeldHoT, int toMeldIndex, int toMeldHoT, GameControl game) {
 		// 4 parameters
 		this.fromMeldIndex = fromMeldIndex;
 		this.fromMeldHoT = fromMeldHoT;
 		this.toMeldIndex = toMeldIndex;
 		this.toMeldHoT = toMeldHoT;
 		this.game = game;
-		this.view = v;
 	}
 	@Override
 	public boolean excute() {
@@ -36,7 +32,7 @@ public class MoveCommand implements Command{
 		case 0: 
 			fromHoT = true;
 			break;
-		case 1:
+		case 14:
 			fromHoT = false;
 			break;
 		default: return false;
@@ -54,18 +50,7 @@ public class MoveCommand implements Command{
 			toHoT = false;
 		}
 		
-		String str = "";
-		if (toMeldHoT == -1) {
-			//3 parameters move method
-			try {
-				return game.move(fromMeldIndex, fromHoT, toMeldIndex);
-			}catch (rrrummy.AbleToAddBothSideException e) {
-				str = view.getHeadOrTail("move");
-				if (str.equalsIgnoreCase("head"))toHoT = true;
-				else toHoT = false;
-			}
-		}
-		return game.move(fromMeldIndex, fromHoT, toMeldIndex, toHoT);
+		return game.commandMove(fromMeldIndex, fromMeldHoT, toMeldIndex, toHoT);
 	}
 	
 }

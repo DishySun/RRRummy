@@ -3,21 +3,19 @@ package command;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import game.View;
-import rrrummy.Game;
+import gui_game.GameControl;
+
 import java.lang.NumberFormatException;
 import java.lang.IndexOutOfBoundsException;
 
 public class CommandControl {
 	private ArrayList<Command> commandHistory;
 	private ArrayList<String> commandStringList;
-	private View view;
-	private Game game;
+	private GameControl game;
 
-	public CommandControl(View v, Game game) {
+	public CommandControl(GameControl game) {
 		commandHistory = new ArrayList<Command>();
 		commandStringList = new ArrayList<String>();
-		view = v;
 		this.game = game;
 	}
 
@@ -61,7 +59,7 @@ public class CommandControl {
 					temp = commandList.remove(0);
 				}catch (IndexOutOfBoundsException ee) {
 					//play int to int
-					c = new PlayCommand(intList.get(0), meldIndex, game, view);
+					c = new PlayCommand(intList.get(0), meldIndex, game);
 					break;
 				}
 				switch (temp) {
@@ -89,7 +87,7 @@ public class CommandControl {
 			//return -1;
 		case "move":
 			int fromMeldIndex = 0;
-			int fromMeldHoT = -1;
+			int fromMeldIndex2 = -1;
 			int toMeldIndex = 0;
 			int toMeldHot = -1;
 			try {
@@ -101,11 +99,12 @@ public class CommandControl {
 			}
 			try {
 				temp = commandList.remove(0);
-				if(temp.equalsIgnoreCase("head")) fromMeldHoT = 0;
-				else if (temp.equalsIgnoreCase("tail")) fromMeldHoT = 1;
+				if(temp.equalsIgnoreCase("head")) fromMeldIndex2 = 0;
+				else if (temp.equalsIgnoreCase("tail")) fromMeldIndex2 = 14;
+				else if (Integer.valueOf(temp)>0 && Integer.valueOf(temp) < 14) fromMeldIndex2 = Integer.valueOf(temp); 
 				else return -1;
 			}catch(Exception e) {
-				System.out.println("'Head'/'Tail' is expected for 3rd string");
+				System.out.println("'Head'/'Tail/index' is expected for 3rd string");
 				return -1;
 			}
 			try {
@@ -133,10 +132,10 @@ public class CommandControl {
 				
 			}catch(IndexOutOfBoundsException e) {
 				// 3 parameters
-				c = new MoveCommand(fromMeldIndex, fromMeldHoT, toMeldIndex, game, view);
+				c = new MoveCommand(fromMeldIndex, fromMeldIndex2, toMeldIndex, game);
 			}
 			//4 parameters
-			c = new MoveCommand(fromMeldIndex, fromMeldHoT, toMeldIndex, toMeldHot ,game, view);
+			c = new MoveCommand(fromMeldIndex, fromMeldIndex2, toMeldIndex, toMeldHot ,game);
 			break;
 		case "cut":
 			int cutFrom = -1;
@@ -223,5 +222,12 @@ public class CommandControl {
 			if (i < commandStringList.size() - 1) result+="\n";
 		}
 		return result;
+	}
+
+	public boolean playerCommand(Command command) {
+		boolean b = command.excute();
+		if (!b)return false;
+		commandHistory.add(command);
+		return true;
 	}
 }

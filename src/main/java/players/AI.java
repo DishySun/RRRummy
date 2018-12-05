@@ -1,9 +1,6 @@
 package players;
 
-import java.util.ArrayList;
-
-import game.View;
-import rrrummy.Tile;
+import gui_game.GameControl;
 
 public class AI extends Player{
 	private AIStrategy strategy;
@@ -15,15 +12,13 @@ public class AI extends Player{
 		this.strategy.setHand(hand);
 	}
 	
-	public String getCommandString(View v) {
+	public String getCommandString() {
 		return strategy.generateCommand();
 	}
 	public AIStrategy getStrategy() {return strategy;}
-	public void initHand(ArrayList<Tile> arr) {
-		hand = new Hand(arr);
-		hand.sort();
-		this.strategy.setHand(hand);
-		notifyObserver();
+	
+	public void getTurn(GameControl g) {
+		g.aiTurn();
 	}
 }
 

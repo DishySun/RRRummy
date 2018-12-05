@@ -1,15 +1,15 @@
 package command;
-import rrrummy.Game;
+import gui_game.GameControl;
 
 public class EndTurnCommand implements Command{
 
-	private Game game;
-	public EndTurnCommand(Game game) {
+	private GameControl game;
+	public EndTurnCommand(GameControl game) {
 		this.game = game;
 	}
 	@Override
 	public boolean excute() {
-		game.endTurn();
+		game.commandEndTurn();
 		return true;
 	}
 

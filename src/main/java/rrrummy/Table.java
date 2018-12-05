@@ -28,66 +28,62 @@ public class Table implements Subject{
 		lastModifiedMeld = table.size() - 1;
 		return true;
 	}
-	public boolean add(Tile t, int i) throws AbleToAddBothSideException{
-		if (i >= this.size()) return false;
-		boolean b = table.get(i).add(t);
-		if(b) {
+	public int add(Tile t, int i) throws AbleToAddBothSideException{
+		if (i >= this.size()) return -1;
+		int b = table.get(i).add(t);
+		if(b >= 0) {
 			lastModifiedMeld = i;
 			notifyObserver();
 		}
 		return b;
 	}
 	
-	public boolean addHead(Tile t, int i) {
-		if (i >= this.size()) return false;
-		boolean b = table.get(i).addHead(t);
-		if(b) {
+	public int addHead(Tile t, int i) {
+		if (i >= this.size()) return -1;
+		int b = table.get(i).addHead(t);
+		if(b >= 0) {
 			lastModifiedMeld = i;
 			notifyObserver();
 		}
 		return b;
 	}
-	public boolean addTail(Tile t, int i) {
-		if (i >= this.size()) return false;
-		boolean b = table.get(i).addTail(t);
-		if(b) {
+	public int addTail(Tile t, int i) {
+		if (i >= this.size()) return -1;
+		int b = table.get(i).addTail(t);
+		if(b >= 0) {
 			lastModifiedMeld = i;
 			notifyObserver();
 		}
 		return b;
-	}
-	public boolean move (int fromMeld, boolean removeHeadOrTail, int toMeld) throws AbleToAddBothSideException{
-		if(fromMeld >= table.size() || fromMeld < 0 || toMeld < 0 || toMeld >= table.size()) return false;
-		Tile t = null;
-		if (removeHeadOrTail) t = table.get(fromMeld).getHead();
-		else t = table.get(fromMeld).getTail();
-		boolean b = add(t, toMeld);
-		if(!b) {
-			return false;
-		}
-		if (removeHeadOrTail) t = table.get(fromMeld).removeHead();
-		else t = table.get(fromMeld).removeTail();
-		if(table.get(fromMeld).size() == 0) table.remove(fromMeld);
-		lastModifiedMeld = table.size()-1;
-		return true;
 	}
 	
-	public boolean move (int fromMeld, boolean removeHeadOrTail, int toMeld, boolean toHeadOrTail) {
-		if(fromMeld >= table.size() || fromMeld < 0 || toMeld < 0 || toMeld >= table.size()) return false;
+	public int move (int fromMeld, boolean removeHeadOrTail, int toMeld, boolean toHeadOrTail) {
+		if(fromMeld >= table.size() || fromMeld < 0 || toMeld < 0 || toMeld >= table.size()) return -1;
 		Tile t = null;
 		if (removeHeadOrTail) t = table.get(fromMeld).removeHead();
 		else t = table.get(fromMeld).removeTail();
-		boolean b = false;
+		int b;
 		if (toHeadOrTail) b = addHead(t, toMeld);
 		else b = addTail(t, toMeld);
-		if (!b) {
+		if (b < 0) {
 			if(removeHeadOrTail) addHead(t, fromMeld);
 			else addTail(t, fromMeld);
-			return false;
+			return -1;
 		}
 		lastModifiedMeld = toMeld;
 		if(table.get(fromMeld).size() == 0) table.remove(fromMeld);
 		return b;
+	}
+	public int move(int fromMeldIndex, int fromTileIndex, int toMeldIndex, boolean headOrTail) {
+		Tile t = table.get(fromMeldIndex).getTile(fromTileIndex);
+		//if (table.get(fromMeldIndex).size() ==0) table.remove(fromMeldIndex); 
+		if (t == null) return -1;
+		int i;
+		if (headOrTail) i = table.get(toMeldIndex).addHead(t);
+		else i = table.get(toMeldIndex).addTail(t);
+		if (i >= 0) table.get(fromMeldIndex).remove(fromTileIndex);
+		if (table.get(fromMeldIndex).size() == 0)table.remove(fromMeldIndex);
+		return i;
 	}
 	public Tile removeHead(int i) {
 		Tile t = table.get(i).removeHead();
@@ -132,6 +128,11 @@ public class Table implements Subject{
 	public int lastMeldScore() {
 		return table.get(size() - 1).getMeldScore();
 	}
+	
+	public boolean isSet(int meldIndex) {
+		if (meldIndex < 0 || meldIndex >= table.size()) return false;
+		return table.get(meldIndex).isSet();
+	}
 
 	@Override
 	public void register(Observer o) {
@@ -150,4 +151,6 @@ public class Table implements Subject{
 			o.update(table);
 		}
 	}
+
+	
 }

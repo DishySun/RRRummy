@@ -42,8 +42,10 @@ public class Hand {
 		}
 		return aString;
 	}
-	public void sort() {
-
+	public ArrayList<Integer> sort() {
+		ArrayList<Integer> sortedIndex = new ArrayList<Integer>();
+		ArrayList<Tile> temp = new ArrayList<Tile>();
+		temp.addAll(hand);
 		Collections.sort(hand, new Comparator<Tile>(){
 
 			@Override
@@ -54,6 +56,10 @@ public class Hand {
 			}
 		
 		});
+		for (Tile t: hand) {
+			sortedIndex.add(temp.indexOf(t));
+		}
+		return sortedIndex;
 	}
 	// hand color order after sorted: BLUE, RED, GREEN, ORANGE,JOKER
 	public boolean contaions(Tile t) {
