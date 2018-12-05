@@ -231,7 +231,7 @@ public class Game {
 			System.out.println(table);
 			System.out.println("Stock Left: "+stock.size());
 			players.get(currentPlayer).printHand();
-			String str = players.get(currentPlayer).getCommandString(view);
+			String str = players.get(currentPlayer).getCommandString();
 			view.stateCommandResult(commandControl.newCommand(str));
 			System.out.println();
 		}

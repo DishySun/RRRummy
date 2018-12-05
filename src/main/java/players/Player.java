@@ -22,12 +22,13 @@ public class Player implements Subject{
 	
 	public String getName() {return name;}
 	public int getId() {return playerId;}
+	public boolean isHuman() {return true;}
 	
-	public void initHand(ArrayList<Tile> arr) {
+	public ArrayList<Integer> initHand(final ArrayList<Tile> arr) {
 		this.playedScore = 0;
 		hand = new Hand(arr);
-		hand.sort();
 		notifyObserver();
+		return hand.sort();
 	}
 	
 	public void draw(Tile t) {
@@ -38,16 +39,17 @@ public class Player implements Subject{
 	
 	public Tile play(int index) {
 		if (index >= handSize() || index < 0) return null;
+		Tile t = hand.remove(index);
 		notifyObserver();
-		return hand.remove(index);
+		return t;
 	}
 	
 	public Tile getTile(int i) {return hand.getTile(i);}
 	public void printHand() {
 		System.out.println(name+"'s hand: "+hand);
 	}
-	public String getCommandString(View v) {
-		return v.getCommand();
+	public String getCommandString() {
+		return View.getCommand();
 	}
 	public int handSize() {return hand.size();}
 	public Tile getHand(int i) {
@@ -61,8 +63,8 @@ public class Player implements Subject{
 	public boolean handContains(Tile t) {
 		return hand.contaions(t);
 	}
-	public String getHeadOrTail(String string, View view) {
-		return view.getHeadOrTail(string);
+	public String getHeadOrTail(String string) {
+		return View.getHeadOrTail(string);
 	}
 	public AIStrategy getStrategy() {return null;}
 	public void caluPlayedScore(int i) {playedScore += i;}
@@ -70,6 +72,7 @@ public class Player implements Subject{
 
 	@Override
 	public void register(Observer o) {
+		if (observers.contains(o)) return;
 		observers.add(o);
 	}
 

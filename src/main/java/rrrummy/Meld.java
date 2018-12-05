@@ -33,12 +33,12 @@ public class Meld {
 		while (m.size()>0) {
 			Tile t = m.remove(0);
 			try {
-				if(!this.add(t)) {
+				if(this.add(t)<0) {
 					m.add(0, t);
 					break;
 				}
 			}catch(AbleToAddBothSideException e) {
-				if (!this.addTail(t)){
+				if (this.addTail(t)<0){
 					m.add(0, t);
 					break;
 				}
@@ -217,13 +217,13 @@ public class Meld {
 		}
 	}
 	
-	public boolean add(Tile t) throws AbleToAddBothSideException{
+	public int add(Tile t) throws AbleToAddBothSideException{
 		if(size() == 0) {
 			meld.add(t);
 			if(!t.isJoker()) tileNumber++;
 			this.generateMap();
 			this.lastModifiedTile = 0;
-			return true;
+			return 1;
 		}
 		if(tileMap == null||tileNumber == 0) {
 			int jkNum = 0;
@@ -235,39 +235,39 @@ public class Meld {
 				this.lastModifiedTile = 0;
 				if(!t.isJoker()) tileNumber++;
 				this.generateMap();
-				return true;
+				return 0;
 			}else if (t.getNumber() >= 13 - jkNum) {
 				meld.add(t);
 				this.lastModifiedTile = size()-1;
 				if(!t.isJoker()) tileNumber++;
 				this.generateMap();
-				return true;
+				return 1;
 			}else throw new AbleToAddBothSideException(this.toString(), t.toString());
 		}
-		if(!tileMap.containsKey(t.toString())) return false;
+		if(!tileMap.containsKey(t.toString())) return -1;
 		switch (tileMap.get(t.toString())) {
 		case 1:	meld.add(0, t);
 				this.lastModifiedTile = 0;
 				if(!t.isJoker()) tileNumber++;
 				this.generateMap();
-				return true;
+				return 0;
 		case 2: meld.add(t);
 				this.lastModifiedTile = size() - 1;
 				if(!t.isJoker()) tileNumber++;
 				this.generateMap();
-				return true;
+				return 1;
 		case 3: if (isSet()) {
 					if(t.isJoker()&&isRun())throw new AbleToAddBothSideException(this.toString(), t.toString());
 					meld.add(t);
 					this.lastModifiedTile = size() - 1;
 					if(!t.isJoker()) tileNumber++;
 					this.generateMap();
-					return true;
+					return 1;
 				}else throw new AbleToAddBothSideException(this.toString(), t.toString());
-		default: return false;
+		default: return -1;
 		}
 	}
-	public boolean addHead(Tile t) {
+	public int addHead(Tile t) {
 		try {
 			return add(t);
 		}catch (AbleToAddBothSideException e) {
@@ -275,10 +275,10 @@ public class Meld {
 			this.lastModifiedTile = 0;
 			if(!t.isJoker()) tileNumber++;
 			this.generateMap();
-			return true;
+			return 0;
 		}
 	}
-	public boolean addTail(Tile t) {
+	public int addTail(Tile t) {
 		try {
 			return add(t);
 		}catch (AbleToAddBothSideException e) {
@@ -286,8 +286,14 @@ public class Meld {
 			this.lastModifiedTile = size() - 1;
 			if(!t.isJoker()) tileNumber++;
 			this.generateMap();
-			return true;
+			return 1;
 		}
+	}
+	public Tile remove (int index) {
+		if (index < 0 || index >= meld.size()) return null;
+		if (index == 0) return meld.remove(0);
+		if (this.isSet() || index == size()-1) return meld.remove(index);
+		else return null;
 	}
 	public Tile removeHead() {
 		if(size() == 0) return null;
@@ -306,8 +312,7 @@ public class Meld {
 		return t;
 	}
 	public Meld cut(int i){
-		if (i >= size() || i < 0 || size() == 1) return null;
-		if (i == size()-1) return new Meld(meld.remove(size() - 1));
+		if (i >= size()-1 || i <= 0) return null;
 		ArrayList<Tile> returnArr = new ArrayList<Tile>();
 		while (i >= 0) {
 			returnArr.add(meld.remove(0));
@@ -397,7 +402,7 @@ public class Meld {
 	public static Meld newMeld(ArrayList<Tile> arr) {
 		Meld m = new Meld();
 		for (int i = 0; i < arr.size(); i++) {
-			if (!m.addTail(arr.get(i))) return null;
+			if (m.addTail(arr.get(i))< 0) return null;
 		}
 		return m;
 	}
@@ -429,4 +434,7 @@ public class Meld {
 	public Tile getTile(int i) {return meld.get(i);}
 	public Tile getHead() {return meld.get(0);}
 	public Tile getTail() {return meld.get(meld.size() -1);}
+	public void add(Tile t, int fromTileIndex) {
+		meld.add(fromTileIndex, t);
+	}
 }
