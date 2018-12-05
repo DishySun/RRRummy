@@ -4,6 +4,10 @@ import javafx.scene.layout.Pane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
+import javafx.scene.Node;
+import javafx.scene.input.MouseEvent;
+import javafx.event.EventHandler;
+
 import java.util.ArrayList;
 
 @SuppressWarnings("restriction")
@@ -37,6 +41,13 @@ public class TileImagePane extends Pane{
 				this.move(iv,(this.getChildren().size() * 20) , 0);
 			}
 		}
+		this.relocateAll();
+	}
+	
+	public void addTile(ImageView iv, boolean headOrTail) {
+		if (headOrTail) this.getChildren().add(0, iv);
+		else this.getChildren().add(iv);
+		this.relocateAll();
 	}
 	
 	public ImageView removeTile(int i) {

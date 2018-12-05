@@ -8,6 +8,7 @@ import javafx.scene.layout.Pane;
 
 @SuppressWarnings("restriction")
 public class MeldImagePane extends Pane{
+	private final boolean TAIL = false;
 	//private final boolean HEAD = true;
 	private final int MELD_IN_EVERY_COLUMN = 6;
 	private Pane innerPane;
