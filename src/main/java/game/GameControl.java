@@ -1,6 +1,8 @@
 package game;
 
 import java.util.ArrayList;
+import java.util.Stack;
+
 import players.*;
 import rrrummy.Game;
 import rrrummy.Tile;
@@ -49,8 +51,9 @@ public class GameControl {
 	}
 
 	public GameControl(ArrayList<String> playersNameList, ArrayList<String> strategyList,
-				ArrayList<ArrayList<Tile>> handsTile) {
+				ArrayList<ArrayList<Tile>> handsTile, Stack<Tile> stockRig) {
 		// TODO Auto-generated constructor stub
+		players = new ArrayList<Player>();
 		for(int i=0;i<playersNameList.size();i++) {
 			Player player = new Player(playersNameList.get(i));
 			players.add(player);
@@ -75,6 +78,9 @@ public class GameControl {
 				}
 			}
 		}
+		System.out.println(players.toString());
+		System.out.println(handsTile);
+		System.out.println(stockRig);
 	}
 
 	private void launch() {
