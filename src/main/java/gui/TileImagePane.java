@@ -8,6 +8,9 @@ import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.event.EventHandler;
 
+import javafx.animation.TranslateTransition; 
+import javafx.util.Duration;
+
 import java.util.ArrayList;
 
 @SuppressWarnings("restriction")
@@ -94,7 +97,14 @@ public class TileImagePane extends Pane{
 
 	private void move(ImageView imageView, int i, int j) {
 		//Animation may applied
-		imageView.relocate(i, j);
+		TranslateTransition translateTransition = new TranslateTransition();
+		translateTransition.setDuration(Duration.millis(1000)); 
+		translateTransition.setNode(imageView); 
+		translateTransition.setToX(i);
+		//translateTransition.setByY(30);
+		translateTransition.setCycleCount(1);
+		translateTransition.play();
+		//imageView.relocate(i, j);
 	}
 	
 	public void setOnClickedHandler(EventHandler<MouseEvent> t) {
