@@ -135,6 +135,7 @@ public class GameControl {
 	public void move(int fromMeldIndex, int fromTileIndex, int toMeldIndex, boolean headOrTail) {
 		System.err.println("move");
 		int i = game.move(fromMeldIndex, fromTileIndex, toMeldIndex, headOrTail);
+		System.out.println("Moving result: " + i);
 		switch(i) {
 		case 0:
 			view.move(toMeldIndex, true);

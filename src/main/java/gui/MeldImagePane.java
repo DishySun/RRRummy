@@ -40,9 +40,6 @@ public class MeldImagePane extends Pane{
 		if (index < 0 || index >= innerPane.getChildren().size()) {
 			TileImagePane newMeld = new TileImagePane();
 			newMeld.add(iv, TAIL);
-			newMeld.setStyle("-fx-background-color: green; " +
-					"-fx-border-color: red; " +
-					"-fx-padding: 0 0;");
 			newMeld.setPrefSize(160, 30);
 			int s = innerPane.getChildren().size();
 			newMeld.relocate(s / MELD_IN_EVERY_COLUMN * 100, (s % MELD_IN_EVERY_COLUMN) * 50);
@@ -56,9 +53,6 @@ public class MeldImagePane extends Pane{
 	public void add(ImageView iv) {
 		TileImagePane newMeld = new TileImagePane();
 		newMeld.addTile(iv, TileImagePane.TAIL);
-		newMeld.setStyle("-fx-background-color: green; " +
-				"-fx-border-color: red; " +
-				"-fx-padding: 0 0;");
 		newMeld.setPrefSize(260, 30);
 		//int s = innerPane.getChildren().size();
 		//newMeld.relocate(s / MELD_IN_EVERY_COLUMN * 270, (s % MELD_IN_EVERY_COLUMN) * 50);
@@ -85,9 +79,14 @@ public class MeldImagePane extends Pane{
 		TileImagePane a = (TileImagePane)innerPane.getChildren().get(meldIndex);
 		if (tileIndex >= a.getChildren().size()) return null;
 		int s = innerPane.getChildren().size();
-		for (int i = 0; i <= tileIndex; i++) {
-			this.add(a.removeTile(0), s, TileImagePane.TAIL);
+		if (tileIndex == a.getChildren().size()-1) {
+			this.add(a.removeTile(tileIndex),s,TileImagePane.TAIL);
+		}else {
+			for (int i = 0; i <= tileIndex; i++) {
+				this.add(a.removeTile(0), s, TileImagePane.TAIL);
+			}
 		}
+		this.relocateAll();
 		TileImagePane p = (TileImagePane)innerPane.getChildren().get(s);
 		return (ImageView)p.getChildren().get(p.getChildren().size()-1);
 	}

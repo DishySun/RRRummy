@@ -34,7 +34,6 @@ public class TablePane extends Pane{
 	private ImageView newlyPlayedTile; //pointer only
 	private ImageView imageViewBeingSelected; //pointer only
 	private ImageView imageViewBeingMoved; 
-	private boolean isFromHand;
 	private ScaleTransition selectingAnimation;
 	private ColorAdjust newlyPlayedTileEffect;
 	private GameControl gameControl;
@@ -50,7 +49,6 @@ public class TablePane extends Pane{
 		this.green = green;
 		this.orange = orange;
 		this.joker = joker;
-		this.isFromHand = false;
 		this.melds = new MeldImagePane(tableOnMouseClicked);
 		this.melds.relocate(120, 120);
 		this.otherPlayers = new ArrayList<OtherPlayerPane>();
@@ -131,7 +129,6 @@ public class TablePane extends Pane{
 	
 	public void cut(int meldIndex, int tileIndex) {
 		pick(melds.cut(meldIndex, tileIndex));
-		isFromHand = false;
 	}
 	public void replace(int meldIndex, int tileIndex) {
 		melds.replace(imageViewBeingSelected, meldIndex, tileIndex);
@@ -233,53 +230,49 @@ public class TablePane extends Pane{
 			ImageView source = (ImageView) t.getSource();
 			mouseX = t.getSceneX();
 			mouseY = t.getSceneY();
-			if(imageViewBeingSelected == null) {
-				//pick
-				if (((TileImagePane)source.getParent()).isFromHand()) {
-					//pick for play
+			int meldIndex = ((TileImagePane)source.getParent()).getMeldIndex();
+			int tileIndex = ((TileImagePane)source.getParent()).getTileIndex(source);
+			int size = ((TileImagePane)source.getParent()).size();
+			if (imageViewBeingSelected == null) {
+				//選択中のテール　ある
+				if(meldIndex == -1) {
+					//手札から
 					pick(source);
-					isFromHand = true;
 				}else {
-					int meldIndex = ((TileImagePane)source.getParent()).getMeldIndex();
-					int tileIndex = ((TileImagePane)source.getParent()).getTileIndex(source);
-					int s = ((TileImagePane)source.getParent()).getChildrenUnmodifiable().size();
-					if (gameControl.isSet(meldIndex) || tileIndex == 0 || tileIndex == s-1) {
-						//pick for move
+					//メルドから
+					if (size == 0) return;
+					if (gameControl.isSet(meldIndex) || tileIndex == 0 || tileIndex == size-1) {
+						//メルドの最初か最末　それから選択中のはsetの場合　選択する
 						pick(source);
-						isFromHand = false;
 					}else {
-						//cut
-						gameControl.cut(meldIndex,tileIndex);
-						//picking status
+						//そうではないなら cutする
+						gameControl.cut(meldIndex, tileIndex);
 					}
 				}
 			}else {
-				if (source.equals(imageViewBeingSelected)) {
+				//選択中のテール　ない
+				int seletcedMeldIndex = ((TileImagePane)imageViewBeingSelected.getParent()).getMeldIndex();
+				int selectedTileIndex = ((TileImagePane)imageViewBeingSelected.getParent()).getTileIndex(imageViewBeingSelected);
+				if (meldIndex == seletcedMeldIndex) {
+					//元の場所に戻す場合
 					drop();
-					return;
-				}
-				//drop
-				
-					int tileInHandIndex = ((TileImagePane)imageViewBeingSelected.getParent()).getTileIndex(imageViewBeingSelected);
-					System.out.println("Select index: "+tileInHandIndex);
-					int meldIndex = ((TileImagePane)source.getParent()).getMeldIndex();
-					System.out.println("table index: " +meldIndex);
-					int tileIndex = ((TileImagePane)source.getParent()).getTileIndex(source);
-					System.out.println("table tile index: "+tileIndex);
-					int size = source.getParent().getChildrenUnmodifiable().size();
-					//System.out.println(size);
-					boolean headOrTail;
-					if(tileIndex > size / 2) headOrTail =false;
-					else headOrTail = true;
-					if(isFromHand) {
-						if(!gameControl.replace(tileInHandIndex,meldIndex,tileIndex)) {
-							gameControl.play(tileInHandIndex,meldIndex,headOrTail);
-						}
-					}else {
-						int pervMeldIndex = ((TileImagePane)imageViewBeingSelected.getParent()).getMeldIndex();
-						gameControl.move(pervMeldIndex, tileInHandIndex, meldIndex, headOrTail);
+				}else if (seletcedMeldIndex == -1) {
+					//選択中のテールは手札にある場合
+					//先ずはreplaceを試す
+					if (!gameControl.replace(selectedTileIndex, meldIndex, tileIndex)) {
+						//失敗たら
+						//手札からplayする
+						boolean headOrTail = (tileIndex < size /2);
+						gameControl.play(selectedTileIndex, meldIndex, headOrTail);
 					}
-				
+				}else {
+					//選択中のテールはtableにある
+					//moveしかない
+					System.out.println("selectedMeldIndex: " + seletcedMeldIndex);
+					System.out.println("selectedTileIndex: " + selectedTileIndex);
+					boolean headOrTail = (tileIndex < size /2);
+					gameControl.move(seletcedMeldIndex, selectedTileIndex, meldIndex, headOrTail);
+				}
 			}
         }
 	};
@@ -288,9 +281,14 @@ public class TablePane extends Pane{
 
 		@Override
 		public void handle(MouseEvent event) {
-			if(imageViewBeingSelected == null) return;
-			int tileIndex = ((TileImagePane)imageViewBeingSelected.getParent()).getTileIndex(imageViewBeingSelected);
-			gameControl.play(tileIndex);
+			if(imageViewBeingSelected == null) ;{
+				int meldIndex = ((TileImagePane)imageViewBeingSelected.getParent()).getMeldIndex();
+				int tileIndex = ((TileImagePane)imageViewBeingSelected.getParent()).getTileIndex(imageViewBeingSelected);
+				int size = ((TileImagePane)imageViewBeingSelected.getParent()).size();
+				if (size == 1) return;
+				if (meldIndex == -1)gameControl.play(tileIndex);
+				else {gameControl.cut(meldIndex, tileIndex);}
+			}
 		}};
 	
 	private EventHandler<MouseEvent> imageViewOnMouseMovedEventHandler = new EventHandler<MouseEvent>() {

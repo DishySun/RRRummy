@@ -98,7 +98,7 @@ public class TileImagePane extends Pane{
 	private void move(ImageView imageView, int i, int j) {
 		//Animation may applied
 		TranslateTransition translateTransition = new TranslateTransition();
-		translateTransition.setDuration(Duration.millis(1000)); 
+		translateTransition.setDuration(Duration.millis(800)); 
 		translateTransition.setNode(imageView); 
 		translateTransition.setToX(i);
 		//translateTransition.setByY(30);
@@ -119,11 +119,6 @@ public class TileImagePane extends Pane{
 		}
 	}
 	
-	public boolean isFromHand() {
-		if (this.getParent().getParent().getClass().getSimpleName().equals("CurrentPlayerPane") )return true;
-		return false;
-	}
-	
 	public int getMeldIndex() {
 		//-1 for player hand
 		if (this.getParent().getParent().getClass().getSimpleName().equals("CurrentPlayerPane") ) return -1;
@@ -133,4 +128,6 @@ public class TileImagePane extends Pane{
 	public int getTileIndex(Node o) {
 		return this.getChildrenUnmodifiable().indexOf(o);
 	}
+	
+	public int size() {return this.getChildren().size();}
 }

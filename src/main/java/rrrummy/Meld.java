@@ -24,6 +24,8 @@ public class Meld {
 		tileNumber = 0;
 		tileMap = null;
 		this.addHead(t);
+		if(!t.isJoker()) tileNumber++;
+		this.generateMap();
 		lastMeld = false;
 	}
 	public Meld(ArrayList<Tile> m) {
@@ -44,6 +46,7 @@ public class Meld {
 				}
 			}
 		}
+		this.generateMap();
 		this.lastMeld = true;
 	}
 	
@@ -218,6 +221,8 @@ public class Meld {
 	}
 	
 	public int add(Tile t) throws AbleToAddBothSideException{
+		System.out.println("(Meld.java: 221) adding "+t+" to "+toString());
+		System.out.println(tileMap);
 		if(size() == 0) {
 			meld.add(t);
 			if(!t.isJoker()) tileNumber++;
@@ -291,8 +296,13 @@ public class Meld {
 	}
 	public Tile remove (int index) {
 		if (index < 0 || index >= meld.size()) return null;
-		if (index == 0) return meld.remove(0);
-		if (this.isSet() || index == size()-1) return meld.remove(index);
+		if (this.isSet() || index == size()-1 || index == 0) {
+			Tile t = meld.remove(index);
+			if (!t.isJoker()) tileNumber--;
+			this.generateMap();
+			this.lastModifiedTile = -1;
+			return t;
+		}
 		else return null;
 	}
 	public Tile removeHead() {
@@ -312,7 +322,8 @@ public class Meld {
 		return t;
 	}
 	public Meld cut(int i){
-		if (i >= size()-1 || i <= 0) return null;
+		if (i > size()-1 || i < 0) return null;
+		if (i == size() -1) return new Meld(meld.remove(size()-1));
 		ArrayList<Tile> returnArr = new ArrayList<Tile>();
 		while (i >= 0) {
 			returnArr.add(meld.remove(0));

@@ -75,12 +75,16 @@ public class Table implements Subject{
 		return b;
 	}
 	public int move(int fromMeldIndex, int fromTileIndex, int toMeldIndex, boolean headOrTail) {
-		Tile t = table.get(fromTileIndex).remove(fromTileIndex);
+		Tile t = table.get(fromMeldIndex).getTile(fromTileIndex);
+		//if (table.get(fromMeldIndex).size() ==0) table.remove(fromMeldIndex); 
+		System.out.println("(Table.java : 79)remove result: "+ t);
 		if (t == null) return -1;
 		int i;
 		if (headOrTail) i = table.get(toMeldIndex).addHead(t);
 		else i = table.get(toMeldIndex).addTail(t);
-		if (i < 0) table.get(fromTileIndex).add(t,fromTileIndex);
+		System.out.println("(Table.java : 85)add result: "+i);
+		if (i >= 0) table.get(fromMeldIndex).remove(fromTileIndex);
+		if (table.get(fromMeldIndex).size() == 0)table.remove(fromMeldIndex);
 		return i;
 	}
 	public Tile removeHead(int i) {
