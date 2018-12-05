@@ -37,7 +37,15 @@ public class MeldImagePane extends Pane{
 	
 	public void add(ImageView iv, int index, boolean headOrTail) {
 		if (index < 0 || index >= innerPane.getChildren().size()) {
-			this.add(iv);
+			TileImagePane newMeld = new TileImagePane();
+			newMeld.add(iv, TAIL);
+			newMeld.setStyle("-fx-background-color: green; " +
+					"-fx-border-color: red; " +
+					"-fx-padding: 0 0;");
+			newMeld.setPrefSize(160, 30);
+			int s = innerPane.getChildren().size();
+			newMeld.relocate(s / MELD_IN_EVERY_COLUMN * 100, (s % MELD_IN_EVERY_COLUMN) * 50);
+			innerPane.getChildren().add(newMeld);
 		}else {
 			TileImagePane a = (TileImagePane)innerPane.getChildren().get(index);
 			a.addTile(iv, headOrTail);

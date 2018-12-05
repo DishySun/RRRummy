@@ -3,9 +3,6 @@ package gui;
 import javafx.scene.layout.Pane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.Node;
-import javafx.scene.input.MouseEvent;
-import javafx.event.*;
 
 import java.util.ArrayList;
 
@@ -15,7 +12,8 @@ public class TileImagePane extends Pane{
 	public final static boolean TAIL = false;
 	public final static boolean HEAD = true;
 	
-	public void addTile(ImageView iv, boolean headOrTail) {
+	
+	public void add(ImageView iv, boolean headOrTail) {
 		//true for head, false for tail
 		if (headOrTail) {
 			iv.relocate(0, 0);
