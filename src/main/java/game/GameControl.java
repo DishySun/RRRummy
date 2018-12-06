@@ -1,7 +1,11 @@
 package game;
 
 import java.util.ArrayList;
+import java.util.Stack;
+
 import players.*;
+import rrrummy.Game;
+import rrrummy.Tile;
 
 
 public class GameControl {
@@ -13,9 +17,72 @@ public class GameControl {
 	public GameControl() {
 		players = new ArrayList<Player>();
 		view = new View();
-		players = new ArrayList<Player>();
 	}
 	
+	public GameControl(ArrayList<String> playersNameList, ArrayList<String> strategyList) {
+		// TODO Auto-generated constructor stub
+		players = new ArrayList<Player>();
+		for(int i=0;i<playersNameList.size();i++) {
+			String tempName = playersNameList.get(i);
+			Player player = new Player(tempName);
+			players.add(player);
+		}
+		if(strategyList != null && strategyList.size() != 0) {
+			for(String s : strategyList) {
+				switch(s) {
+				case "1":
+					players.add(new AI(new StrategyZero()));
+					break;
+				case "2":
+					players.add(new AI(new StrategyTwo()));
+					break;
+				case "3":
+					players.add(new AI(new StrategyThree()));
+					break;
+				case "4":
+					//players.add(new AI(new StrategyFour()));
+					break;
+				default:
+					players.add(new AI(new StrategyThree()));
+				}
+			}
+		}
+		view = new View();
+	}
+
+	public GameControl(ArrayList<String> playersNameList, ArrayList<String> strategyList,
+				ArrayList<ArrayList<Tile>> handsTile, Stack<Tile> stockRig) {
+		// TODO Auto-generated constructor stub
+		players = new ArrayList<Player>();
+		for(int i=0;i<playersNameList.size();i++) {
+			Player player = new Player(playersNameList.get(i));
+			players.add(player);
+		}
+		if(strategyList != null && strategyList.size() != 0) {
+			for(String s : strategyList) {
+				switch(s) {
+				case "1":
+					players.add(new AI(new StrategyZero()));
+					break;
+				case "2":
+					players.add(new AI(new StrategyTwo()));
+					break;
+				case "3":
+					players.add(new AI(new StrategyThree()));
+					break;
+				case "4":
+					//players.add(new AI(new StrategyFour()));
+					break;
+				default:
+					players.add(new AI(new StrategyThree()));
+				}
+			}
+		}
+		System.out.println(players.toString());
+		System.out.println(handsTile);
+		System.out.println(stockRig);
+	}
+
 	private void launch() {
 		int gameOrReplay = view.getGameOrReplay();
 		if (gameOrReplay == 1)newGame();
@@ -24,9 +91,9 @@ public class GameControl {
 	
 	
 	
-	private void newGame() {
+	public void newGame() {
 		initAiPlayers();
-		game = new Game(players, view);
+		//game = new Game(players, view);
 		game.startGame();
 	}
 	
