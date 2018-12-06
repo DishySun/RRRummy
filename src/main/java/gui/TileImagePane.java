@@ -129,6 +129,11 @@ public class TileImagePane extends Pane{
 		}
 	}
 	
+	public void clearAllNode() {
+		this.getChildren().removeAll();
+		this.relocateAll();
+	}
+	
 	public int getMeldIndex() {
 		//-1 for player hand
 		if (this.getParent().getParent().getClass().getSimpleName().equals("CurrentPlayerPane") ) return -1;

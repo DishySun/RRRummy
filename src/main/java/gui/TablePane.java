@@ -342,7 +342,7 @@ public class TablePane extends Pane{
 		
 	};
 	
-	public void initHand(int playerIndex, ArrayList<Tile> tiles, ArrayList<Integer> order) {
+	public void initHand(int playerIndex, ArrayList<Tile> tiles) {
 		if (playerIndex == playerIndexToShow) {
 			for (Tile t: tiles) {
 				currentPlayer.addTile(newImageView(t));
@@ -380,12 +380,18 @@ public class TablePane extends Pane{
 			if (players.indexOf(p) == this.playerIndexToShow)continue;
 			int otherIndex = this.getOtherPlayerIndex(players.indexOf(p));
 			otherPlayers.get(otherIndex).setTileNumber(p.handSize());
-		}
+		}	
 	}
 
-	public void drawTile(int currentPlayer2, Tile t, ArrayList<Integer> order) {
+	public void drawTile(int currentPlayer2, Tile t) {
 		if (currentPlayer2 == playerIndexToShow) this.playerDrawTile(t);
 		else this.otherDrawTile(this.getOtherPlayerIndex(currentPlayer2));
 		currentPlayer.sortedImages(imageMap);
 	}
+	
+	public void updateHands(int playerIndex, ArrayList<Tile> hands) {
+		currentPlayer.clearCurrentPlayerPane();
+		initHand(playerIndex, hands);
+	}
+	
 }
