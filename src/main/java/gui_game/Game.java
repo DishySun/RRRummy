@@ -165,4 +165,16 @@ public class Game {
 		return this.table.size();
 	}
 	
+	public Player determineWinner(int currentPlayer) {
+		Player winner = null;
+		if (players.get(currentPlayer).handSize() == 0) return players.get(currentPlayer);
+		if (stock.size() == 0) {
+			winner = players.get(currentPlayer);
+			for (Player p : players) {
+				if (p.handSize() < winner.handSize()) winner = p;
+			}
+		}
+		return winner;
+	}
+	
 }

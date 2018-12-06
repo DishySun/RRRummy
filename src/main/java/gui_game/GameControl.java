@@ -125,6 +125,11 @@ public class GameControl {
 	}
 	
 	public void commandEndTurn() {
+		Player winner = this.determineWinner();
+		if (winner !=  null) {
+			view.anaounceWinner(winner);
+			return;
+		}
 		Tile t = null;
 		
 		if (hadPlayed == 0) {
@@ -258,5 +263,9 @@ public class GameControl {
 		game.printTable();
 		players.get(currentPlayer).printHand();
 		return false;
+	}
+	
+	public Player determineWinner() {
+		return game.determineWinner(currentPlayer);
 	}
 }

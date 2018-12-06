@@ -388,4 +388,12 @@ public class TablePane extends Pane{
 		else this.otherDrawTile(this.getOtherPlayerIndex(currentPlayer2));
 		currentPlayer.sortedImages(imageMap);
 	}
+
+	public void anaounceWinner(Player winner) {
+		this.getChildren().clear();
+		Label winnerLabel = new Label();
+		winnerLabel.setText("Winner is : "+winner.getName());
+		winnerLabel.relocate(400, 250);
+		this.getChildren().add(winnerLabel);
+	}
 }

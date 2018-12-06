@@ -84,7 +84,6 @@ public class TileImagePane extends Pane{
 					return 1;
 				}else return -1;
 			}
-		
 		});
 		this.getChildren().setAll(list);
 		this.relocateAll();
