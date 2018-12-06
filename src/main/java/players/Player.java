@@ -35,6 +35,10 @@ public class Player implements Subject{
 		return hand.sort();
 	}
 	
+	public void initHand(Hand h) {
+		hand = h;
+	}
+	
 	public void draw(Tile t) {
 		hand.add(t);
 		notifyObserver();
@@ -76,7 +80,8 @@ public class Player implements Subject{
 	public AIStrategy getStrategy() {return strategy;}
 	public void caluPlayedScore(int i) {playedScore += i;}
 	public int getPlayerdSocre() {return playedScore;}
-
+	public Hand getHand() {return hand;}
+	
 	@Override
 	public void register(Observer o) {
 		if (observers.contains(o)) return;

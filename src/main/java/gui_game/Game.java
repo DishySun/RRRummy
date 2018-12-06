@@ -164,5 +164,13 @@ public class Game {
 	public int tableSize() {
 		return this.table.size();
 	}
+
+	public ArrayList<Meld> getTable() {
+		// TODO Auto-generated method stub
+		return table.getTableMeld();
+	}
 	
+	public void copyTable(ArrayList<Meld> t) {
+		table.steTable(t);
+	}
 }

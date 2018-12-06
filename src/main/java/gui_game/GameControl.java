@@ -3,13 +3,19 @@ package gui_game;
 import java.util.ArrayList;
 import java.util.Random;
 
+import Memento.Caretaker;
+import Memento.Memento;
+import Memento.Originator;
 import gui.TablePane;
 import javafx.scene.image.Image;
 
 import java.util.Collections;
 
+import players.Hand;
 import players.Player;
 import rrrummy.InvalidTileException;
+import rrrummy.Meld;
+import rrrummy.Table;
 import rrrummy.Tile;
 import command.*;
 
@@ -23,6 +29,9 @@ public class GameControl {
 	private TablePane view;
 	private CommandControl commandControl;
 	private int hadPlayed = 0;
+	private Caretaker caretaker = new Caretaker();
+	private Originator originator = new Originator();
+	private Memento memento_1;
 	
 	public GameControl(ArrayList<Player> players, int firstHumanPlayer, ArrayList<Image> red, ArrayList<Image> blue, ArrayList<Image> green, ArrayList<Image> orange, Image joker, Image back) {
 		//normal game at least one human player
@@ -131,8 +140,13 @@ public class GameControl {
 			t = game.playerDraw(players.get(currentPlayer));
 			ArrayList<Integer> order = players.get(currentPlayer).sortHand();
 			if (t != null) view.drawTile(currentPlayer, t, order);
+		} else {
+			for(Meld meld : game.getTable()) {
+				if(!meld.isValid()) {
+					penalty();
+				}
+			}
 		}
-		
 		currentPlayer = (currentPlayer +1) % players.size();
 		hadPlayed = 0;
 		players.get(currentPlayer).getTurn(this);
@@ -140,6 +154,9 @@ public class GameControl {
 	
 	//model method
 	public void humanTurn() {
+		originator.setState(game.getTable(), players.get(currentPlayer).getHand());
+		memento_1 = originator.createMemento();
+		caretaker.setMemento(memento_1);
 		view.setHumanTurn(currentPlayer);
 	}
 
@@ -258,5 +275,14 @@ public class GameControl {
 		game.printTable();
 		players.get(currentPlayer).printHand();
 		return false;
+	}
+	
+	public void penalty() {
+		originator.restoreMemento(caretaker.getMemento());
+		players.get(currentPlayer).initHand(originator.getPlayerHand());
+		game.copyTable(originator.getTable());
+		game.playerDraw(players.get(currentPlayer));
+		game.playerDraw(players.get(currentPlayer));
+		game.playerDraw(players.get(currentPlayer));
 	}
 }

@@ -134,6 +134,10 @@ public class Table implements Subject{
 		return table.get(meldIndex).isSet();
 	}
 
+	public void steTable(ArrayList<Meld> t) {
+		table = t;
+	}
+	
 	@Override
 	public void register(Observer o) {
 		observers.add(o);	
@@ -150,6 +154,11 @@ public class Table implements Subject{
 		for (Observer o: observers) {
 			o.update(table);
 		}
+	}
+
+	public ArrayList<Meld> getTableMeld() {
+		// TODO Auto-generated method stub
+		return table;
 	}
 
 	

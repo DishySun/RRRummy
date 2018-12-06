@@ -2,13 +2,14 @@ package Memento;
 
 import java.util.ArrayList;
 
+import players.Hand;
 import players.Player;
 import rrrummy.Meld;
 import rrrummy.Tile;
 
 public class Originator {
 	private ArrayList<Meld> table;
-	private ArrayList<Tile> playerHand;
+	private Hand playerHand;
 	
 	/*
 	 * Create a new Memento
@@ -33,20 +34,17 @@ public class Originator {
 		return table;
 	}
 	
-	public ArrayList<Tile> getPlayerHand() {
+	public Hand getPlayerHand() {
 		return playerHand;
 	}
  
-	public void setState(ArrayList<Meld> tab, ArrayList<Tile> handt) {
+	public void setState(ArrayList<Meld> tab, Hand handt) {
 		table = new ArrayList<Meld>();
 		for(Meld meld : tab) {
 			Meld tempM = new Meld(meld);
 			table.add(tempM);
 		}
-		playerHand = new ArrayList<Tile>();
-		for(Tile h : handt) {
-			Tile tempT = new Tile(h);
-			playerHand.add(tempT);
-		}
+		playerHand = new Hand(handt);
+		
 	}
 }
