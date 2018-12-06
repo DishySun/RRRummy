@@ -13,36 +13,31 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.layout.Pane;
+import players.Player;
 import rrrummy.InvalidTileException;
 import rrrummy.Tile;
 import javafx.scene.control.TextField;
 
-//@SuppressWarnings("restriction")
+@SuppressWarnings("restriction")
 public class RiggingPane extends Pane {
 
 	// private NewGameControlPane n;
-	private int HumanPlayer, AIPlayer, totalPlayer;
+	private int totalPlayer;
 	private ListView<String> cards, stock;
 	private ObservableList<String> selectTiles;
 	private String selectTile;
 	private ObservableList<String> data;
 	private ArrayList<ArrayList<String>> hands;
 	private ArrayList<String> stocks;
-	ArrayList<String> playersNameList;
-	ArrayList<String> StrategyList;
+	private ArrayList<Player> players;
 
-	public RiggingPane(int hPlayer, int aPlayer, ArrayList<String> playerName, ArrayList<String> StraList) {
+	public RiggingPane(ArrayList<Player> pList) {
+		players = pList;
+		totalPlayer = players.size();
+		System.out.println("total" + players.size());
+		for(Player p : players)
+			System.out.println("PlayerName: " + p.getName());
 
-		HumanPlayer = hPlayer;
-		AIPlayer = aPlayer;
-		totalPlayer = AIPlayer + HumanPlayer;
-		System.out.println("h" + HumanPlayer);
-		System.out.println("a" + AIPlayer);
-		System.out.println("total" + totalPlayer);
-		System.out.println("PlayerName: " + playerName);
-		System.out.println("Strategy: " + StraList);
-		playersNameList = playerName;
-		StrategyList = StraList;
 		hands = new ArrayList<ArrayList<String>>();
 		stocks = new ArrayList<String>();
 		for (int i = 0; i < totalPlayer; i++) { // initialize size
@@ -106,11 +101,9 @@ public class RiggingPane extends Pane {
 			pname.setLayoutX(30 + i * 180);
 			pname.setLayoutY(100);
 			pname.setDisable(true);
-
-			if (i < HumanPlayer)
-				pname.setText(playersNameList.get(i));
-			else
-				pname.setText(StrategyList.get(i - HumanPlayer));
+			
+			
+			pname.setText(players.get(i).getName());
 
 			ListView<String> playerhands = new ListView<String>();
 
@@ -154,10 +147,7 @@ public class RiggingPane extends Pane {
 		getChildren().add(Confirm1);
 
 		Confirm1.setOnAction(event -> {
-			if (checkHas14or0(hands)) {
 				play();
-			} else
-				System.out.println("has to have 14 or 0 tile");
 		});
 
 	}
@@ -223,7 +213,7 @@ public class RiggingPane extends Pane {
 				e.printStackTrace();
 			}
 		}
-		GameControl game = new GameControl(playersNameList, StrategyList, handsTile,stock);
+		GameControl game = new GameControl(players, handsTile, stock);
 		// game.newGame();
 	}
 }

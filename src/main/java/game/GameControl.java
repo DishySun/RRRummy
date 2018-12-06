@@ -19,68 +19,19 @@ public class GameControl {
 		view = new View();
 	}
 	
-	public GameControl(ArrayList<String> playersNameList, ArrayList<String> strategyList) {
+	public GameControl(ArrayList<Player> players ) {
 		// TODO Auto-generated constructor stub
-		players = new ArrayList<Player>();
-		for(int i=0;i<playersNameList.size();i++) {
-			String tempName = playersNameList.get(i);
-			Player player = new Player(tempName);
-			players.add(player);
-		}
-		if(strategyList != null && strategyList.size() != 0) {
-			for(String s : strategyList) {
-				switch(s) {
-				case "1":
-					players.add(new AI(new StrategyZero()));
-					break;
-				case "2":
-					players.add(new AI(new StrategyTwo()));
-					break;
-				case "3":
-					players.add(new AI(new StrategyThree()));
-					break;
-				case "4":
-					//players.add(new AI(new StrategyFour()));
-					break;
-				default:
-					players.add(new AI(new StrategyThree()));
-				}
-			}
-		}
-		view = new View();
+		for(Player p : players)
+			System.out.println(p.getName());
 	}
 
-	public GameControl(ArrayList<String> playersNameList, ArrayList<String> strategyList,
-				ArrayList<ArrayList<Tile>> handsTile, Stack<Tile> stockRig) {
+	public GameControl(ArrayList<Player> players, ArrayList<ArrayList<Tile>> handsTile, Stack<Tile> stockRig) {
 		// TODO Auto-generated constructor stub
-		players = new ArrayList<Player>();
-		for(int i=0;i<playersNameList.size();i++) {
-			Player player = new Player(playersNameList.get(i));
-			players.add(player);
+		for(Player p : players) {
+			System.out.println(p.getName());
+			System.out.println(handsTile);
+			System.out.println(stockRig);
 		}
-		if(strategyList != null && strategyList.size() != 0) {
-			for(String s : strategyList) {
-				switch(s) {
-				case "1":
-					players.add(new AI(new StrategyZero()));
-					break;
-				case "2":
-					players.add(new AI(new StrategyTwo()));
-					break;
-				case "3":
-					players.add(new AI(new StrategyThree()));
-					break;
-				case "4":
-					//players.add(new AI(new StrategyFour()));
-					break;
-				default:
-					players.add(new AI(new StrategyThree()));
-				}
-			}
-		}
-		System.out.println(players.toString());
-		System.out.println(handsTile);
-		System.out.println(stockRig);
 	}
 
 	private void launch() {

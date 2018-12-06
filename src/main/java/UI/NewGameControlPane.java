@@ -19,26 +19,34 @@ import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
+import players.AI;
+import players.Player;
+import players.StrategyThree;
+import players.StrategyTwo;
+import players.StrategyZero;
 import rrrummy.Game;
 import javafx.scene.control.TextField;
 
-//@SuppressWarnings("restriction")
+@SuppressWarnings("restriction")
 public class NewGameControlPane extends Pane{
 
 	private RiggingPane r;
 	private Button Play,Rigging,HPOK,AIOK;
-	ArrayList<ChoiceBox <String>> HumanPlayerNum;
-	ArrayList<ChoiceBox <String>> AIPlayerNum;
-	private Label label,ailabel,hmlabel;
 	private int hn,in;
-	ArrayList<ChoiceBox <String>> nStrategy;
-	ChoiceBox <String> tempCB,hpCB;
-	private String Stra;
-	Optional<String> playerNames;
-	ArrayList<String> playersNameList;
-	ArrayList<String> StrategyList;
+	private ArrayList<ChoiceBox <String>> HumanPlayerNum;
+	private ArrayList<ChoiceBox <String>> AIPlayerNum;
+	private Label label,ailabel,hmlabel;
+	private ArrayList<ChoiceBox <String>> nStrategy;
+	private ChoiceBox <String> tempCB,hpCB;
+	private Optional<String> playerNames;
+	private ArrayList<String> playersNameList;
+	private ArrayList<String> StrategyList;
+	private ArrayList<Player> players;
+	private ArrayList<Player> playersAI;
 	
 	public NewGameControlPane (){
+		players = new ArrayList<Player>();
+		playersAI = new ArrayList<Player>();
 		initUI();
 		playersNameList = new ArrayList<String>();
 		StrategyList = new ArrayList<String>();
@@ -90,8 +98,8 @@ public class NewGameControlPane extends Pane{
     				dialog.setTitle("Player Name Input");
     				dialog.setHeaderText("Player " + (i+1) + ", Could you tell me your name please?");
     				dialog.setContentText("Please enter your name:");
-    				playerNames = dialog.showAndWait();
-    				playersNameList.add(playerNames.get());
+    				Player player = new Player(dialog.showAndWait().get());
+    				players.add(player);
     				//System.out.println(playerNames.get());
     				//System.out.println(playerNames);
     				}
@@ -171,23 +179,39 @@ public class NewGameControlPane extends Pane{
 
 	public void playGame() {
 		getChildren().clear();
-		//System.out.println("play");
-		//System.out.println("NewGame "+playersNameList);
-		GameControl game = new GameControl(playersNameList,StrategyList);
-		//game.newGame();
-		//game.startGame();
-		
+		players.addAll(	getAI());
+		GameControl game = new GameControl(players);
 	};
 	
 	public void rigging() {
-		r =  new RiggingPane(hn,in,playersNameList,StrategyList);
-		getChildren().removeAll(Rigging,Play,HPOK,AIOK);
-		getChildren().removeAll(label,hmlabel,ailabel);
-		getChildren().removeAll(AIPlayerNum);
-		getChildren().removeAll(HumanPlayerNum);
-		if(nStrategy != null)
-			getChildren().removeAll(nStrategy);
-		getChildren().clear();
-		getChildren().add(r);
+		players.addAll(	getAI());
+		r =  new RiggingPane(players);
+		this.getScene().setRoot(r);;
+	}
+
+	private ArrayList<Player> getAI() {
+		// TODO Auto-generated method stub
+		if(StrategyList != null && StrategyList.size() != 0) {
+			for(String s : StrategyList) {
+				switch(s) {
+				case "Strategy 1":
+					playersAI.add(new AI(new StrategyZero()));
+					break;
+				case "Strategy 2":
+					playersAI.add(new AI(new StrategyTwo()));
+					break;
+				case "Strategy 3":
+					playersAI.add(new AI(new StrategyThree()));
+					break;
+				case "Strategy 4":
+					//playersAI.add(new AI(new StrategyFour()));
+					break;
+				default:
+					players.add(new AI(new StrategyThree()));
+				}
+			}
+		}
+		return playersAI;
+
 	}
 }
