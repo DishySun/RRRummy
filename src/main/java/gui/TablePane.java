@@ -12,6 +12,7 @@ import javafx.event.*;
 
 //utils
 import java.util.ArrayList;
+import java.util.HashMap;
 
 //effect part
 import javafx.animation.ScaleTransition;
@@ -44,9 +45,11 @@ public class TablePane extends Pane{
 	private double mouseY;
 	private Timer timer;
 	private Label hintLabel;
+	private HashMap<ImageView, Tile> imageMap;
 	
 	public TablePane(GameControl gc, final ArrayList<Player> players, int playerIndexToShow, ArrayList<Image> red, ArrayList<Image> blue, ArrayList<Image> green, ArrayList<Image> orange, Image joker, Image back) {
 		this.gameControl = gc;
+		imageMap = new HashMap<ImageView, Tile>();
 		this.playerIndexToShow = playerIndexToShow;
 		this.red = red;
 		this.blue = blue;
@@ -104,7 +107,7 @@ public class TablePane extends Pane{
 	}
 	
 	public void playerDrawTile(Tile t) {
-		currentPlayer.addTile(newImageView(t.getColor(),t.getNumber()));
+		currentPlayer.addTile(newImageView(t));
 	}
 	
 	public void playerPlayed(int playerIndex, int meldIndex, boolean headOrTail, Tile t) {
@@ -124,16 +127,17 @@ public class TablePane extends Pane{
 		}else {
 			int i = getOtherPlayerIndex(playerIndex);
 			otherPlayers.get(i).remove();
-			ImageView temp = this.newImageView(t.getColor(), t.getNumber());
+			ImageView temp = this.newImageView(t);
 			setNewlyPlayed(temp);
 			melds.add(temp);
 		}
 	}
 	
-	public void move(int toMeldIndex, boolean headOrTail) {
-		melds.add(imageViewBeingSelected, toMeldIndex, headOrTail);
-		this.setNewlyPlayed(imageViewBeingSelected);
-		drop();
+	public void move(int fromMeldIndex, int fromTileIndex, int toMeldIndex, boolean headOrTail) {
+		ImageView iv = melds.getImageView(fromMeldIndex, fromTileIndex);
+		melds.add(iv, toMeldIndex, headOrTail);
+		this.setNewlyPlayed(iv);
+		if (imageViewBeingSelected != null) drop();
 		melds.relocateAll();
 	}
 	
@@ -160,7 +164,7 @@ public class TablePane extends Pane{
 	private void otherPlayTileTo(int playerNumber, Tile playedTile, int meldIndex, boolean headOrTail) {
 		int i = getOtherPlayerIndex(playerNumber);
 		otherPlayers.get(i).remove();
-		this.setNewlyPlayed(this.newImageView(playedTile.getColor(), playedTile.getNumber()));
+		this.setNewlyPlayed(this.newImageView(playedTile));
 		
 		melds.add(newlyPlayedTile, meldIndex, headOrTail);
 		//drop();
@@ -171,8 +175,11 @@ public class TablePane extends Pane{
 	}
 	
 	
-	private ImageView newImageView(Tile.Color c, int tileNumber) {
+	private ImageView newImageView(Tile t) {
 		ImageView iv = new ImageView();
+		Tile.Color c = t.getColor();
+		int tileNumber = t.getNumber();
+		imageMap.put(iv, t);
 		//iv.setOnMouseClicked(imageViewOnMouseClickedEventHandler);
 		switch (c) {
 		case RED:
@@ -335,7 +342,7 @@ public class TablePane extends Pane{
 	public void initHand(int playerIndex, ArrayList<Tile> tiles, ArrayList<Integer> order) {
 		if (playerIndex == playerIndexToShow) {
 			for (Tile t: tiles) {
-				currentPlayer.addTile(newImageView(t.getColor(),t.getNumber()));
+				currentPlayer.addTile(newImageView(t));
 			}
 		}else {
 			int p = this.getOtherPlayerIndex(playerIndex);
@@ -364,7 +371,7 @@ public class TablePane extends Pane{
 		currentPlayer = new CurrentPlayerPane(players.get(playerIndexToShow).getName(), endTurnEventHandler, hintEventHandler);
 		for (int i = 0; i < players.get(playerIndexToShow).handSize(); i++) {
 			Tile t = players.get(playerIndexToShow).getHand(i);
-			currentPlayer.addTile(this.newImageView(t.getColor(),t.getNumber()));
+			currentPlayer.addTile(this.newImageView(t));
 		}
 		for (Player p : players) {
 			if (players.indexOf(p) == this.playerIndexToShow)continue;
@@ -376,6 +383,6 @@ public class TablePane extends Pane{
 	public void drawTile(int currentPlayer2, Tile t, ArrayList<Integer> order) {
 		if (currentPlayer2 == playerIndexToShow) this.playerDrawTile(t);
 		else this.otherDrawTile(this.getOtherPlayerIndex(currentPlayer2));
-		currentPlayer.sortedImages(order);
+		currentPlayer.sortedImages(imageMap);
 	}
 }

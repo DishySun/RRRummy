@@ -330,12 +330,17 @@ public class Meld {
 	}
 	public Meld cut(int i){
 		if (i > size()-1 || i < 0) return null;
-		if (i == size() -1) return new Meld(meld.remove(size()-1));
+		if (i == size() -1) {
+			Tile t = meld.remove(size()-1);
+			this.generateMap();
+			return new Meld(t);
+		}
 		ArrayList<Tile> returnArr = new ArrayList<Tile>();
 		while (i >= 0) {
 			returnArr.add(meld.remove(0));
 			i--;
 		}
+		this.generateMap();
 		return new Meld(returnArr);
 	}
 	public Tile.Color getRunColor(){

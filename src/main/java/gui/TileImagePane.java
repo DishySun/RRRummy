@@ -10,8 +10,12 @@ import javafx.event.EventHandler;
 
 import javafx.animation.TranslateTransition; 
 import javafx.util.Duration;
+import rrrummy.Tile;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 
 @SuppressWarnings("restriction")
 public class TileImagePane extends Pane{
@@ -65,17 +69,23 @@ public class TileImagePane extends Pane{
 		this.relocateAll();
 	}
 	
-	public void sort(ArrayList<Integer> indexes) {
-		if (indexes.size() != this.getChildren().size()) {
-			System.err.println("Error size when sorting in TileImagePane.java");
-			System.err.println("indexes siez: "+indexes.size());
-			System.err.println("Children size: "+ this.getChildren().size());
-			System.exit(-1);
-		}
+	public void sort(HashMap<ImageView, Tile> imgMap) {
 		ArrayList<ImageView> list = new ArrayList<ImageView>();
-		for (int i: indexes) {
-			list.add((ImageView) this.getChildren().get(i));
+		for (int i = 0; i < this.getChildren().size(); i++) {
+			list.add((ImageView)this.getChildren().get(i));
 		}
+		Collections.sort(list, new Comparator<ImageView>(){
+
+			@Override
+			public int compare(ImageView iv1, ImageView iv2) {
+				Tile t1 = imgMap.get(iv1);
+				Tile t2 = imgMap.get(iv2);
+				if (t1.isGreaterThan(t2)) {
+					return 1;
+				}else return -1;
+			}
+		
+		});
 		this.getChildren().setAll(list);
 		this.relocateAll();
 	}

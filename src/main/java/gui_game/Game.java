@@ -124,8 +124,8 @@ public class Game {
 	}
 	public int move(int fromMeldIndex, int fromTileIndex, int toMeldIndex, boolean headOrTail) {
 		int i;
-		if (fromTileIndex == 14)	i = this.move(fromMeldIndex, false, toMeldIndex, headOrTail);
-		else i = this.move(fromMeldIndex, fromTileIndex, toMeldIndex, headOrTail);
+		if (fromTileIndex == 14) i = this.move(fromMeldIndex, false, toMeldIndex, headOrTail);
+		else i = table.move(fromMeldIndex, fromTileIndex, toMeldIndex, headOrTail);
 		return i;
 	}
 	

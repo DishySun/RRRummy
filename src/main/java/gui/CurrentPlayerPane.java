@@ -1,6 +1,7 @@
 package gui;
 
 import javafx.scene.layout.Pane;
+import rrrummy.Tile;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -11,6 +12,7 @@ import javafx.scene.control.Label;
 import javafx.event.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 @SuppressWarnings({ "restriction", "unused" })
 public class CurrentPlayerPane extends Pane{
@@ -63,8 +65,8 @@ public class CurrentPlayerPane extends Pane{
 		handImages.remove(imageViewBeingMoved);
 	}
 	
-	public void sortedImages(ArrayList<Integer> imgs) {
-		handImages.sort(imgs);
+	public void sortedImages(HashMap<ImageView, Tile> imgMap) {
+		handImages.sort(imgMap);
 	}
 	
 	public void getTurnEventHandlers(EventHandler<MouseEvent> ivEvent) {

@@ -21,8 +21,6 @@ public class Hand {
 	public Hand(Hand h) {
 		//this.hand = h.hand;
 		hand = new ArrayList<Tile>();
-		System.out.println("System:"+h);
-		System.out.println(h.hand);
 		for(Tile t : h.hand)
 			hand.add(t);
 	}
@@ -50,7 +48,7 @@ public class Hand {
 
 			@Override
 			public int compare(Tile t1, Tile t2) {
-					if (t1.isGreaterThan(t2)) {
+				if (t1.isGreaterThan(t2)) {
 					return 1;
 				}else return -1;
 			}

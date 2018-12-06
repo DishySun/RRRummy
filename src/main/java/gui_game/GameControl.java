@@ -196,7 +196,6 @@ public class GameControl {
 		default: 
 			return false;
 		}
-		System.err.println("play");
 		game.printTable();
 		players.get(currentPlayer).printHand();
 		hadPlayed++;
@@ -218,7 +217,6 @@ public class GameControl {
 			return false;
 		}
 		hadPlayed++;
-		System.err.println("play");
 		game.printTable();
 		players.get(currentPlayer).printHand();
 		return true;
@@ -229,8 +227,6 @@ public class GameControl {
 		boolean b = game.replace(currentPlayer, tileInHandIndex, meldIndex, tileIndex);
 		if (b) view.replace(meldIndex, tileIndex);
 		
-		System.err.println("Replace"+ b);
-		
 		game.printTable();
 		players.get(currentPlayer).printHand();
 		return b;
@@ -240,10 +236,10 @@ public class GameControl {
 		int i = game.move(fromMeldIndex, fromMeldHoT, toMeldIndex, toHoT);
 		switch(i) {
 		case 0:
-			view.move(toMeldIndex, true);
+			view.move(fromMeldIndex, fromMeldHoT,toMeldIndex, true);
 			break;
 		case 1:
-			view.move(toMeldIndex, false);
+			view.move(fromMeldIndex, fromMeldHoT,toMeldIndex, false);
 			break;
 		default:
 			return false;
