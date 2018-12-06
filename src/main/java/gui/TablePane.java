@@ -144,10 +144,11 @@ public class TablePane extends Pane{
 	public void cut(int meldIndex, int tileIndex) {
 		pick(melds.cut(meldIndex, tileIndex));
 	}
-	public void replace(int meldIndex, int tileIndex) {
-		melds.replace(imageViewBeingSelected, meldIndex, tileIndex);
-		melds.add(imageViewBeingSelected);
-		drop();
+	public void replace(int handIndex, int meldIndex, int tileIndex) {
+		ImageView temp = currentPlayer.getImageView(handIndex);
+		melds.replace(temp, meldIndex, tileIndex);
+		melds.add(temp);
+		if (imageViewBeingSelected != null) drop();
 	}
 	
 	public void otherDrawTile(int playerNumber) {
@@ -208,12 +209,14 @@ public class TablePane extends Pane{
 		imageViewBeingSelected = source;
 		selectAnimationPlay();
 		activeMovingImageView(imageViewBeingSelected.getImage(), mouseX+5, mouseY+5);
+		currentPlayer.getEndButton().setDisable(true);
 	}
 	
 	private void drop() {
 		selectAnimationStop();
 		disactiveMovingImageView();
 		currentPlayer.relocateAll();
+		currentPlayer.getEndButton().setDisable(false);
 	}
 	
 	private void selectAnimationPlay() {

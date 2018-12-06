@@ -92,6 +92,8 @@ public class MeldImagePane extends Pane{
 	}
 	
 	public ImageView getImageView(int meldIndex, int tileIndex) {
+		int lastIndex = ((TileImagePane)innerPane.getChildren().get(meldIndex)).getChildren().size() - 1;
+		if (tileIndex == 14) return ((ImageView) ((TileImagePane)innerPane.getChildren().get(meldIndex)).getChildren().get(lastIndex));
 		return ((ImageView) ((TileImagePane)innerPane.getChildren().get(meldIndex)).getChildren().get(tileIndex));
 	}
 	

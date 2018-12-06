@@ -84,4 +84,10 @@ public class CurrentPlayerPane extends Pane{
 	public void relocateAll() {
 		handImages.relocateAll();
 	}
+
+	public ImageView getImageView(int handIndex) {
+		return (ImageView)handImages.getChildren().get(handIndex);
+	}
+	
+	public Button getEndButton() {return endButton;}
 }
