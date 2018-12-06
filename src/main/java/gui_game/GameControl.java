@@ -3,19 +3,16 @@ package gui_game;
 import java.util.ArrayList;
 import java.util.Random;
 
-import Memento.Caretaker;
-import Memento.Memento;
-import Memento.Originator;
+import Memento.HandMemento;
+import Memento.TableMemento;
 import gui.TablePane;
 import javafx.scene.image.Image;
 
 import java.util.Collections;
 
-import players.Hand;
 import players.Player;
 import rrrummy.InvalidTileException;
 import rrrummy.Meld;
-import rrrummy.Table;
 import rrrummy.Tile;
 import command.*;
 
@@ -29,9 +26,8 @@ public class GameControl {
 	private TablePane view;
 	private CommandControl commandControl;
 	private int hadPlayed = 0;
-	private Caretaker caretaker = new Caretaker();
-	private Originator originator = new Originator();
-	private Memento memento_1;
+	private HandMemento memento_hand;
+	private TableMemento memento_table;
 	
 	public GameControl(ArrayList<Player> players, int firstHumanPlayer, ArrayList<Image> red, ArrayList<Image> blue, ArrayList<Image> green, ArrayList<Image> orange, Image joker, Image back) {
 		//normal game at least one human player
@@ -141,7 +137,7 @@ public class GameControl {
 			ArrayList<Integer> order = players.get(currentPlayer).sortHand();
 			if (t != null) view.drawTile(currentPlayer, t, order);
 		} else {
-			for(Meld meld : game.getTable()) {
+			for(Meld meld : game.getTableMeld()) {
 				if(!meld.isValid()) {
 					penalty();
 				}
@@ -154,9 +150,10 @@ public class GameControl {
 	
 	//model method
 	public void humanTurn() {
-		originator.setState(game.getTable(), players.get(currentPlayer).getHand());
-		memento_1 = originator.createMemento();
-		caretaker.setMemento(memento_1);
+		players.get(currentPlayer).getHand().setState(players.get(currentPlayer).getHand().getHandList());
+		memento_hand = players.get(currentPlayer).getHand().Save();
+		game.getTable().steTable(game.getTableMeld());
+		memento_table = game.getTable().Save();
 		view.setHumanTurn(currentPlayer);
 	}
 
@@ -278,9 +275,8 @@ public class GameControl {
 	}
 	
 	public void penalty() {
-		originator.restoreMemento(caretaker.getMemento());
-		players.get(currentPlayer).initHand(originator.getPlayerHand());
-		game.copyTable(originator.getTable());
+		players.get(currentPlayer).getHand().restoreToState(memento_hand);
+		game.getTable().restoreToState(memento_table);
 		game.playerDraw(players.get(currentPlayer));
 		game.playerDraw(players.get(currentPlayer));
 		game.playerDraw(players.get(currentPlayer));

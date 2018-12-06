@@ -165,12 +165,13 @@ public class Game {
 		return this.table.size();
 	}
 
-	public ArrayList<Meld> getTable() {
+	public ArrayList<Meld> getTableMeld() {
 		// TODO Auto-generated method stub
 		return table.getTableMeld();
 	}
 	
-	public void copyTable(ArrayList<Meld> t) {
-		table.steTable(t);
+	public Table getTable() {
+		// TODO Auto-generated method stub
+		return table;
 	}
 }
