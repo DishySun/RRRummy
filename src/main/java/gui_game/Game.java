@@ -113,7 +113,6 @@ public class Game {
 			int i = p.getHand(t);
 			p.play(i);
 		}
-		//System.out.println(players.get(currentPlayer).getName() +" has played "+arr.toString()+" as a new meld.");
 		p.caluPlayedScore(table.lastMeldScore());
 		return true;
 		
@@ -121,14 +120,12 @@ public class Game {
 	
 	public int move (int fromMeld, boolean removeHeadOrTail, int toMeld, boolean toHeadOrTail) {
 		int i = table.move (fromMeld, removeHeadOrTail, toMeld, toHeadOrTail);
-		System.out.println("normal move: " + i);
 		return i;
 	}
 	public int move(int fromMeldIndex, int fromTileIndex, int toMeldIndex, boolean headOrTail) {
 		int i;
 		if (fromTileIndex == 14)	i = this.move(fromMeldIndex, false, toMeldIndex, headOrTail);
 		else i = this.move(fromMeldIndex, fromTileIndex, toMeldIndex, headOrTail);
-		System.out.println("move from set: " + i);
 		return i;
 	}
 	
@@ -155,6 +152,17 @@ public class Game {
 
 	public void printTable() {
 		System.out.println(table);
+	}
+
+	public Tile playerDraw(Player player) {
+		Tile t = stock.draw();
+		if (t == null) return null;
+		player.draw(t);
+		return t;
+	}
+
+	public int tableSize() {
+		return this.table.size();
 	}
 	
 }

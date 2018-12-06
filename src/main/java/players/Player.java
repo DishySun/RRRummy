@@ -14,11 +14,13 @@ public class Player implements Subject{
 	private int playerId;
 	protected static int idTracker = 0;
 	private int playedScore;
+	protected AIStrategy strategy;
 	
 	public Player(String name) {
 		this.name = name;
 		playerId = idTracker++;
 		observers = new ArrayList<Observer>() ;
+		strategy = new StrategyFour();
 	}
 	
 	public String getName() {return name;}
@@ -29,13 +31,17 @@ public class Player implements Subject{
 		this.playedScore = 0;
 		hand = new Hand(arr);
 		notifyObserver();
+		strategy.setHand(hand);
 		return hand.sort();
 	}
 	
 	public void draw(Tile t) {
 		hand.add(t);
-		hand.sort();
 		notifyObserver();
+	}
+	
+	public ArrayList<Integer> sortHand(){
+		return hand.sort();
 	}
 	
 	public Tile play(int index) {

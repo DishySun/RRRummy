@@ -22,6 +22,7 @@ public class GameControl {
 	private int currentPlayer;
 	private TablePane view;
 	private CommandControl commandControl;
+	private int hadPlayed = 0;
 	
 	public GameControl(ArrayList<Player> players, int firstHumanPlayer, ArrayList<Image> red, ArrayList<Image> blue, ArrayList<Image> green, ArrayList<Image> orange, Image joker, Image back) {
 		//normal game at least one human player
@@ -124,7 +125,16 @@ public class GameControl {
 	}
 	
 	public void commandEndTurn() {
+		Tile t = null;
+		
+		if (hadPlayed == 0) {
+			t = game.playerDraw(players.get(currentPlayer));
+			ArrayList<Integer> order = players.get(currentPlayer).sortHand();
+			if (t != null) view.drawTile(currentPlayer, t, order);
+		}
+		
 		currentPlayer = (currentPlayer +1) % players.size();
+		hadPlayed = 0;
 		players.get(currentPlayer).getTurn(this);
 	}
 	
@@ -147,7 +157,10 @@ public class GameControl {
 	public boolean commandPlays(int handIndex) {
 		Tile t = players.get(currentPlayer).getHand(handIndex);
 		boolean b = game.playerPlays(players.get(currentPlayer), handIndex);
-		if (b) view.playerPlayed(currentPlayer, t);
+		if (b) {
+			view.playerPlayed(currentPlayer, t);
+			hadPlayed++;
+		}
 		game.printTable();
 		players.get(currentPlayer).printHand();
 		return b;
@@ -155,13 +168,18 @@ public class GameControl {
 	}
 
 	public boolean commandPlays(ArrayList<Integer> arr) {
-		
+		ArrayList<Tile> tilesPlayed = new ArrayList<Tile>();
+		for (int i : arr) {
+			Tile t = players.get(currentPlayer).getHand(i);;
+			tilesPlayed.add(t);
+		}
 		boolean b = game.playerPlays(players.get(currentPlayer), arr);
 		if (b) {
-			for (int i : arr) {
-				Tile t = players.get(currentPlayer).getHand(i);
-				view.playerPlayed(currentPlayer, t);
+			int index = game.tableSize()-1;
+			for (Tile t : tilesPlayed) {
+				view.playerPlayed(currentPlayer,index, false,t);
 			}
+			hadPlayed++;
 		}
 		return b;
 	}
@@ -181,6 +199,7 @@ public class GameControl {
 		System.err.println("play");
 		game.printTable();
 		players.get(currentPlayer).printHand();
+		hadPlayed++;
 		
 		//if ( game.playerPlays(players.get(currentPlayer), handIndex, meldIndex, false) >=0) return true;
 		return true;
@@ -198,6 +217,7 @@ public class GameControl {
 		default:
 			return false;
 		}
+		hadPlayed++;
 		System.err.println("play");
 		game.printTable();
 		players.get(currentPlayer).printHand();
@@ -238,7 +258,6 @@ public class GameControl {
 			view.cut(meldIndex,tileIndex);
 			return true;
 		}
-		System.out.println("cut");
 		
 		game.printTable();
 		players.get(currentPlayer).printHand();

@@ -120,7 +120,9 @@ public class TablePane extends Pane{
 		}else {
 			int i = getOtherPlayerIndex(playerIndex);
 			otherPlayers.get(i).remove();
-			setNewlyPlayed(this.newImageView(t.getColor(), t.getNumber()));
+			ImageView temp = this.newImageView(t.getColor(), t.getNumber());
+			setNewlyPlayed(temp);
+			melds.add(temp);
 		}
 	}
 	
@@ -136,6 +138,8 @@ public class TablePane extends Pane{
 	}
 	public void replace(int meldIndex, int tileIndex) {
 		melds.replace(imageViewBeingSelected, meldIndex, tileIndex);
+		melds.add(imageViewBeingSelected);
+		drop();
 	}
 	
 	public void otherDrawTile(int playerNumber) {
@@ -155,7 +159,7 @@ public class TablePane extends Pane{
 		this.setNewlyPlayed(this.newImageView(playedTile.getColor(), playedTile.getNumber()));
 		
 		melds.add(newlyPlayedTile, meldIndex, headOrTail);
-		drop();
+		//drop();
 	}
 	
 	private int getOtherPlayerIndex(int currentPlayer) {
@@ -272,8 +276,7 @@ public class TablePane extends Pane{
 				}else {
 					//選択中のテールはtableにある
 					//moveしかない
-					System.out.println("selectedMeldIndex: " + seletcedMeldIndex);
-					System.out.println("selectedTileIndex: " + selectedTileIndex);
+					if (meldIndex == -1) return;
 					boolean headOrTail = (tileIndex < size /2);
 					gameControl.move(seletcedMeldIndex, selectedTileIndex, meldIndex, headOrTail);
 				}
@@ -329,7 +332,6 @@ public class TablePane extends Pane{
 			for (Tile t: tiles) {
 				currentPlayer.addTile(newImageView(t.getColor(),t.getNumber()));
 			}
-			currentPlayer.sortedImages(order);
 		}else {
 			int p = this.getOtherPlayerIndex(playerIndex);
 			for (int i = 0; i < tiles.size(); i++) {
@@ -364,5 +366,11 @@ public class TablePane extends Pane{
 			int otherIndex = this.getOtherPlayerIndex(players.indexOf(p));
 			otherPlayers.get(otherIndex).setTileNumber(p.handSize());
 		}
+	}
+
+	public void drawTile(int currentPlayer2, Tile t, ArrayList<Integer> order) {
+		if (currentPlayer2 == playerIndexToShow) this.playerDrawTile(t);
+		else this.otherDrawTile(this.getOtherPlayerIndex(currentPlayer2));
+		currentPlayer.sortedImages(order);
 	}
 }

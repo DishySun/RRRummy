@@ -34,9 +34,9 @@ public class HomeScreen extends Application{
 		}
 		players = new ArrayList<Player>();
 		players.add(new AI(new StrategyZero()));
-		players.add(new AI(new StrategyTwo()));
+		players.add(new AI(new StrategyFour()));
 		players.add(new Player("Bill"));
-		players.add(new AI(new StrategyThree()));
+		players.add(new AI(new StrategyTwo()));
 		gameControl = new GameControl(players, 2, red, blue,green,orange,joker,back);
 
 	}

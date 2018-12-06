@@ -15,13 +15,14 @@ public class Hand {
 	
 	public Hand(ArrayList<Tile> initHand) {
 		hand = initHand;
-		this.sort();
 	}
 	
 	//copy constructor
 	public Hand(Hand h) {
 		//this.hand = h.hand;
 		hand = new ArrayList<Tile>();
+		System.out.println("System:"+h);
+		System.out.println(h.hand);
 		for(Tile t : h.hand)
 			hand.add(t);
 	}
@@ -29,7 +30,6 @@ public class Hand {
 	public Tile getTile(int i){return hand.get(i);}
 	public void add(Tile t) {
 		hand.add(t);
-		this.sort();
 	}
 	public Tile remove(int i) {return hand.remove(i);}
 	public int size() {return hand.size();}
