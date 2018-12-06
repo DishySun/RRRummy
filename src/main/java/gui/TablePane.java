@@ -4,6 +4,7 @@ package gui;
 import javafx.scene.layout.Pane;
 import players.Player;
 import rrrummy.Tile;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -42,6 +43,7 @@ public class TablePane extends Pane{
 	private double mouseX;
 	private double mouseY;
 	private Timer timer;
+	private Label hintLabel;
 	
 	public TablePane(GameControl gc, final ArrayList<Player> players, int playerIndexToShow, ArrayList<Image> red, ArrayList<Image> blue, ArrayList<Image> green, ArrayList<Image> orange, Image joker, Image back) {
 		this.gameControl = gc;
@@ -58,7 +60,9 @@ public class TablePane extends Pane{
 		//this.melds.setOnMouseClicked(tableOnMouseClicked);
 		this.imageViewBeingMoved = new ImageView();
 		this.timer = new Timer(null);
-		timer.relocate(-80, 500);
+		timer.relocate(20, 520);
+		this.hintLabel = new Label();
+		hintLabel.relocate(700, 500);
 		this.currentPlayer = new CurrentPlayerPane(players.get(playerIndexToShow).getName(), endTurnEventHandler, hintEventHandler);
 		currentPlayer.relocate(150, 500);
 		for (int i = 1; i< players.size(); i++) {
@@ -96,7 +100,7 @@ public class TablePane extends Pane{
 		newlyPlayedTileEffect.setSaturation(0.2);
 		
 		this.getChildren().addAll(otherPlayers);
-		this.getChildren().addAll(melds,currentPlayer,imageViewBeingMoved,timer);
+		this.getChildren().addAll(melds,currentPlayer,imageViewBeingMoved,timer,hintLabel);
 	}
 	
 	public void playerDrawTile(Tile t) {
@@ -235,6 +239,7 @@ public class TablePane extends Pane{
 	private EventHandler<MouseEvent> imageViewOnMouseClickedEventHandler = new EventHandler<MouseEvent>() {
 		@Override
         public void handle(MouseEvent t) {
+			hintLabel.setText(null);
 			ImageView source = (ImageView) t.getSource();
 			mouseX = t.getSceneX();
 			mouseY = t.getSceneY();
@@ -312,6 +317,7 @@ public class TablePane extends Pane{
 
 		@Override
 		public void handle(ActionEvent event) {
+			timer.stop();
 			gameControl.endTurn();
 		}
 		
@@ -321,8 +327,7 @@ public class TablePane extends Pane{
 
 		@Override
 		public void handle(ActionEvent event) {
-			// TODO Auto-generated method stub
-			
+			hintLabel.setText(players.get(playerIndexToShow).getCommandString());
 		}
 		
 	};
@@ -347,7 +352,7 @@ public class TablePane extends Pane{
 	}
 
 	public void setHumanTurn(int currentPlayer2) {
-		timer = new Timer(endTurnEventHandler);
+		timer.restart();
 		if (this.playerIndexToShow == currentPlayer2) {
 			currentPlayer.getTurnEventHandlers(imageViewOnMouseClickedEventHandler);
 			melds.setOnClickedHandler(imageViewOnMouseClickedEventHandler);

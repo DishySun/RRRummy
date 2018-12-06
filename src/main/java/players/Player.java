@@ -56,7 +56,7 @@ public class Player implements Subject{
 		System.out.println(name+"'s hand: "+hand);
 	}
 	public String getCommandString() {
-		return View.getCommand();
+		return strategy.generateCommand();
 	}
 	public int handSize() {return hand.size();}
 	public Tile getHand(int i) {
@@ -73,7 +73,7 @@ public class Player implements Subject{
 	public String getHeadOrTail(String string) {
 		return View.getHeadOrTail(string);
 	}
-	public AIStrategy getStrategy() {return null;}
+	public AIStrategy getStrategy() {return strategy;}
 	public void caluPlayedScore(int i) {playedScore += i;}
 	public int getPlayerdSocre() {return playedScore;}
 
