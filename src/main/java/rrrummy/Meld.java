@@ -51,14 +51,14 @@ public class Meld {
 	}
 	
 	//copy constructor
-	public Meld(Meld m) {
-		meld = new ArrayList<Tile>();
-		this.tileMap = m.tileMap;
-		this.tileNumber = m.tileNumber;
-		for(Tile t : m.meld)
-			meld.add(t);
-	}
-	
+		public Meld(Meld m) {
+			meld = new ArrayList<Tile>();
+			this.tileMap = m.tileMap;
+			this.tileNumber = m.tileNumber;
+			for(Tile t : m.meld)
+				meld.add(t);
+		}
+
 	public int size() {return meld.size();}
 	public boolean isRun() {
 		//in case of [jk R1] or [jk jk R2]
