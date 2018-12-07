@@ -1,0 +1,9 @@
+For run:
+Strategy 4 will check the number of the same color tile that is one number less or one number bigger, if the number is smaller than two, he wont play that set.
+For example if strategy wants to play sets [O3,O4,O5], he will check the number of tile[O2] and tile[O6] with the same color, if there are less than two tile of them are on the table, he won't play, otherwise he plays this run.
+
+For sets:
+Strategy 4 will check the number of left color of the set, if the number of this tile on table is less than 2, he wont play, otherwise he plays this set.
+For example if he wants to play set[R2 O2 B2],then it will check the number of tile[G2] on the table, if the number is less than two, he won't play this set, otherwise he plays.
+
+When tiles in stock are left around 4-5, Strategy 4 will play as many melds as he can.
