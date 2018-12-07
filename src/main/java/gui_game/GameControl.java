@@ -258,7 +258,10 @@ public class GameControl {
 
 	public boolean commandReplace(int tileInHandIndex, int meldIndex, int tileIndex) {
 		boolean b = game.replace(currentPlayer, tileInHandIndex, meldIndex, tileIndex);
-		if (b) view.replace(meldIndex, tileIndex);
+		if (b) {
+			Tile t = game.getLastTile();
+			view.replace(currentPlayer, meldIndex, tileIndex,t);
+		}
 		
 		game.printTable();
 		players.get(currentPlayer).printHand();

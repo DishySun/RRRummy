@@ -189,5 +189,10 @@ public class Table implements Subject{
 		}
 		return true;
 	}
+
+	public Tile getLastTile() {
+		if (size() < 0) return null;
+		return table.get(table.size()-1).getTail();
+	}
 	
 }

@@ -194,4 +194,9 @@ public class Game {
 	public boolean isEveryMeldValid() {
 		return table.isEveryMeldValid();
 	}
+
+	public Tile getLastTile() {
+		
+		return table.getLastTile();
+	}
 }

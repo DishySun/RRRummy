@@ -209,12 +209,17 @@ public class TablePane extends Pane{
 	public void cut(int meldIndex, int tileIndex) {
 		pick(melds.cut(meldIndex, tileIndex));
 	}
-	public void replace(int meldIndex, int tileIndex) {
-		
-		
-		melds.replace(imageViewBeingSelected, meldIndex, tileIndex);
-		melds.add(imageViewBeingSelected);
-		drop();
+	public void replace(int playerNumber, int meldIndex, int tileIndex, Tile t) {
+		if (playerNumber == this.playerIndexToShow) {
+			melds.replace(imageViewBeingSelected, meldIndex, tileIndex);
+			melds.add(imageViewBeingSelected);
+			drop();
+		}else {
+			otherPlayers.get(this.getOtherPlayerIndex(playerNumber)).remove();
+			ImageView temp = this.newImageView(t);
+			temp.setOnMouseClicked(null);
+			melds.add(temp);
+		}
 	}
 	
 	public void otherDrawTile(int playerNumber) {
