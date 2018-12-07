@@ -8,7 +8,10 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.control.Button;
 import javafx.event.*;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
 //utils
 import java.util.ArrayList;
@@ -46,6 +49,7 @@ public class TablePane extends Pane{
 	private Timer timer;
 	private Label hintLabel;
 	private HashMap<ImageView, Tile> imageMap;
+	private Pane firstPane; 
 	
 	public TablePane(GameControl gc, final ArrayList<Player> players, int playerIndexToShow, ArrayList<Image> red, ArrayList<Image> blue, ArrayList<Image> green, ArrayList<Image> orange, Image joker, Image back) {
 		this.gameControl = gc;
@@ -62,7 +66,7 @@ public class TablePane extends Pane{
 		this.otherPlayers = new ArrayList<OtherPlayerPane>();
 		//this.melds.setOnMouseClicked(tableOnMouseClicked);
 		this.imageViewBeingMoved = new ImageView();
-		this.timer = new Timer(null);
+		this.timer = new Timer(endTurnEventHandler);
 		timer.relocate(20, 520);
 		this.hintLabel = new Label();
 		hintLabel.relocate(700, 500);
@@ -101,8 +105,70 @@ public class TablePane extends Pane{
 		newlyPlayedTileEffect.setBrightness(0.1);
 		newlyPlayedTileEffect.setSaturation(0.2);
 		
+		firstPane = new Pane();
+		Button playButton = new Button("Play");
+		playButton.relocate(400, 300);
+		playButton.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				getChildren().remove(firstPane);
+				gameControl.playButton();
+				getChildren().remove(event.getSource());
+			}});
+		
+		
 		this.getChildren().addAll(otherPlayers);
-		this.getChildren().addAll(melds,currentPlayer,imageViewBeingMoved,timer,hintLabel);
+		this.getChildren().addAll(melds,currentPlayer,imageViewBeingMoved,timer,hintLabel,firstPane,playButton);
+		setAiTurn();
+	}
+	
+	public void decideFirstDraw(Tile t, int playerNumber) {
+		ImageView iv = newImageView(t);
+		iv.setOnMouseClicked(null);
+		iv.setScaleX(3.0);
+		iv.setScaleY(3.0);
+		if (playerNumber == playerIndexToShow) {
+			iv.relocate(400, 400);
+		}else {
+			int i = this.getOtherPlayerIndex(playerNumber);
+			switch(i) {
+			case 0:
+				iv.relocate(300, 300);
+				break;
+			case 1:
+				iv.relocate(400, 200);
+				break;
+			case 2:
+				iv.relocate(500, 300);
+				break;
+			}
+		}
+		firstPane.getChildren().add(iv);
+	}
+	
+	public void anounceWhoFirst(int number) {
+		Label temp = new Label("This player play first");
+		temp.setTextFill(Color.web("purple"));
+		temp.setStyle("-fx-background-color: pink;");
+		temp.setFont(Font.font("Cambria", 30));
+		if (number == playerIndexToShow) {
+			temp.relocate(300, 500);
+		}else {
+			int i = this.getOtherPlayerIndex(number);
+			switch(i) {
+			case 0:
+				temp.relocate(100, 300);
+				break;
+			case 1:
+				temp.relocate(300, 50);
+				break;
+			case 2:
+				temp.relocate(450, 300);
+				break;
+			}
+		}
+		firstPane.getChildren().add(temp);
 	}
 	
 	public void playerDrawTile(Tile t) {
@@ -327,10 +393,11 @@ public class TablePane extends Pane{
 
 		@Override
 		public void handle(ActionEvent event) {
-			timer.stop();
+			System.out.println("stop");
 			currentPlayer.endTurnEventHandlers();
 			melds.clearEventHandler();
 			gameControl.endTurn();
+			//timer.stop();
 		}
 		
 	};

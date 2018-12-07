@@ -152,18 +152,20 @@ public class PlayerCreator extends Pane{
 		public void handle(ActionEvent event) {
 			ArrayList<Player> players = initPlayers();
 			if (players == null) return;
+			int firstPlayer = 0;
 			for (Player p : players) {
 				if (p.getClass().getSimpleName().equals("Player")) {
-					GameControl g = new GameControl(players, players.indexOf(p),red,blue,green,orange,joker, back);
-					Scene newScene = new Scene(g.getTablePane(), 900, 700);
-					Stage newGame = new Stage();
-					newGame.setTitle("RRRumy");
-					newGame.setScene(newScene);
-					newGame.show();
-					g.normalGame();
+					firstPlayer = players.indexOf(p);
 					break;
 				}
 			}
+			GameControl g = new GameControl(players, firstPlayer,red,blue,green,orange,joker, back);
+			Scene newScene = new Scene(g.getTablePane(), 800, 700);
+			Stage newGame = new Stage();
+			newGame.setTitle("RRRumy");
+			newGame.setScene(newScene);
+			newGame.show();
+			g.normalGame();
 		}
 	};
 	
@@ -172,14 +174,16 @@ public class PlayerCreator extends Pane{
 		public void handle(ActionEvent event) {
 			ArrayList<Player> players = initPlayers();
 			if (players == null) return;
+			int firstHumanPlayer = 0;
 			for (Player p : players) {
 				if (p.getClass().getSimpleName().equals("Player")) {
-					GameControl g = new GameControl(players, players.indexOf(p),red,blue,green,orange,joker, back);
-					RiggingPane riggingPane = new RiggingPane(players, g);
-					getScene().setRoot(riggingPane);
+					firstHumanPlayer = players.indexOf(p);
 					break;
 				}
 			}
+			GameControl g = new GameControl(players, firstHumanPlayer,red,blue,green,orange,joker, back);
+			RiggingPane riggingPane = new RiggingPane(players, g);
+			getScene().setRoot(riggingPane);
 		}
 	};
 }

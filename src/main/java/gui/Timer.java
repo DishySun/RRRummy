@@ -12,16 +12,15 @@ public class Timer extends Pane {
 
     private Timeline animation;
     private String s = "";
-    private int seconds = 120;
+    private final int TIMER = 120; 
+    private int seconds;
 
-    Label label = new Label("time left:" + seconds+ "s");
-
+    private Label label = new Label("time left:" + seconds+ "s");
 
     public Timer(EventHandler<ActionEvent> endTurnEventHandler) {
         label.setFont(javafx.scene.text.Font.font(20));
         getChildren().add(label);
         animation = new Timeline(new KeyFrame(Duration.millis(1000), e -> timelabel()));
-        animation.setCycleCount(seconds);
         animation.setOnFinished(endTurnEventHandler);
     }
     
@@ -32,13 +31,13 @@ public class Timer extends Pane {
     }
     
     public void restart() {
-    	seconds = 120;
+    	seconds = TIMER;
     	animation.setCycleCount(seconds);
+    	//animation.setOnFinished(b);
     	animation.play();
     }
     
     public void stop() {
     	animation.stop();
     }
-   
 }

@@ -42,13 +42,15 @@ public class GameControl {
 		whichPlayerPlayFirst();
 		game = new Game(players, tiles);
 		initHand();
-		players.get(currentPlayer).getTurn(this);
 	}
 	
 	public void riggingGame(ArrayList<ArrayList<Tile>> initHands, ArrayList<Tile> initStock) {
 		game = new Game(players,initStock);
 		currentPlayer = 0;
 		this.initHand(initHands);
+	}
+	
+	public void playButton() {
 		players.get(currentPlayer).getTurn(this);
 	}
 	
@@ -76,12 +78,15 @@ public class GameControl {
 		Collections.shuffle(pickTiles);
 		for (int i = 0; i < players.size(); i++) {
 			int a = random.nextInt(pickTiles.size());
-			int temp = pickTiles.remove(a).getNumber();
+			Tile t = pickTiles.remove(a);
+			view.decideFirstDraw(t, i);
+			int temp = t.getNumber();
 			if (temp > max) {
 				max = temp;
 				currentPlayer = i;
 			}
 		}
+		view.anounceWhoFirst(currentPlayer);
 	}
 
 	private void initTiles() {

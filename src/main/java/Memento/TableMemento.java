@@ -3,7 +3,6 @@ package Memento;
 import java.util.ArrayList;
 
 import rrrummy.Meld;
-import rrrummy.Table;
 
 public class TableMemento {
 	private final ArrayList<Meld> melds;

@@ -103,7 +103,6 @@ public class RiggingPane extends Pane{
 
 		@Override
 		public void handle(ActionEvent event) {
-			// TODO Auto-generated method stub
 			ArrayList<ArrayList<Tile>> initHands = new ArrayList<ArrayList<Tile>>(); 
 			for (TilePickerPane tp : players) {
 				ListView<Tile> temp = tp.getList();
@@ -116,7 +115,7 @@ public class RiggingPane extends Pane{
 			if (st.getItems().size() != 0) initStock.addAll(st.getItems());
 			else initStock.addAll(tiles.getItems());
 			Stage newGame = new Stage();
-			Scene newScene = new Scene(gc.getTablePane(), 900, 700);
+			Scene newScene = new Scene(gc.getTablePane(), 800, 700);
 			newGame.setTitle("RRRumy");
 			newGame.setScene(newScene);
 			newGame.show();
