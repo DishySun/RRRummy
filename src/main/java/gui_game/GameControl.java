@@ -3,13 +3,18 @@ package gui_game;
 import java.util.ArrayList;
 import java.util.Random;
 
+import Memento.HandMemento;
+import Memento.TableMemento;
 import gui.TablePane;
 import javafx.scene.image.Image;
 
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import players.Player;
 import rrrummy.InvalidTileException;
+import rrrummy.Meld;
 import rrrummy.Tile;
 import command.*;
 
@@ -23,6 +28,8 @@ public class GameControl {
 	private TablePane view;
 	private CommandControl commandControl;
 	private int hadPlayed = 0;
+	private HandMemento memento_hand;
+	private TableMemento memento_table;
 	
 	public GameControl(ArrayList<Player> players, int firstHumanPlayer, ArrayList<Image> red, ArrayList<Image> blue, ArrayList<Image> green, ArrayList<Image> orange, Image joker, Image back) {
 		//normal game at least one human player
@@ -151,8 +158,14 @@ public class GameControl {
 			t = game.playerDraw(players.get(currentPlayer));
 			players.get(currentPlayer).sortHand();
 			if (t != null) view.drawTile(currentPlayer, t);
+		} else {
+			for(Meld meld : game.getTableMeld()) {
+				if(!meld.isValid()) {
+					penalty();
+				}
+			}
+			
 		}
-		
 		currentPlayer = (currentPlayer +1) % players.size();
 		hadPlayed = 0;
 		players.get(currentPlayer).getTurn(this);
@@ -160,6 +173,10 @@ public class GameControl {
 	
 	//model method
 	public void humanTurn() {
+		players.get(currentPlayer).getHand().setState(players.get(currentPlayer).getHand().getHandList());
+		memento_hand = players.get(currentPlayer).getHand().Save();
+		game.getTable().steTable(game.getTableMeld());
+		memento_table = game.getTable().Save();
 		view.setHumanTurn(currentPlayer);
 	}
 
@@ -282,5 +299,18 @@ public class GameControl {
 	
 	public Player determineWinner() {
 		return game.determineWinner(currentPlayer);
+	}
+	
+	public void penalty() {
+		Tile t = null;
+		players.get(currentPlayer).getHand().restoreToState(memento_hand);
+		game.getTable().restoreToState(memento_table);
+		view.updateHands(currentPlayer, players.get(currentPlayer).getHand().getHandList());
+		
+		for(int i=0; i<3; i++) {
+			t = game.playerDraw(players.get(currentPlayer));
+			view.drawTile(currentPlayer, t);
+		}
+		players.get(currentPlayer).sortHand();
 	}
 }

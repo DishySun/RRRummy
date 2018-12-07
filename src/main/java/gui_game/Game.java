@@ -168,7 +168,16 @@ public class Game {
 	public int tableSize() {
 		return this.table.size();
 	}
+
+	public ArrayList<Meld> getTableMeld() {
+		// TODO Auto-generated method stub
+		return table.getTableMeld();
+	}
 	
+	public Table getTable() {
+		// TODO Auto-generated method stub
+		return table;
+	}
 	public Player determineWinner(int currentPlayer) {
 		Player winner = null;
 		if (players.get(currentPlayer).handSize() == 0) return players.get(currentPlayer);

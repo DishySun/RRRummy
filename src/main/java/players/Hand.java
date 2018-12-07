@@ -5,6 +5,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
+import Memento.HandMemento;
 import rrrummy.AbleToAddBothSideException;
 import rrrummy.InvalidTileException;
 import rrrummy.Meld;
@@ -76,5 +77,22 @@ public class Hand {
 	public int handIndexOf(Tile tile) {
 		sort();
 		return hand.indexOf(tile);
+	}
+	
+	public Hand getHand() {return this;}
+	public ArrayList<Tile> getHandList() { return hand;}
+	
+	////// memento
+	
+	public void setState(ArrayList<Tile> h) {
+		hand = h;
+	}
+	
+	public HandMemento Save() {
+		return new HandMemento(this);
+	}
+	
+	public void restoreToState(HandMemento memeto) {
+		hand = memeto.getSaveData();
 	}
 }
