@@ -31,6 +31,7 @@ public class RiggingPane extends Pane {
 	ArrayList<String> playersNameList;
 	ArrayList<String> StrategyList;
 
+	@SuppressWarnings("restriction")
 	public RiggingPane(int hPlayer, int aPlayer, ArrayList<String> playerName, ArrayList<String> StraList) {
 
 		HumanPlayer = hPlayer;

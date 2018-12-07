@@ -29,6 +29,11 @@ public class GameControl {
 		this.players = players;
 		commandControl= new CommandControl(this);
 		view = new TablePane(this,players, firstHumanPlayer,red,blue,green,orange,joker,back);
+		
+	}
+	
+	public void normalGame() {
+		
 		initTiles();
 		whichPlayerPlayFirst();
 		game = new Game(players, tiles);
@@ -36,11 +41,25 @@ public class GameControl {
 		players.get(currentPlayer).getTurn(this);
 	}
 	
+	public void riggingGame(ArrayList<ArrayList<Tile>> initHands, ArrayList<Tile> initStock) {
+		game = new Game(players,initStock);
+		currentPlayer = 0;
+		this.initHand(initHands);
+		players.get(currentPlayer).getTurn(this);
+	}
+	
+	private void initHand(ArrayList<ArrayList<Tile>> initHands) {
+		for (int i = 0; i < players.size(); i++) {
+			game.initHand(players.get(i), initHands.get(i));
+			view.initHand(i, initHands.get(i));
+		}
+	}
+	
 	private void initHand() {
 		for (Player p: players) {
 			ArrayList<Tile> tiles = new ArrayList<Tile>();
-			ArrayList<Integer> order = game.initHand(p, 14, tiles);
-			view.initHand(players.indexOf(p), tiles, order);
+			game.initHand(p, 14, tiles);
+			view.initHand(players.indexOf(p), tiles);
 			p.printHand();
 		}
 		
@@ -59,8 +78,6 @@ public class GameControl {
 				currentPlayer = i;
 			}
 		}
-		//TODO:delet this line after testing!!!
-		currentPlayer = 2;
 	}
 
 	private void initTiles() {
@@ -90,8 +107,6 @@ public class GameControl {
 	
 	public TablePane getTablePane() {return view;}
 
-	
-	//TODO:game logic command needed later!
 	public boolean cut(int meldIndex, int tileIndex) {
 		return commandControl.playerCommand(new CutCommand(meldIndex, tileIndex, this));
 	}
@@ -134,8 +149,8 @@ public class GameControl {
 		
 		if (hadPlayed == 0) {
 			t = game.playerDraw(players.get(currentPlayer));
-			ArrayList<Integer> order = players.get(currentPlayer).sortHand();
-			if (t != null) view.drawTile(currentPlayer, t, order);
+			players.get(currentPlayer).sortHand();
+			if (t != null) view.drawTile(currentPlayer, t);
 		}
 		
 		currentPlayer = (currentPlayer +1) % players.size();

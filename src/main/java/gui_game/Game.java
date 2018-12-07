@@ -30,7 +30,7 @@ public class Game {
 		table.notifyObserver();
 	}
 	
-	public ArrayList<Integer> initHand(Player p, int initTileNumber, ArrayList<Tile> initHand) {
+	public void initHand(Player p, int initTileNumber, ArrayList<Tile> initHand) {
 		if (stock.size() < initTileNumber - initHand.size()) {
 			System.err.println("out of stock while initHand");
 			System.exit(-1);
@@ -38,7 +38,11 @@ public class Game {
 		while(initHand.size() < initTileNumber) {
 			initHand.add(stock.draw());
 		}
-		return p.initHand(initHand);
+		p.initHand(initHand);
+	}
+	
+	public void initHand(Player p, ArrayList<Tile> initHands) {
+		p.initHand(initHands);
 	}
 	
 	public boolean playerDraw(Player p, Tile drewTile) {

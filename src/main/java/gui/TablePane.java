@@ -87,7 +87,6 @@ public class TablePane extends Pane{
 			default:
 				break;
 			}
-			
 		}
 		selectingAnimation = new ScaleTransition();
 		selectingAnimation.setDuration(Duration.millis(500));
@@ -328,6 +327,8 @@ public class TablePane extends Pane{
 		@Override
 		public void handle(ActionEvent event) {
 			timer.stop();
+			currentPlayer.endTurnEventHandlers();
+			melds.clearEventHandler();
 			gameControl.endTurn();
 		}
 		
@@ -342,7 +343,7 @@ public class TablePane extends Pane{
 		
 	};
 
-	public void initHand(int playerIndex, ArrayList<Tile> tiles, ArrayList<Integer> order) {
+	public void initHand(int playerIndex, ArrayList<Tile> tiles) {
 		if (playerIndex == playerIndexToShow) {
 			for (Tile t: tiles) {
 				currentPlayer.addTile(newImageView(t));
@@ -383,14 +384,16 @@ public class TablePane extends Pane{
 		}
 	}
 
-	public void drawTile(int currentPlayer2, Tile t, ArrayList<Integer> order) {
+	public void drawTile(int currentPlayer2, Tile t) {
 		if (currentPlayer2 == playerIndexToShow) this.playerDrawTile(t);
 		else this.otherDrawTile(this.getOtherPlayerIndex(currentPlayer2));
 		currentPlayer.sortedImages(imageMap);
 	}
 
 	public void anaounceWinner(Player winner) {
-		this.getChildren().clear();
+		//this.getChildren().clear();
+		currentPlayer.endTurnEventHandlers();
+		melds.clearEventHandler();
 		Label winnerLabel = new Label();
 		winnerLabel.setText("Winner is : "+winner.getName());
 		winnerLabel.relocate(400, 250);

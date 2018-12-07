@@ -27,12 +27,12 @@ public class Player implements Subject{
 	public int getId() {return playerId;}
 	public boolean isHuman() {return true;}
 	
-	public ArrayList<Integer> initHand(final ArrayList<Tile> arr) {
+	public void initHand(final ArrayList<Tile> arr) {
 		this.playedScore = 0;
 		hand = new Hand(arr);
 		notifyObserver();
 		strategy.setHand(hand);
-		return hand.sort();
+		hand.sort();
 	}
 	
 	public void draw(Tile t) {
@@ -40,8 +40,8 @@ public class Player implements Subject{
 		notifyObserver();
 	}
 	
-	public ArrayList<Integer> sortHand(){
-		return hand.sort();
+	public void sortHand(){
+		hand.sort();
 	}
 	
 	public Tile play(int index) {

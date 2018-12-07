@@ -1,15 +1,22 @@
 package gui;
-import javafx.scene.layout.Pane;
-import players.*;
-import javafx.event.*;
 
+import players.*;
+import gui_game.GameControl;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
+import javafx.event.*;
+import javafx.scene.Scene;
+import javafx.scene.layout.Pane;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Label;
-import gui_game.GameControl;
+import javafx.scene.image.Image;
+import javafx.stage.Stage;
+
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 
@@ -21,8 +28,36 @@ public class PlayerCreator extends Pane{
 	private ArrayList<TextField> textes;
 	private ArrayList<Label> labels;
 	private final int MAX_PLAYER_NUMBER = 4;
+	private final ArrayList<Image> red;
+	private final ArrayList<Image> blue;
+	private final ArrayList<Image> green;
+	private final ArrayList<Image> orange;
+	private final Image back;
+	private final Image joker;
 	
 	public PlayerCreator() {
+		String path = "src/main/resources/Tiles/";
+		red = new ArrayList<Image>();
+		blue = new ArrayList<Image>();
+		green = new ArrayList<Image>();
+		orange = new ArrayList<Image>();
+		FileInputStream jk = null;
+		FileInputStream bk = null;
+		try {
+			for (int i = 1; i <= 13; i++) {
+				red.add(new Image(new FileInputStream(path+"R"+Integer.toString(i)+".png")));
+				blue.add(new Image(new FileInputStream(path+"B"+Integer.toString(i)+".png")));
+				green.add(new Image(new FileInputStream(path+"G"+Integer.toString(i)+".png")));
+				orange.add(new Image(new FileInputStream(path+"O"+Integer.toString(i)+".png")));
+			}
+			jk =new FileInputStream(path + "Joker.png");
+			bk =new FileInputStream(path + "Back.png");
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			System.exit(-1);
+		}
+		joker = new Image(jk);
+		back = new Image(bk);
 		initUI();
 	}
 	
@@ -103,11 +138,12 @@ public class PlayerCreator extends Pane{
 			case 5:
 				st = new StrategyFour();
 			default:
-				players.add(new AI(st));
+				if (st != null) players.add(new AI(st));
 				break;
 			}
 		}
 		if(players.size() > 1) return players;
+		System.err.println("Player size < 2");
 		return null;
 	}
 	
@@ -115,8 +151,19 @@ public class PlayerCreator extends Pane{
 		@Override
 		public void handle(ActionEvent event) {
 			ArrayList<Player> players = initPlayers();
-			//TODO: normal GameContorl Contraster
-			System.out.println(players);
+			if (players == null) return;
+			for (Player p : players) {
+				if (p.getClass().getSimpleName().equals("Player")) {
+					GameControl g = new GameControl(players, players.indexOf(p),red,blue,green,orange,joker, back);
+					Scene newScene = new Scene(g.getTablePane(), 900, 700);
+					Stage newGame = new Stage();
+					newGame.setTitle("RRRumy");
+					newGame.setScene(newScene);
+					newGame.show();
+					g.normalGame();
+					break;
+				}
+			}
 		}
 	};
 	
@@ -124,8 +171,15 @@ public class PlayerCreator extends Pane{
 		@Override
 		public void handle(ActionEvent event) {
 			ArrayList<Player> players = initPlayers();
-			//TODO: rigging Pane
-			System.out.println(players);
+			if (players == null) return;
+			for (Player p : players) {
+				if (p.getClass().getSimpleName().equals("Player")) {
+					GameControl g = new GameControl(players, players.indexOf(p),red,blue,green,orange,joker, back);
+					RiggingPane riggingPane = new RiggingPane(players, g);
+					getScene().setRoot(riggingPane);
+					break;
+				}
+			}
 		}
 	};
 }
