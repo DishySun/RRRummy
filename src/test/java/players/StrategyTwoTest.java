@@ -148,7 +148,7 @@ public class StrategyTwoTest {
 		Hand hand2 = new Hand(hand);
 		testAI.initHand(hand);
 		testAI.getStrategy().setHand(hand2);
-		String command = testAI.getCommandString(null);
+		String command = testAI.getCommandString();
 		//total no. < 30, END
 		assertEquals("END", command);
 	}

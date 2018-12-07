@@ -393,7 +393,6 @@ public class TablePane extends Pane{
 
 		@Override
 		public void handle(ActionEvent event) {
-			System.out.println("stop");
 			currentPlayer.endTurnEventHandlers();
 			melds.clearEventHandler();
 			gameControl.endTurn();

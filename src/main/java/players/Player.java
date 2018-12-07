@@ -2,7 +2,6 @@ package players;
 
 import java.util.ArrayList;
 
-import game.View;
 import gui_game.GameControl;
 import rrrummy.Tile;
 import observer.*;
@@ -75,7 +74,7 @@ public class Player implements Subject{
 		return hand.contaions(t);
 	}
 	public String getHeadOrTail(String string) {
-		return View.getHeadOrTail(string);
+		return "Tail";
 	}
 	public AIStrategy getStrategy() {return strategy;}
 	public void caluPlayedScore(int i) {playedScore += i;}

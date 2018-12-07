@@ -83,7 +83,7 @@ public class StrategyFour implements AIStrategy, Observer{
 	@Override
 	public String getDifficulty() {
 		// TODO Auto-generated method stub
-		return "Difficult";
+		return "Crazy";
 	}
 
 	@Override

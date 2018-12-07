@@ -61,16 +61,16 @@ public class MeldTest extends TestCase {
 		init();
 		try {
 			assertEquals(0, testMeld.size());
-			assertTrue(testMeld.add(r4));
+			assertTrue(testMeld.add(r4)>=0);
 			assertEquals(1, testMeld.size());
-			assertFalse(testMeld.add(g8));
+			assertFalse(testMeld.add(g8)>=0);
 			assertEquals(1, testMeld.size());
-			assertTrue(testMeld.add(r5));
-			assertTrue(testMeld.add(r6));
-			assertFalse(testMeld.add(r2));
-			assertTrue(testMeld.add(r3));
-			assertTrue(testMeld.add(r2));
-			assertTrue(testMeld.add(r1));
+			assertTrue(testMeld.add(r5)>=0);
+			assertTrue(testMeld.add(r6)>=0);
+			assertFalse(testMeld.add(r2)>=0);
+			assertTrue(testMeld.add(r3)>=0);
+			assertTrue(testMeld.add(r2)>=0);
+			assertTrue(testMeld.add(r1)>=0);
 			assertEquals(6, testMeld.size());
 		} catch (AbleToAddBothSideException e) {
 			fail();

@@ -131,19 +131,23 @@ public class PlayerCreator extends Pane{
 				break;
 			case 2:
 				st = new StrategyZero();
+				break;
 			case 3:
 				st = new StrategyTwo();
+				break;
 			case 4:
 				st = new StrategyThree();
+				break;
 			case 5:
 				st = new StrategyFour();
+				break;
 			default:
-				if (st != null) players.add(new AI(st));
 				break;
 			}
+			if (st != null) players.add(new AI(st));
 		}
 		if(players.size() > 1) return players;
-		System.err.println("Player size < 2");
+		System.out.println("Player size < 2");
 		return null;
 	}
 	
