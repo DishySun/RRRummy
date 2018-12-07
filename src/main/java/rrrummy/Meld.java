@@ -460,4 +460,10 @@ public class Meld {
 	public void add(Tile t, int fromTileIndex) {
 		meld.add(fromTileIndex, t);
 	}
+	
+	public ArrayList<Tile> toArrayList(){
+		ArrayList<Tile> temp = new  ArrayList<Tile>();
+		temp.addAll(meld);
+		return temp;
+	}
 }

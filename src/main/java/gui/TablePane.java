@@ -143,11 +143,12 @@ public class TablePane extends Pane{
 	public void cut(int meldIndex, int tileIndex) {
 		pick(melds.cut(meldIndex, tileIndex));
 	}
-	public void replace(int handIndex, int meldIndex, int tileIndex) {
-		ImageView temp = currentPlayer.getImageView(handIndex);
-		melds.replace(temp, meldIndex, tileIndex);
-		melds.add(temp);
-		if (imageViewBeingSelected != null) drop();
+	public void replace(int meldIndex, int tileIndex) {
+		
+		
+		melds.replace(imageViewBeingSelected, meldIndex, tileIndex);
+		melds.add(imageViewBeingSelected);
+		drop();
 	}
 	
 	public void otherDrawTile(int playerNumber) {
@@ -403,6 +404,18 @@ public class TablePane extends Pane{
 	public void updateHands(int playerIndex, ArrayList<Tile> hands) {
 		currentPlayer.clearCurrentPlayerPane();
 		initHand(playerIndex, hands);
+	}
+	
+	public void updateTable(ArrayList<ArrayList<Tile>> table) {
+		ArrayList<ArrayList<ImageView>> ivs = new ArrayList<ArrayList<ImageView>>();
+		for (int i = 0; i < table.size(); i++) {
+			ArrayList<ImageView> a = new ArrayList<ImageView>();
+			for (Tile t: table.get(i)) {
+				a.add(this.newImageView(t));
+			}
+			ivs.add(a);
+		}
+		melds.restore(ivs);
 	}
 	
 }

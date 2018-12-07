@@ -1,11 +1,9 @@
 package rrrummy;
 import java.util.ArrayList;
 
-import Memento.HandMemento;
 import Memento.TableMemento;
 import observer.Observer;
 import observer.Subject;
-import players.Hand;
 
 public class Table implements Subject{
 	private ArrayList<Meld> table;
@@ -160,7 +158,7 @@ public class Table implements Subject{
 	}
 
 	public Table getTable() {return this;}
-	public ArrayList<Meld> getTableMeld() { return table; }
+	
 	
 	////// memento
 	
@@ -168,12 +166,28 @@ public class Table implements Subject{
 		table = m;
 	}
 	
-	public TableMemento Save() {
-		return new TableMemento(this);
+	public TableMemento save() {
+		ArrayList<Meld> temp = new ArrayList<Meld>();
+		for (Meld m :table) {
+			temp.add(new Meld(m));
+		}
+		return new TableMemento(temp);
 	}
 	
-	public void restoreToState(TableMemento memeto) {
+	public ArrayList<ArrayList<Tile>> restoreToState(TableMemento memeto) {
 		table = memeto.getSaveData();
+		ArrayList<ArrayList<Tile>> temp = new ArrayList<ArrayList<Tile>>();
+		for (Meld m : table) {
+			temp.add(m.toArrayList());
+		}
+		return temp;
+	}
+	
+	public boolean isEveryMeldValid() {
+		for (Meld m : table) {
+			if (!m.isValid()) return false;
+		}
+		return true;
 	}
 	
 }

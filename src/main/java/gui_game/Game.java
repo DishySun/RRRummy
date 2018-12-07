@@ -2,6 +2,7 @@ package gui_game;
 
 import java.util.ArrayList;
 
+import Memento.TableMemento;
 import rrrummy.*;
 import players.Player;
 
@@ -169,10 +170,6 @@ public class Game {
 		return this.table.size();
 	}
 
-	public ArrayList<Meld> getTableMeld() {
-		// TODO Auto-generated method stub
-		return table.getTableMeld();
-	}
 	
 	public Table getTable() {
 		// TODO Auto-generated method stub
@@ -190,4 +187,11 @@ public class Game {
 		return winner;
 	}
 	
+	public ArrayList<ArrayList<Tile>> restoreToState(TableMemento memeto){
+		return table.restoreToState(memeto);
+	}
+	
+	public boolean isEveryMeldValid() {
+		return table.isEveryMeldValid();
+	}
 }

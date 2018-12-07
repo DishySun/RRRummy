@@ -9,12 +9,9 @@ import gui.TablePane;
 import javafx.scene.image.Image;
 
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 import players.Player;
 import rrrummy.InvalidTileException;
-import rrrummy.Meld;
 import rrrummy.Tile;
 import command.*;
 
@@ -159,12 +156,7 @@ public class GameControl {
 			players.get(currentPlayer).sortHand();
 			if (t != null) view.drawTile(currentPlayer, t);
 		} else {
-			for(Meld meld : game.getTableMeld()) {
-				if(!meld.isValid()) {
-					penalty();
-				}
-			}
-			
+			if (!game.isEveryMeldValid()) this.penalty();
 		}
 		currentPlayer = (currentPlayer +1) % players.size();
 		hadPlayed = 0;
@@ -175,8 +167,7 @@ public class GameControl {
 	public void humanTurn() {
 		players.get(currentPlayer).getHand().setState(players.get(currentPlayer).getHand().getHandList());
 		memento_hand = players.get(currentPlayer).getHand().Save();
-		game.getTable().steTable(game.getTableMeld());
-		memento_table = game.getTable().Save();
+		memento_table = game.getTable().save();
 		view.setHumanTurn(currentPlayer);
 	}
 
@@ -262,7 +253,7 @@ public class GameControl {
 
 	public boolean commandReplace(int tileInHandIndex, int meldIndex, int tileIndex) {
 		boolean b = game.replace(currentPlayer, tileInHandIndex, meldIndex, tileIndex);
-		if (b) view.replace(currentPlayer, meldIndex, tileIndex);
+		if (b) view.replace(meldIndex, tileIndex);
 		
 		game.printTable();
 		players.get(currentPlayer).printHand();
@@ -304,7 +295,8 @@ public class GameControl {
 	public void penalty() {
 		Tile t = null;
 		players.get(currentPlayer).getHand().restoreToState(memento_hand);
-		game.getTable().restoreToState(memento_table);
+		ArrayList<ArrayList<Tile>> newList = game.restoreToState(memento_table);
+		view.updateTable(newList);
 		view.updateHands(currentPlayer, players.get(currentPlayer).getHand().getHandList());
 		
 		for(int i=0; i<3; i++) {

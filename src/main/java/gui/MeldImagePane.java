@@ -1,7 +1,10 @@
 package gui;
 
+import java.util.ArrayList;
+
 import javafx.event.EventHandler;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
@@ -98,11 +101,12 @@ public class MeldImagePane extends Pane{
 	}
 	
 	public void replace(ImageView iv, int meldIndex, int tileIndex) {
-		if (meldIndex < 0  || tileIndex < 0 || meldIndex >= innerPane.getChildren().size()) return;
 		TileImagePane a = (TileImagePane)innerPane.getChildren().get(meldIndex);
-		if (tileIndex >= a.getChildren().size()) return;
-		a.replace(iv, tileIndex);
-	}
+		ImageView temp = (ImageView)a.getChildren().get(tileIndex);
+		Image img = iv.getImage();
+		iv.setImage(temp.getImage());
+		temp.setImage(img);
+;	}
 	
 	public void setOnClickedHandler(EventHandler<MouseEvent> t) {
 		for (int i = 0; i < innerPane.getChildren().size(); i++) {
@@ -113,6 +117,15 @@ public class MeldImagePane extends Pane{
 	public void clearEventHandler() {
 		for (int i = 0; i < innerPane.getChildren().size(); i++) {
 			((TileImagePane)innerPane.getChildren().get(i)).clearEventHandler();
+		}
+	}
+	
+	public void restore(ArrayList<ArrayList<ImageView>> table) {
+		innerPane.getChildren().clear();
+		for (int i = 0 ; i < table.size(); i++) {
+			for (ImageView iv : table.get(i)) {
+				this.add(iv, i, false);
+			}
 		}
 	}
 }
