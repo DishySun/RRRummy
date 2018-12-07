@@ -1,13 +1,13 @@
 package command;
 
-import rrrummy.Game;
+import gui_game.GameControl;
 
 public class CutCommand implements Command{
 
 	private int meldIndex, tileIndex;
-	private Game game;
+	private GameControl game;
 	
-	public CutCommand(int meldIndex, int tileIndex, Game game) {
+	public CutCommand(int meldIndex, int tileIndex, GameControl game) {
 		this.meldIndex = meldIndex;
 		this.tileIndex = tileIndex;
 		this.game = game;
@@ -15,7 +15,7 @@ public class CutCommand implements Command{
 	
 	@Override
 	public boolean excute() {
-		return game.cut(meldIndex, tileIndex);
+		return game.commandCut(meldIndex, tileIndex);
 	}
 
 }

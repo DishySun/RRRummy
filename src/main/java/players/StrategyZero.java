@@ -14,21 +14,24 @@ public class StrategyZero implements AIStrategy{
 	private ArrayList<Tile> group;
 	private int countInitial;
 	private String returnString;
+	private AILogic logic;
 	
 	public StrategyZero(){
 		playerHandSizes = new HashMap<Integer, Integer>();
+		logic = new AILogic(myHand,table);
 	}
 	
 	@Override
 	public String generateCommand() {
+		logic = new AILogic(myHand,table);
 		returnString = "";
 		run = new ArrayList<Tile>();
 		group = new ArrayList<Tile>();
 		if(countInitial < 30) {	//play initial
-			if(myHand.checkInitialSum() >= 30-countInitial) {
-				run = myHand.findRun();
+			if(logic.checkInitialSum() >= 30-countInitial) {
+				run = logic.findRun();
 				if(run != null) {
-					countInitial += myHand.checkSum(run);
+					countInitial += logic.checkSum(run);
 					myHand.sort();
 					returnString = "Play";
 					for(int i=0; i<run.size();i++) {
@@ -37,10 +40,10 @@ public class StrategyZero implements AIStrategy{
 					return returnString;
 				}
 				else {
-					group = myHand.findGroup4Initial();
+					group = logic.findSet();
 					myHand.sort();
 					if(group != null) {
-						countInitial += myHand.checkSum(group);
+						countInitial += logic.checkSum(group);
 						myHand.sort();
 						returnString = "Play";
 						for(int i=0; i<group.size();i++) {
@@ -54,7 +57,9 @@ public class StrategyZero implements AIStrategy{
 			}	else
 				return "END";
 		}else {
-			run = myHand.findRun();
+			returnString = logic.AI1Command(myHand,table);
+			return returnString;
+			/*run = logic.findRun();
 			if(run != null)	{
 				myHand.sort();
 				returnString = "Play";
@@ -63,7 +68,7 @@ public class StrategyZero implements AIStrategy{
 				}
 				return returnString;
 			} else {
-				group  = myHand.findGroup();
+				group  = logic.findSet();
 				myHand.sort();
 				if(group != null) {
 					myHand.sort();
@@ -74,7 +79,7 @@ public class StrategyZero implements AIStrategy{
 					return returnString;
 				}
 				return "END";
-			}	
+			}	*/
 		}
 	}
 	

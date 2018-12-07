@@ -24,6 +24,12 @@ public class Tile {
 		number = 0;
 	}
 	
+	//copy constructor
+	public Tile(Tile t) {
+		color = t.color;
+		number = t.number;
+	}
+	
 	public Tile(String str) throws InvalidTileException{
 		String c = str.substring(0, 1);
 		switch(c) {

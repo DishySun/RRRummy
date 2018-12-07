@@ -19,6 +19,11 @@ public class Stock {
 		if (size() == 0) return null;
 		return stock.pop();
 	}
+	public boolean put(Tile t) {
+		if (t == null) return false;
+		stock.push(t);
+		return true;
+	}
 	private void initStock(){
 		for (Tile.Color c : Tile.Color.values()) {
 			if (c == Tile.Color.JOKER) break;
