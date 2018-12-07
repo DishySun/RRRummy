@@ -21,9 +21,10 @@ public class CurrentPlayerPane extends Pane{
 	private TileImagePane handImages;
 	private final int HAND_LOCATION_X = 10;
 	private final int HAND_LOCATION_Y = 10; 
+	private Pane innerPane;
 	
 	public CurrentPlayerPane(String playerName, EventHandler<ActionEvent> endTurnEventHandler, EventHandler<ActionEvent> hintEventHandler) {
-		Pane innerPane = new Pane();
+		innerPane = new Pane();
 		innerPane.setStyle("-fx-background-color: white; " +
 				"-fx-border-color: gray; " +
 				"-fx-padding: 4 4;");
@@ -79,6 +80,13 @@ public class CurrentPlayerPane extends Pane{
 		handImages.clearEventHandler();
 		endButton.setDisable(true);
 		hintButton.setDisable(true);
+	}
+	
+	public void clearCurrentPlayerPane() {
+		innerPane.getChildren().remove(handImages);
+		handImages = new TileImagePane();
+		handImages.relocate(HAND_LOCATION_X, HAND_LOCATION_Y);
+		innerPane.getChildren().add(handImages);
 	}
 	
 	public void relocateAll() {

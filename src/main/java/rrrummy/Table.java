@@ -1,6 +1,7 @@
 package rrrummy;
 import java.util.ArrayList;
 
+import Memento.TableMemento;
 import observer.Observer;
 import observer.Subject;
 
@@ -134,6 +135,10 @@ public class Table implements Subject{
 		return table.get(meldIndex).isSet();
 	}
 
+	public void steTable(ArrayList<Meld> t) {
+		table = t;
+	}
+	
 	@Override
 	public void register(Observer o) {
 		observers.add(o);	
@@ -152,5 +157,37 @@ public class Table implements Subject{
 		}
 	}
 
+	public Table getTable() {return this;}
+	
+	
+	////// memento
+	
+	public void setState(ArrayList<Meld> m) {
+		table = m;
+	}
+	
+	public TableMemento save() {
+		ArrayList<Meld> temp = new ArrayList<Meld>();
+		for (Meld m :table) {
+			temp.add(new Meld(m));
+		}
+		return new TableMemento(temp);
+	}
+	
+	public ArrayList<ArrayList<Tile>> restoreToState(TableMemento memeto) {
+		table = memeto.getSaveData();
+		ArrayList<ArrayList<Tile>> temp = new ArrayList<ArrayList<Tile>>();
+		for (Meld m : table) {
+			temp.add(m.toArrayList());
+		}
+		return temp;
+	}
+	
+	public boolean isEveryMeldValid() {
+		for (Meld m : table) {
+			if (!m.isValid()) return false;
+		}
+		return true;
+	}
 	
 }

@@ -96,14 +96,6 @@ public class TileImagePane extends Pane{
 		
 	}
 
-	public void replace(ImageView iv, int at) {
-		if (at < 0 || at >= this.getChildren().size()) return;
-		ImageView a = (ImageView)this.getChildren().get(at);
-		Image img = iv.getImage();
-		iv.setImage(a.getImage());
-		a.setImage(img);
-	}
-
 	private void move(ImageView imageView, int i, int j) {
 		//Animation may applied
 		TranslateTransition translateTransition = new TranslateTransition();
@@ -126,6 +118,11 @@ public class TileImagePane extends Pane{
 		for (Node n : this.getChildren()) {
 			n.setOnMouseClicked(null);
 		}
+	}
+	
+	public void clearAllNode() {
+		this.getChildren().removeAll();
+		this.relocateAll();
 	}
 	
 	public int getMeldIndex() {

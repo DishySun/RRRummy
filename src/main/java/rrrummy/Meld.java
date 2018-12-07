@@ -51,7 +51,7 @@ public class Meld {
 	}
 	
 	//copy constructor
-		public Meld(Meld m) {
+		public Meld(final Meld m) {
 			meld = new ArrayList<Tile>();
 			this.tileMap = m.tileMap;
 			this.tileNumber = m.tileNumber;
@@ -459,5 +459,11 @@ public class Meld {
 	public Tile getTail() {return meld.get(meld.size() -1);}
 	public void add(Tile t, int fromTileIndex) {
 		meld.add(fromTileIndex, t);
+	}
+	
+	public ArrayList<Tile> toArrayList(){
+		ArrayList<Tile> temp = new  ArrayList<Tile>();
+		temp.addAll(meld);
+		return temp;
 	}
 }

@@ -3,6 +3,8 @@ package gui_game;
 import java.util.ArrayList;
 import java.util.Random;
 
+import Memento.HandMemento;
+import Memento.TableMemento;
 import gui.TablePane;
 import javafx.scene.image.Image;
 
@@ -23,6 +25,8 @@ public class GameControl {
 	private TablePane view;
 	private CommandControl commandControl;
 	private int hadPlayed = 0;
+	private HandMemento memento_hand;
+	private TableMemento memento_table;
 	
 	public GameControl(ArrayList<Player> players, int firstHumanPlayer, ArrayList<Image> red, ArrayList<Image> blue, ArrayList<Image> green, ArrayList<Image> orange, Image joker, Image back) {
 		//normal game at least one human player
@@ -151,8 +155,9 @@ public class GameControl {
 			t = game.playerDraw(players.get(currentPlayer));
 			players.get(currentPlayer).sortHand();
 			if (t != null) view.drawTile(currentPlayer, t);
+		} else {
+			if (!game.isEveryMeldValid()) this.penalty();
 		}
-		
 		currentPlayer = (currentPlayer +1) % players.size();
 		hadPlayed = 0;
 		players.get(currentPlayer).getTurn(this);
@@ -160,6 +165,9 @@ public class GameControl {
 	
 	//model method
 	public void humanTurn() {
+		players.get(currentPlayer).getHand().setState(players.get(currentPlayer).getHand().getHandList());
+		memento_hand = players.get(currentPlayer).getHand().Save();
+		memento_table = game.getTable().save();
 		view.setHumanTurn(currentPlayer);
 	}
 
@@ -245,7 +253,7 @@ public class GameControl {
 
 	public boolean commandReplace(int tileInHandIndex, int meldIndex, int tileIndex) {
 		boolean b = game.replace(currentPlayer, tileInHandIndex, meldIndex, tileIndex);
-		if (b) view.replace(currentPlayer, meldIndex, tileIndex);
+		if (b) view.replace(meldIndex, tileIndex);
 		
 		game.printTable();
 		players.get(currentPlayer).printHand();
@@ -282,5 +290,19 @@ public class GameControl {
 	
 	public Player determineWinner() {
 		return game.determineWinner(currentPlayer);
+	}
+	
+	public void penalty() {
+		Tile t = null;
+		players.get(currentPlayer).getHand().restoreToState(memento_hand);
+		ArrayList<ArrayList<Tile>> newList = game.restoreToState(memento_table);
+		view.updateTable(newList);
+		view.updateHands(currentPlayer, players.get(currentPlayer).getHand().getHandList());
+		
+		for(int i=0; i<3; i++) {
+			t = game.playerDraw(players.get(currentPlayer));
+			view.drawTile(currentPlayer, t);
+		}
+		players.get(currentPlayer).sortHand();
 	}
 }
